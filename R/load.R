@@ -40,11 +40,12 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "", recursive = TRUE) {
     ## read the whole directory, possibly recursively
     if (dir.exists(dpa.directory)) {
       dpa.files <- list.files(path = dpa.directory, recursive = recursive, pattern="*.dpa$")
+      dpa.files <- file.path(dpa.directory, dpa.files)
       print(paste0("found ",length(dpa.files), " dpa files, loading:"))
       if (requireNamespace("pbapply", quietly = TRUE)) {
-        dpa.list <-  pbapply::pblapply(file.path(dpa.directory, dpa.files),  read_dpa_file)
+        dpa.list <-  pbapply::pblapply(dpa.files,  read_dpa_file)
       } else {
-        dpa.list <-  lapply(file.path(dpa.directory, dpa.files),  read_dpa_file)
+        dpa.list <-  lapply(dpa.files,  read_dpa_file)
       }
       ## if recursive, name them properly also using folders
       names(dpa.list) <-  gsub("*.dpa$","",dpa.files)

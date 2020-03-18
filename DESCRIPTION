@@ -1,0 +1,22 @@
+Package: densiteR
+Title: Tools for Resistograph Density analysis
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Luka",
+           family = "Krajnc",
+           role = c("aut", "cre"),
+           email = "luka.krajnc@gozdis.si",
+           comment = c(ORCID = "0000-0002-3120-559X"))
+Description: What the package does (one paragraph).
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+	dplyr,
+        zoo,
+        magrittr,
+        tibble,
+        readr,
+        tidyr,
+        pbapply
+

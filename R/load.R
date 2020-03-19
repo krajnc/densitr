@@ -1,28 +1,35 @@
+
+## get filename using regex
+## sapply(regmatches(dpa.file, regexec("[\\w-]+?(?=\\.)", dpa.file, perl = TRUE)), "[", 1)
+## str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
+## source https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
+extract_dpa_name  <- function(string){
+  return(sapply(
+    regmatches(
+      string,
+      regexec("[\\w-]+?(?=\\.)",
+              string, perl = TRUE)),
+    "[", 1))
+}
+
 ### rabiš tudi magitrr
 read_dpa_file <- function(dpa.file){
+
   dpa.read  <- readr::read_lines(dpa.file,skip=3)
 
-  ## get filename using regex
-  ## sapply(regmatches(dpa.file, regexec("[\\w-]+?(?=\\.)", dpa.file, perl = TRUE)), "[", 1)
-  ## str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
-  ## source https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
   dpa.data <- dpa.read  %>%
     head(n = -14) %>%
     dplyr::tibble(amplitude=.) %>%
     dplyr::mutate_at("amplitude", as.numeric) %>%
     tibble::rowid_to_column(var = "position") %>%
-    dplyr::mutate(ID=sapply(regmatches(dpa.file,
-                                       regexec("[\\w-]+?(?=\\.)", dpa.file, perl = TRUE)),
-                            "[", 1))
+    dplyr::mutate(ID=extract_dpa_name(dpa.file))
 
   dpa.footer <-  dpa.read %>%
     tail(n=13) %>%
     paste(collapse = "\n")  %>%
     readr::read_csv(.,col_names = c("footer")) %>%
     tidyr::separate(footer, into = c("name","value"),sep="=") %>%
-    dplyr::mutate(ID=sapply(regmatches(dpa.file,
-                                       regexec("[\\w-]+?(?=\\.)", dpa.file, perl = TRUE)),
-                            "[", 1)) %>%
+    dplyr::mutate(ID=extract_dpa_name(dpa.file)) %>%
     tidyr::pivot_wider(names_from = name, values_from = value)
 
   ## dpa.complete <- dpa.data %>%

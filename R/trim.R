@@ -25,9 +25,10 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
     p <- recordPlot()
     return(p)
   } else {
-    dpa$data <- list(dpa$data[start:end, ])
-    names(dpa$data)  <- dpa$footer$ID
+
     if (return.fail == FALSE){
+      dpa$data <- list(dpa$data[start:end, ])
+      names(dpa$data)  <- dpa$footer$ID
       return(dpa)
     } else {
       if (start == 1){
@@ -40,6 +41,8 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
       } else {
         end.status <- "succeeded"
       }
+      dpa$data <- list(dpa$data[start:end, ])
+      names(dpa$data)  <- dpa$footer$ID
       return(list("dpa" = dpa,
                   "detection.start" = start.status,
                   "detection.end" = end.status))
@@ -88,9 +91,9 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
     p <- recordPlot()
     return(p)
   } else {
-    dpa$data <- list(dpa$data[start:nrow(dpa$data), ])
-    names(dpa$data)  <- dpa$footer$ID
     if (return.fail == FALSE){
+      dpa$data <- list(dpa$data[start:nrow(dpa$data), ])
+      names(dpa$data)  <- dpa$footer$ID
       return(dpa)
     } else {
       if (start == 1){
@@ -98,6 +101,8 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
       } else {
         start.status <- "succeeded"
       }
+      dpa$data <- list(dpa$data[start:nrow(dpa$data), ])
+      names(dpa$data)  <- dpa$footer$ID
       return(list("dpa" = dpa,
                   "detection.start" = start.status))
     }

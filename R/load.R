@@ -66,14 +66,7 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
         ## if recursive, name them properly also using folders
         names(dpa.list) <-  gsub("*.dpa$","",dpa.files)
       }
-
-      info  <- lapply(dpa.list,function(x) x$footer) %>%
-        bind_rows()
-
-      data  <- lapply(dpa.list,function(x) x$data)
-      d.list <- list("data" = data, "info" = info)
-      class(d.list) <- 'dpa.list'
-      return(d.list)
+      return(dpa.list)
     } else {
       ## fail directory doesn't exist
       warning("given directory does not exist")
@@ -90,4 +83,16 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
       warning("file not found")
     }
   }
+}
+
+
+combine_footers  <- function(dpa.list){
+   info  <- lapply(dpa.list,function(x) x$footer) %>%
+     dplyr::bind_rows()
+   return(info)
+}
+
+combine_data  <- function(dpa.list){
+  data  <- lapply(dpa.list,function(x) x$data)
+  return(data)
 }

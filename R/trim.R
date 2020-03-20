@@ -1,5 +1,11 @@
 
-dpa_trim_both <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
+dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
+
+  ## check if dpa object
+  if (!inherits(dpa,"dpa"))  {
+    stop("not a dpa object")
+  }
+
   if (silent == TRUE) {
     start <- suppressWarnings(dpa_detect_start(dpa))
     end <-  suppressWarnings(dpa_detect_end(dpa))
@@ -19,8 +25,10 @@ dpa_trim_both <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent 
     p <- recordPlot()
     return(p)
   } else {
+    dpa$data <- list(dpa$data[start:end, ])
+    names(dpa$data)  <- dpa$footer$ID
     if (return.fail == FALSE){
-      return(dpa$data[start:end, ])
+      return(dpa)
     } else {
       if (start == 1){
         start.status  <- "failed"
@@ -32,20 +40,21 @@ dpa_trim_both <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent 
       } else {
         end.status <- "succeeded"
       }
-      return(list("data" = dpa$data[start:end, ],
+      return(list("dpa" = dpa,
                   "detection.start" = start.status,
                   "detection.end" = end.status))
     }
   }
 }
 
-dpa_trim_both_list  <- function(dpa.list, cl = 1) {
+dtriml  <- function(dpa.list, cl = 1) {
   print(paste0("started trimming ", length(dpa.list), " files"))
-  dpa.trimmed  <- pbapply::pblapply(dpa.list,  dpa_trim_both, return.fail = T, silent = T, cl = cl)
+  dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
+  #str(dpa.trimmed)
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-(2:3)]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
   report  <- lapply(dpa.trimmed, function(x) x[-(1)]) %>%
-    dplyr::bind_rows(., .id="name")
+    dplyr::bind_rows(., .id="ID")
   cat(paste0("########################################\ntrimming report: \nanalysed ",
              length(dpa.list),
              " file(s) \nstart detection failed in: ",
@@ -53,10 +62,16 @@ dpa_trim_both_list  <- function(dpa.list, cl = 1) {
              " file(s)\nend detection failed in: ",
              sum(report[,3] == "failed"), " file(s).\n",
              "########################################\n"))
-  return(list("data" = data, "report" = report))
+  return(list("dpa" = data, "report" = report))
 }
 
-dpa_trim_start <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
+dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
+
+  ## check if dpa object
+  if (!inherits(dpa,"dpa"))  {
+    stop("not a dpa object")
+  }
+
   if (silent == TRUE) {
     start <- suppressWarnings(dpa_detect_start(dpa))
   } else {
@@ -73,23 +88,25 @@ dpa_trim_start <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent
     p <- recordPlot()
     return(p)
   } else {
+    dpa$data <- list(dpa$data[start:nrow(dpa$data), ])
+    names(dpa$data)  <- dpa$footer$ID
     if (return.fail == FALSE){
-      return(dpa$data[start:nrow(dpa$data), ])
+      return(dpa)
     } else {
       if (start == 1){
         start.status  <- "failed"
       } else {
         start.status <- "succeeded"
       }
-      return(list("data" = dpa$data[start:nrow(dpa$data), ],
+      return(list("dpa" = dpa,
                   "detection.start" = start.status))
     }
   }
 }
 
-dpa_trim_start_list  <- function(dpa.list, cl = 1) {
+dtrim_sl  <- function(dpa.list, cl = 1) {
   print(paste0("started start trimming ", length(dpa.list), " files"))
-  dpa.trimmed  <- pbapply::pblapply(dpa.list,  dpa_trim_start, return.fail = T, silent = T, cl = cl)
+  dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-2]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
   report  <- lapply(dpa.trimmed, function(x) x[-(1)]) %>%
@@ -100,5 +117,5 @@ dpa_trim_start_list  <- function(dpa.list, cl = 1) {
              sum(report[,2] == "failed"),
              " file(s).\n",
              "########################################\n"))
-  return(list("data" = data, "report" = report))
+  return(list("dpa" = data, "report" = report))
 }

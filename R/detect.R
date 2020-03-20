@@ -1,6 +1,13 @@
 
 dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
 
+  ## check if dpa object
+  if (!inherits(dpa,"dpa"))  {
+    stop("not a dpa object")
+  }
+
+  ## dpa <- unclass(dpa)
+
   data.in <-
     loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
     predict(.) %>%
@@ -58,13 +65,13 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
                                                                   minseglen=250,class=TRUE))
     par(mfrow=c(2,1))
     plot(dpa$data$amplitude, type = "l",
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
-         ylab= paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
+         xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
+         ylab= paste0("Resistograph density [", dpa$footer$yUnit, "]"),
          main = paste0("Resistograph data: file ",dpa$footer$ID))
     abline(v=cutoff, col="red",lwd=3, lty=2)
     ## [1:length(dpa$data$amplitude)/2]
-    plot(segments.points2,
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
+    changepoint::plot(segments.points2,
+                      xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
          ylab= paste0("Moving average of lagged differences"),
          main="Detected segments, overall mean and cutoff limits")
     abline(h=mean(data.in), col="blue")
@@ -79,6 +86,12 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
 }
 
 dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
+
+  ## check if dpa object
+  if (!inherits(dpa,"dpa"))  {
+    stop("not a dpa object")
+  }
+
   data.in <-
     loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
     predict(.) %>%
@@ -144,8 +157,8 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
          main = paste0("Resistograph data: file ",dpa$footer$ID))
     abline(v=cutoff + 100, col="red", lwd=3, lty=2)
     ## [1:length(dpa$data$amplitude)/2]
-    plot(segments.points2,
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
+    changepoint::plot(segments.points2,
+                      xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab= paste0("Moving average of lagged differences"),
          main="Detected segments, overall mean and cutoff limits")
     abline(h=mean(data.in), col="blue")

@@ -50,18 +50,13 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
   }
 }
 
-dtriml  <- function(dpa.list, report = FALSE, cl = 1) {
+dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
   print(paste0("started trimming ", length(dpa.list), " files"))
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-(2:3)]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
-  if (report == TRUE){
-    report  <- lapply(dpa.trimmed, function(x) x[-(1)]) %>%
-      dplyr::bind_rows(., .id="ID")
-    return(list("dpa" = data, "report" = report))
-  } else {
-    return(data)
-  }
+  report  <- lapply(dpa.trimmed, function(x) x[-(1)]) %>%
+    dplyr::bind_rows(., .id="ID")
   cat(paste0("########################################\ntrimming report: \nanalysed ",
              length(dpa.list),
              " file(s) \nstart detection failed in: ",
@@ -69,6 +64,11 @@ dtriml  <- function(dpa.list, report = FALSE, cl = 1) {
              " file(s)\nend detection failed in: ",
              sum(report[,3] == "failed"), " file(s).\n",
              "########################################\n"))
+  if (rreport == TRUE){
+    return(list("dpa" = data, "report" = report))
+  } else {
+    return(data)
+  }
 }
 
 dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
@@ -112,22 +112,23 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
   }
 }
 
-dtrim_sl  <- function(dpa.list, report = FALSE, cl = 1) {
+dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   print(paste0("started start trimming ", length(dpa.list), " files"))
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-2]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
-  if (report == TRUE){
-    report  <- lapply(dpa.trimmed, function(x) x[-(1)]) %>%
-      dplyr::bind_rows(., .id="ID")
-    return(list("dpa" = data, "report" = report))
-  } else {
-    return(data)
-  }
+  report  <- lapply(dpa.trimmed, function(x) x[-(1)]) %>%
+    dplyr::bind_rows(., .id="ID")
   cat(paste0("########################################\ntrimming report: \nanalysed ",
              length(dpa.list),
              " files \nstart detection failed in: ",
              sum(report[,2] == "failed"),
              " file(s).\n",
              "########################################\n"))
+  if (rreport == TRUE){
+    return(list("dpa" = data, "report" = report))
+  } else {
+    return(data)
+  }
+
 }

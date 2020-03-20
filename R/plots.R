@@ -43,13 +43,25 @@ plot_end_detection  <- function(dpa.list){
   }
 }
 
-plot_all  <- function(dpa.list){
+
+plot_all  <- function(dpa.list, short = FALSE){
   for (i in 1:length(dpa.list)){
-    dpa  <- dpa.list[[i]]
-    print(plot(dpa$data$amplitude, type = "l",
-               xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
-               ylab= paste0("Resistograph density [", dpa$footer$yUnit, "]"),
-               main = paste0("Resistograph data: file ",dpa$footer$ID)))
+    if (short == TRUE){
+      dpa  <- dpa.list[[i]]
+      print(plot(dpa$amplitude, type = "l",
+                 xlab = paste0("Drilling depth"),
+                 ylab= paste0("Resistograph density"),
+                 main = paste0("Resistograph data: file ",dpa$ID[1])))
+
+    } else {
+      dpa  <- dpa.list[[i]]
+      print(plot(dpa$data$amplitude, type = "l",
+                 xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
+                 ylab= paste0("Resistograph density [", dpa$footer$yUnit, "]"),
+                 main = paste0("Resistograph data: file ",dpa$footer$ID)))
+
+    }
+
     ##Sys.sleep(2)
     keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
   }

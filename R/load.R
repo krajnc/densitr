@@ -1,20 +1,40 @@
-
-## get filename using regex
-## sapply(regmatches(dpa.file, regexec("[\\w-]+?(?=\\.)", dpa.file, perl = TRUE)), "[", 1)
-## str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
-## source https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
+#' Extract a file name from a full path
+#'
+#' A wrapper function for regex extraction of filename. Given a
+#' character string ("data/0005/00/00050060.dpa"), it will return only
+#' the file name without the extension ("00050060").
+#'
+#' @param string A path to file, including file name. Can be nested in
+#'   many directories or in none.
+#' @return An extracted filename, a character string.
+#' @examples
+#' extract_dpa_name("data/0005/00/00050060.dpa")
 extract_dpa_name  <- function(string){
+  ## sourced from https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
   return(sapply(
     regmatches(
       string,
       regexec("[\\w-]+?(?=\\.)",
               string, perl = TRUE)),
     "[", 1))
+  ## tidyverse alternative: str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
 }
 
-### rabiš tudi magitrr
+#' Read a single Resistograph measurement file (*.dpa)
+#'
+#' Reads a single *.dpa file and returns a \code{dpa} object,
+#' constructed from two lists: \code{data} and \code{footer}. The
+#' former one contains actual measurement values, the latter includes
+#' supplementary data recorded by the Resistograph device, such as
+#' time, firmware number...
+#'
+#' @param file A path to file, including file name.
+#' @return A \code{dpa} object.
+#' @seealso read_dpa.
+#' @examples
+#' read_dpa("data/test.dpa")
 read_dpa <- function(file){
-  ## check ending
+  ## check if the file ends in *.dpa
   if (!grepl("\\.dpa$", file))  {
     stop("not a *.dpa file")
   }
@@ -36,16 +56,39 @@ read_dpa <- function(file){
     dplyr::mutate(ID=extract_dpa_name(file)) %>%
     tidyr::pivot_wider(names_from = name, values_from = value)
 
-  ## dpa.complete <- dpa.data %>%
-  ##   dplyr::left_join(dpa.footer, by="ID") #%>%    mutate_at(c("ID","position"), as.factor)
-
   d  <- list("data" = dpa.data, "footer" = dpa.footer)
   class(d) <- 'dpa'
   return(d)
 }
 
-
-## funnkcija za load dpa files, if za recursive, uporabi pbapply če obstaja
+#' Load a single Resistograph measurement file (*.dpa) or a directory
+#' of *.dpa files.
+#'
+#' Loads either a single .dpa file or a list of .dpa files. If
+#' dpa.file is specified, it will load a single file. If dpa.directory
+#' is specified, it will search for all dpa files in that directory
+#' (recursively in all subfolders, can be turned off) and return a
+#' list of dpa files. It will use pbapply to display progress, if
+#' loading a directory.
+#'
+#' @param dpa.file A path to a single file, including file name.
+#' @param dpa.directory A directory with .dpa files.
+#' @param recursive Also look for dpa files in subfolders?
+#' @param name Either \code{c("file", "folder")}, used for naming of
+#'   list items. If "file", only file name withouth the complete path
+#'   will be used for naming ("00050060"). If "folder", the complete
+#'   path along with file name will be used to name the dpa objects
+#'   ("data/0005/00/00050060"). *.dpa ending is removed from the name
+#'   in both cases.
+#' @return A \code{dpa} object or a list of \code{dpa} objects.
+#' @seealso read_dpa.
+#' @export
+#' @examples
+#' ## load a single file
+#' load_dpa("data/test.dpa")
+#' dpa <- load_dpa("data/0005/00/00050060.dpa")
+#' ## load all files in directory
+#' dpa.list <- load_dpa(dpa.directory = "data")
 load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
                       recursive = TRUE, name = "file") {
   if (is.null(dpa.file)) {
@@ -85,13 +128,46 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
   }
 }
 
-
+#' Combines footer data from a dpa object list into a single data
+#' frame
+#'
+#' Given a dpa object list, this function will extract all footers
+#' (the additional measurement data) from all dpa objects in a given
+#' list and combine them in a single data frame/tibble.
+#'
+#' @param dpa.list A list of dpa objects, either from loading several
+#'   files using load_dpa or combined manually. Note: the list should
+#'   include only dpa objects!
+#' @return A tibble, combining all footer data from dpa.list
+#' @seealso load_dpa, combine_data.
+#' @export
+#' @examples
+#' ## load all files in directory
+#' dpa.list <- load_dpa(dpa.directory = "data")
+#' combine_footers(dpa.list)
 combine_footers  <- function(dpa.list){
    info  <- lapply(dpa.list,function(x) x$footer) %>%
      dplyr::bind_rows()
    return(info)
 }
 
+#' Combines density measurement from a dpa object list into a single
+#' data frame
+#'
+#' Given a dpa object list, this function will extract all density
+#' measurement data from all dpa objects in a given list and combine
+#' them in a single data frame/tibble.
+#'
+#' @param dpa.list A list of dpa objects, either from loading several
+#'   files using load_dpa or combined manually. Note: the list should
+#'   include only dpa objects!
+#' @return A tibble, combining all density data from dpa.list
+#' @seealso load_dpa, combine_footer.
+#' @export
+#' @examples
+#' ## load all files in directory
+#' dpa.list <- load_dpa(dpa.directory = "data")
+#' combine_data(dpa.list)
 combine_data  <- function(dpa.list){
   data  <- lapply(dpa.list,function(x) x$data)
   return(data)

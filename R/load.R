@@ -9,8 +9,9 @@
 #' @return An extracted filename, a character string.
 #' @examples
 #' extract_dpa_name("data/0005/00/00050060.dpa")
+#' @references
+#' https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
 extract_dpa_name  <- function(string){
-  ## sourced from https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
   return(sapply(
     regmatches(
       string,
@@ -38,16 +39,13 @@ read_dpa <- function(file){
   if (!grepl("\\.dpa$", file))  {
     stop("not a *.dpa file")
   }
-
   dpa.read  <- readr::read_lines(file,skip=3)
-
   dpa.data <- dpa.read  %>%
     head(n = -14) %>%
     dplyr::tibble(amplitude=.) %>%
     dplyr::mutate_at("amplitude", as.numeric) %>%
     tibble::rowid_to_column(var = "position") %>%
     dplyr::mutate(ID=extract_dpa_name(file))
-
   dpa.footer <-  dpa.read %>%
     tail(n=13) %>%
     paste(collapse = "\n")  %>%
@@ -55,7 +53,6 @@ read_dpa <- function(file){
     tidyr::separate(footer, into = c("name","value"),sep="=") %>%
     dplyr::mutate(ID=extract_dpa_name(file)) %>%
     tidyr::pivot_wider(names_from = name, values_from = value)
-
   d  <- list("data" = dpa.data, "footer" = dpa.footer)
   class(d) <- 'dpa'
   return(d)

@@ -13,7 +13,7 @@ ddetrend <- function(dpa, type = ""){
       m <- mgcv::gam(amplitude~s(position), data = df, method = "REML")
       new  <- df %>%
         dplyr::mutate(amplitude =  amplitude - m$fitted.values + m$fitted.values[1])
-      dpa$data <- list(new)
+      dpa$data <- new
     } else {
       stop("Package \"mgcv\" needed for GAM detrending. Please install it.")
     }

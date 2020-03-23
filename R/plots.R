@@ -1,4 +1,3 @@
-
 keydown <- function(key) {
   if (key == "q") {
     dev.off()
@@ -22,7 +21,6 @@ readkeygraph <- function(prompt)
 plot_trimming  <- function(dpa.list){
   for (i in 1:length(dpa.list)){
     print((dtrim(dpa.list[[i]], return.plot = T)))
-    ##Sys.sleep(2)
     keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
   }
 }
@@ -30,7 +28,6 @@ plot_trimming  <- function(dpa.list){
 plot_start_detection  <- function(dpa.list){
   for (i in 1:length(dpa.list)){
     print((dpa_detect_start(dpa.list[[i]], return.plot = T)))
-    ##Sys.sleep(2)
     keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
   }
 }
@@ -38,7 +35,6 @@ plot_start_detection  <- function(dpa.list){
 plot_end_detection  <- function(dpa.list){
   for (i in 1:length(dpa.list)){
     print((dpa_detect_end(dpa.list[[i]], return.plot = T)))
-    ##Sys.sleep(2)
     keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
   }
 }
@@ -54,12 +50,10 @@ plot_all  <- function(dpa.list){
   }
 }
 
-
 plot_failures  <- function(dpa.trimmed){
   failures  <-  separate_trim_failures(dpa.trimmed)
   failures2  <- union(failures$failures.start, failures$failures.end)
   names(failures2)  <-  union(names(failures$failures.start), names(failures$failures.end))
-
   for (i in 1:length(failures2)){
     dpa  <- failures2[[i]]$data
     print(plot(dpa$amplitude, type = "l",
@@ -67,7 +61,6 @@ plot_failures  <- function(dpa.trimmed){
                ylab= paste0("Resistograph density"),
                main = paste0("Resistograph data, trimming failure ",dpa$ID[1])))
 
-    ##Sys.sleep(2)
     keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
   }
 }

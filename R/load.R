@@ -36,9 +36,7 @@ extract_dpa_name  <- function(string){
 #' read_dpa("data/test.dpa")
 read_dpa <- function(file){
   ## check if the file ends in *.dpa
-  if (!grepl("\\.dpa$", file))  {
-    stop("not a *.dpa file")
-  }
+  if (!grepl("\\.dpa$", file)) {stop("not a *.dpa file")}
   dpa.read  <- readr::read_lines(file,skip=3)
   dpa.data <- dpa.read  %>%
     head(n = -14) %>%
@@ -93,7 +91,7 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
     if (dir.exists(dpa.directory)) {
       dpa.files <- list.files(path = dpa.directory, recursive = recursive, pattern="*.dpa$")
       dpa.files <- file.path(dpa.directory, dpa.files)
-      print(paste0("found ",length(dpa.files), " dpa files, loading:"))
+      message("found ", length(dpa.files), " dpa files, loading:")
       if (requireNamespace("pbapply", quietly = TRUE)) {
         dpa.list <-  pbapply::pblapply(dpa.files, read_dpa)
       } else {

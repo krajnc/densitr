@@ -1,7 +1,5 @@
 ddetrend <- function(dpa, type = ""){
-  if (!inherits(dpa,"dpa"))  {
-    stop("not a dpa object")
-  }
+  if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
   df <-  dpa$data
   if (type == "linear") {
     trend <- lm(amplitude ~ position, data = df)
@@ -14,12 +12,8 @@ ddetrend <- function(dpa, type = ""){
       new  <- df %>%
         dplyr::mutate(amplitude =  amplitude - m$fitted.values + m$fitted.values[1])
       dpa$data <- new
-    } else {
-      stop("Package \"mgcv\" needed for GAM detrending. Please install it.")
-    }
-  } else {
-    stop("Please specify detrending function.")
-  }
+    } else {stop("Package \"mgcv\" needed for GAM detrending. Please install it.")}
+  } else {stop("Please specify detrending function.")}
   #names(dpa$data)  <- dpa$footer$ID
   return(dpa)
 }

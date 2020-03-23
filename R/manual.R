@@ -1,8 +1,6 @@
-
-
 remove_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
-    stop("not report attached, trim again with report = TRUE")
+    stop("not report attached, trim again with rreport = TRUE")
   }
 
   failures.start  <- dpa.trimmed$report %>%
@@ -25,7 +23,7 @@ remove_trim_failures  <- function(dpa.trimmed) {
 
 separate_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
-    stop("not report attached, trim again with report = TRUE")
+    stop("not report attached, trim again with rreport = TRUE")
   }
 
   failures.start  <- dpa.trimmed$report %>%
@@ -35,8 +33,7 @@ separate_trim_failures  <- function(dpa.trimmed) {
   dpas <- dpa.trimmed$dpa
   dpa.start <- dpas[(names(dpas) %in% failures.start)]
 
-  if("detection.end" %in% colnames(dpa.trimmed$report))
-  {
+  if("detection.end" %in% colnames(dpa.trimmed$report)) {
     failures.end  <- dpa.trimmed$report %>%
       dplyr::filter(detection.end == "failed") %>%
       dplyr::select(ID) %>%
@@ -53,7 +50,7 @@ manual_trim_detect <- function(failure, label = "start") {
        xlab = paste0("Drilling depth"),
        ylab= paste0("Resistograph density"),
        main = paste0("Resistograph data: file ",failure$footer$ID," ",label))
-  cat("\n[click on graph then pick a vertical line, then confirm]\n")
+  message("\n[click on graph then pick a vertical line, then confirm]\n")
   click.loc <- locator(1)
   abline(v=click.loc$x, col="red",lwd=3, lty=2)
   keyPressed = readkeygraph(paste0("confirm selection, y or n?"))
@@ -86,29 +83,24 @@ manual_trim_detect <- function(failure, label = "start") {
 
 correct_failures  <- function(dpa.trimmed) {
   failures  <-  separate_trim_failures(dpa.trimmed)
-
-  cat(paste0("\nfound:\n",length(failures$failures.start)," start failures \n",length(failures$failures.end)," end failures" ))
-
+  message("\nfound:\n",
+          length(failures$failures.start),
+          " start failures \n",
+          length(failures$failures.end),
+          " end failures" )
   if (length(failures$failures.start) > 0) {
-    cutoffs.start <-    lapply(failures$failures.start, manual_trim_detect, label = "PICK START")
+    cutoffs.start <-
+      apply(failures$failures.start, manual_trim_detect, label = "PICK START")
     for (i in 1:length(failures$failures.start)){
-
       start <- unlist(cutoffs.start[names(failures$failures.start[i])],use.names = F)
       end  <- nrow(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data)
-      ## i <- 1
-      ## summary(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data)
-
       dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data  <- tail(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data, -(start - 1))
     }
   }
-
-  cat("\nstart corrections done, starting end corrections\n")
-  ## both <- intersect(names(failures$failures.start),
-  ##                   names(failures$failures.end))
+  message("\nstart corrections done, starting end corrections\n")
   if (length(failures$failures.end) > 0) {
     cutoffs.end <- lapply(failures$failures.end, manual_trim_detect, label = "PICK STOP")
     for (i in 1:length(failures$failures.end)){
-      ## i <- 5
       end.old  <-
         nrow(dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data)
 
@@ -116,13 +108,11 @@ correct_failures  <- function(dpa.trimmed) {
         unlist(cutoffs.end[names(failures$failures.end[i])],use.names = F)
 
       diff  <- end.old - end.new
-
       ## remove the last X values
       dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data   <-
         head(dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data, -diff)
     }
   }
-
-  cat("\ncorrections done\n")
+  message("\ncorrections done\n")
   return(dpa.trimmed)
 }

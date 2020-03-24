@@ -1,30 +1,38 @@
-#' Detect measurement starting point automatically
+#' Detect measurement starting point automatically using changepoint
+#' segmentation
 #'
-#' Loads either a single .dpa file or a list of .dpa files. If
-#' dpa.file is specified, it will load a single file. If dpa.directory
-#' is specified, it will search for all dpa files in that directory
-#' (recursively in all subfolders, can be turned off) and return a
-#' list of dpa files. It will use pbapply to display progress, if
-#' loading a directory.
-#'
-#' @param dpa.file A path to a single file, including file name.
-#' @param dpa.directory A directory with .dpa files.
-#' @param recursive Also look for dpa files in subfolders?
-#' @param name Either \code{c("file", "folder")}, used for naming of
-#'   list items. If "file", only file name withouth the complete path
-#'   will be used for naming ("00050060"). If "folder", the complete
-#'   path along with file name will be used to name the dpa objects
-#'   ("data/0005/00/00050060"). *.dpa ending is removed from the name
-#'   in both cases.
-#' @return A \code{dpa} object or a list of \code{dpa} objects.
-#' @seealso read_dpa.
+#' A typical resistance drilling measurement starts with an increase
+#' in resistance values in between the measurement start and the
+#' immersion of the needle in the wood. These values are not useful
+#' when estimating density and should be removed before further
+#' analysis. This function will detect the starting point
+#' automatically using binary segmentation from the package
+#' \code{changepoint}, which separates the measurement in segments
+#' based on their mean and variance. Start is detected, when the
+#' segment mean is outside of the cutoff limit, see \code{return.plot
+#' = TRUE} to display the actual process. This function will only
+#' check the mean values of the first four (4) segments and compare
+#' them to the cutoff value. The function is called on a dpa object
+#' and returns either a row number of the starting point or a plot
+#' displaying the segmentation and detection. The sensitivity can be
+#' adjusted using the cutoff.sd parameter, which is an indicator on
+#' how many standard deviations the segment mean value can be before
+#' cutting it off. Will return a warning if start not detected.
+#' @param dpa A dpa object, see load_dpa.
+#' @param cutoff.sd How many standard deviations for the cutoff limit?
+#' @param return.plot If true, will return a plot displaying segment
+#'   detection for the current dpa file.
+#' @return Either a row number where the actual measurement starts or
+#'   a plot, displaying changepoint segmentation and set limits.
+#' @seealso dpa_detect_end, dtrim, dtriml, dtrim_s, dtriml_s
 #' @export
 #' @examples
 #' ## load a single file
-#' load_dpa("data/test.dpa")
-#' dpa <- load_dpa("data/0005/00/00050060.dpa")
-#' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = "data")
+#' dpa <- load_dpa("data/test.dpa")
+#' ## get starting point
+#' start <- dpa_detect_start(dpa, return.plot = TRUE)
+#' ## plot the start detection
+#' dpa_detect_start(dpa, return.plot = TRUE)
 dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   ## check if dpa object
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
@@ -93,10 +101,39 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     p <- recordPlot()
     return(p)
   } else {
-    return(cutoff) # add 100 to account for rolling mean right centred
+    return(cutoff) # add 100 to account for rolling mean right centered
   }
 }
 
+#' Detect measurement ending point automatically using changepoint
+#' segmentation
+#'
+#' The opposite of the dpa_detect_start, it will check the mean values
+#' of the last four segments and compare them to the cutoff limit.
+#' Will give a warning if end not detected, which is expected on
+#' measurements where the needle did not exit the tree on the opposite
+#' side of the tree. See \code{return.plot = TRUE} to display the
+#' actual process. The function is called on a dpa object and returns
+#' either a row number of the measurement ending or a plot displaying
+#' the segmentation and detection. The sensitivity can be adjusted
+#' using the cutoff.sd parameter, which is an indicator on how many
+#' standard deviations the segment mean value can be before cutting it
+#' off.
+#' @param dpa A dpa object, see load_dpa.
+#' @param cutoff.sd How many standard deviations for the cutoff limit?
+#' @param return.plot If true, will return a plot displaying segment
+#'   detection for the current dpa file.
+#' @return Either a row number where the actual measurement ends or
+#'   a plot, displaying changepoint segmentation and set limits.
+#' @seealso dpa_detect_start, dtrim, dtriml, dtrim_s, dtriml_s
+#' @export
+#' @examples
+#' ## load a single file
+#' dpa <- load_dpa("data/test.dpa")
+#' ## get ending point
+#' start <- dpa_detect_end(dpa, return.plot = TRUE)
+#' ## plot the end detection
+#' dpa_detect_end(dpa, return.plot = TRUE)
 dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   ## check if dpa object
   if (!inherits(dpa,"dpa"))  {stop("not a dpa object")}

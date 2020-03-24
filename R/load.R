@@ -43,14 +43,16 @@ read_dpa <- function(file){
     dplyr::tibble(amplitude=.) %>%
     dplyr::mutate_at("amplitude", as.numeric) %>%
     tibble::rowid_to_column(var = "position") %>%
-    dplyr::mutate(ID=extract_dpa_name(file))
+    dplyr::mutate(ID=extract_dpa_name(file)) %>%
+    as.data.frame()
   dpa.footer <-  dpa.read %>%
     tail(n=13) %>%
     paste(collapse = "\n")  %>%
     readr::read_csv(.,col_names = c("footer")) %>%
     tidyr::separate(footer, into = c("name","value"),sep="=") %>%
     dplyr::mutate(ID=extract_dpa_name(file)) %>%
-    tidyr::pivot_wider(names_from = name, values_from = value)
+    tidyr::pivot_wider(names_from = name, values_from = value) %>%
+    as.data.frame()
   d  <- list("data" = dpa.data, "footer" = dpa.footer)
   class(d) <- 'dpa'
   return(d)

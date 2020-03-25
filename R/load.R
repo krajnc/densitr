@@ -12,12 +12,23 @@
 #' @references
 #' https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
 extract_dpa_name  <- function(string){
-  return(sapply(
-    regmatches(
-      string,
-      regexec("[\\w-]+?(?=\\.)",
-              string, perl = TRUE)),
-    "[", 1))
+  if(.Platform$OS.type == "unix") {
+    return(sapply(
+      regmatches(
+        string,
+        regexec("[\\w-]+?(?=\\.)",
+                string, perl = TRUE)),
+      "[", 1))
+  } else {
+    ## widnows uses backward slashes, so convert them to froward slashes for regex
+    string  <- gsub("\\\\", "/", string)
+    return(sapply(
+      regmatches(
+        string,
+        regexec("[\\w-]+?(?=\\.)",
+                string, perl = TRUE)),
+      "[", 1))
+  }
   ## tidyverse alternative: str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
 }
 

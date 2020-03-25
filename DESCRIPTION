@@ -1,5 +1,5 @@
-Package: densiteR
-Title: Tools for Resistograph Density analysis
+Package: densiter
+Title: Tools for analysing resistance drilling density profiles
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Luka",
@@ -12,6 +12,8 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
+        stats,
+        utils,
 	dplyr,
         zoo,
         magrittr,
@@ -20,4 +22,6 @@ Imports:
         tidyr,
         pbapply,
         changepoint
-
+Suggests:
+        mgcv
+RoxygenNote: 7.1.0

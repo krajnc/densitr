@@ -38,12 +38,12 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
   ## get a rolling mean of diff lags
   data.in <-
-    loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
-    predict(.) %>%
-    diff(.) %>%
+    stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
+    stats::predict(.) %>%
+    base::diff(.) %>%
     zoo::rollmeanr(.,100)
   ## set limits and find segments
-  limit <- abs(mean(data.in) + (cutoff.sd * sd(data.in)))
+  limit <- abs(mean(data.in) + (cutoff.sd * stats::sd(data.in)))
   segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                method="BinSeg", Q=10,
                                                                minseglen=250,class=FALSE))
@@ -83,21 +83,21 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
-    par(mfrow=c(2,1))
-    plot(dpa$data$amplitude, type = "l",
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
+    graphics::par(mfrow=c(2,1))
+    graphics::plot(dpa$data$amplitude, type = "l",
+                   xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
          ylab= paste0("Resistograph density [", dpa$footer$yUnit, "]"),
          main = paste0("Resistograph data: file ",dpa$footer$ID))
-    abline(v=cutoff, col="red",lwd=3, lty=2)
+    graphics::abline(v=cutoff, col="red",lwd=3, lty=2)
     ## [1:length(dpa$data$amplitude)/2]
     changepoint::plot(segments.points2,
                       xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
          ylab= paste0("Moving average of lagged differences"),
          main="Detected segments, overall mean and cutoff limits")
-    abline(h=mean(data.in), col="blue")
-    abline(h=limit, col="green")
-    abline(h=-limit, col="green")
-    abline(v=cutoff, col="red", lwd=3, lty=2)
+    graphics::abline(h=mean(data.in), col="blue")
+    graphics::abline(h=limit, col="green")
+    graphics::abline(h=-limit, col="green")
+    graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
     p <- recordPlot()
     return(p)
   } else {
@@ -139,12 +139,12 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   if (!inherits(dpa,"dpa"))  {stop("not a dpa object")}
   ## get a rolling mean of diff lags
   data.in <-
-    loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
-    predict(.) %>%
-    diff(.) %>%
+    stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
+    stats::predict(.) %>%
+    base::diff(.) %>%
     zoo::rollmeanr(.,100)
   ## get limits and get segments
-  limit <- mean(data.in) - (cutoff.sd * sd(data.in))
+  limit <- mean(data.in) - (cutoff.sd * stats::sd(data.in))
   segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                method="BinSeg", Q=10,
                                                                minseglen=250,class=FALSE))
@@ -181,20 +181,20 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
-    par(mfrow=c(2,1))
-    plot(dpa$data$amplitude, type = "l",
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
+    graphics::par(mfrow=c(2,1))
+    graphics::plot(dpa$data$amplitude, type = "l",
+                   xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab= paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
          main = paste0("Resistograph data: file ",dpa$footer$ID))
-    abline(v=cutoff + 100, col="red", lwd=3, lty=2)
+    graphics::abline(v=cutoff + 100, col="red", lwd=3, lty=2)
     changepoint::plot(segments.points2,
                       xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab= paste0("Moving average of lagged differences"),
          main="Detected segments, overall mean and cutoff limits")
-    abline(h=mean(data.in), col="blue")
-    abline(h=limit, col="green")
-    abline(h=-limit, col="green")
-    abline(v=cutoff, col="red", lwd=3, lty=2)
+    graphics::abline(h=mean(data.in), col="blue")
+    graphics::abline(h=limit, col="green")
+    graphics::abline(h=-limit, col="green")
+    graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
     p <- recordPlot()
     return(p)
   } else {

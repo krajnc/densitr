@@ -1,7 +1,4 @@
-#' Print method for dpa objects
-#'
-#' Generic method for printing dpa objects.
-#' @export
+
 print.dpa <- function(x, ...) {
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
   cat(paste0("\n\nResistance drilling profile ID:\t",
@@ -14,10 +11,6 @@ print.dpa <- function(x, ...) {
   cat("...\n")
 }
 
-#' Plot method for dpa objects
-#'
-#' Generic method for plotting dpa objects.
-#' @export
 plot.dpa <- function(x, ...) {
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
   plot(x=dpa$data$position, y=dpa$data$amplitude, type = "l",

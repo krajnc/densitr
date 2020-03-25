@@ -1,19 +1,14 @@
-#' Helper function for plotting dpa lists
-#'
-#' Helper function when plotting a list of dpa objects.
 keydown <- function(key) {
   if (key == "q") {
     dev.off()
-    break
+    #break
+    stop()
   } else {
     keyPressed <<- key
     ## print("11111111111")
   }
 }
 
-#' Helper function 2 for plotting dpa lists
-#'
-#' Helper function when plotting a list of dpa objects.
 readkeygraph <- function(prompt)
 {
   getGraphicsEvent(prompt = prompt,

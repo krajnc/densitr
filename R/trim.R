@@ -2,13 +2,14 @@
 #'
 #' Calls dpa_detect_start and dpa_detect_end on a given dpa object and
 #' returns a trimmed dpa object with the the row before the starting
-#' point and after the ending removed. If return.plot = TRUE, it will
-#' return a plot displaying the dpa object with detected starting and
-#' ending point. IF called with the option "return.fail = FALSE" and
-#' "return.plot = FALSE", the returned object will also include
-#' information on whether both cutoff points were detected. If
-#' starting/ending point not detected, dpa object is returned with no
-#' changes. When running on a list of dpa objects, use \code{dtriml}.
+#' point and after the ending removed. If \code{return.plot = TRUE},
+#' it will return a plot displaying the dpa object with detected
+#' starting and ending point. If called with the option
+#' \code{return.fail = FALSE} and \code{return.plot = FALSE}, the
+#' returned object will also include information on whether both
+#' cutoff points were detected. If starting/ending point not detected,
+#' dpa object is returned with no changes. When running on a list of
+#' dpa objects, use \code{dtriml}.
 #'
 #' @param dpa An dpa object, see \code{load_dpa}
 #' @param return.plot Return a plot instead of dpa object? If TRUE,
@@ -19,9 +20,9 @@
 #'   included when returning a dpa object?
 #' @param silent Mute detection warnings, used when calling on list. A
 #'   list of trimmed dpa objects, a result of calling dtriml or
-#'   dtriml_s on a dpa list with "return.fail = FALSE".
+#'   dtriml_s on a dpa list with return.fail = FALSE.
 #' @return A trimmed dpa object, with the beginning and ending
-#'   removed, if they were detected. When "return.plot = TRUE", it
+#'   removed, if they were detected. When return.plot = TRUE, it
 #'   returns a plot displaying the process.
 #' @seealso dtriml, dtrim_s, dtriml_s
 #' @export
@@ -123,7 +124,7 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
 #' dpa object with the the row before the starting point removed. If
 #' return.plot = TRUE, it will return a plot displaying the dpa object
 #' with detected starting point. If called with the option
-#' "return.fail = FALSE" and "return.plot = FALSE", the returned
+#' return.fail = FALSE and return.plot = FALSE, the returned
 #' object will also include information on whether starting cutoff
 #' point was detected. If starting point not detected, dpa object is
 #' returned with no changes. When running on a list of dpa objects,
@@ -138,9 +139,9 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
 #'   included when returning a dpa object?
 #' @param silent Mute detection warnings, used when calling on list. A
 #'   list of trimmed dpa objects, a result of calling dtriml or
-#'   dtriml_s on a dpa list with "return.fail = FALSE".
+#'   dtriml_s on a dpa list with return.fail = FALSE.
 #' @return A trimmed dpa object, with the beginning and ending
-#'   removed, if they were detected. When "return.plot = TRUE", it
+#'   removed, if they were detected. When return.plot = TRUE, it
 #'   returns a plot displaying the process.
 #' @seealso dtrim, dtriml, dtrim_s
 #' @export
@@ -193,7 +194,7 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' trimmed objects. If automatic detection fails, the dpa objects are
 #' not trimmed. Can be run in parallel on multiple cores, this speeds
 #' up the trimming process significantly. Only trims the starting
-#' side, see \{dtriml} for trimming both side simultaneously.
+#' side, see \code{dtriml} for trimming both side simultaneously.
 #'
 #' @param dpa.list A list of dpa objects, see \code{load_dpa}
 #' @param rreport Return an embedded report on automatic trim success,

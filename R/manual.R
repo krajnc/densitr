@@ -99,7 +99,7 @@ separate_trim_failures  <- function(dpa.trimmed) {
 #' The selection can be repeated once after pressing n, next n will
 #' stop the process and it has to be restarted manually.
 #'
-#' @param dpa A dpa object, usually see load_dpa.
+#' @param failure A dpa object, usually see load_dpa.
 #' @param label Optional label to be displayed on the plot after the
 #'   file
 #' @return The x position selected on the graph, row number in the dpa$data data frame.

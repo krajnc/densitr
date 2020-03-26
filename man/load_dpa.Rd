@@ -34,10 +34,10 @@ loading a directory.
 }
 \examples{
 ## load a single file
-load_dpa("data/test.dpa")
-dpa <- load_dpa("data/0005/00/00050060.dpa")
+load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+dpa <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 ## load all files in directory
-dpa.list <- load_dpa(dpa.directory = "data")
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 }
 \seealso{
 read_dpa.

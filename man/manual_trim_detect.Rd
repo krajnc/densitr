@@ -27,9 +27,11 @@ stop the process and it has to be restarted manually.
 }
 \examples{
 ## load a single file
-dpa <- load_dpa("data/test.dpa")
+dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 ## get a starting point on the plot
+\dontrun{
 manual_trim_detect(dpa)
+}
 }
 \seealso{
 dtrim, dtriml

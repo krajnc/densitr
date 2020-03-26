@@ -20,7 +20,9 @@ supplementary data recorded by the Resistograph device, such as
 time, firmware number...
 }
 \examples{
-read_dpa("data/test.dpa")
+\dontrun{
+read_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+}
 }
 \seealso{
 read_dpa.

@@ -40,7 +40,7 @@ cutting it off. Will return a warning if start not detected.
 }
 \examples{
 ## load a single file
-dpa <- load_dpa("data/test.dpa")
+dpa <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 ## get starting point
 start <- dpa_detect_start(dpa, return.plot = TRUE)
 ## plot the start detection

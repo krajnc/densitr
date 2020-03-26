@@ -20,15 +20,15 @@ An inverse of remove_dpa_failures, return a list of failed trimming
 objects from a trimmed dpa list. Trimmed dpa list should be a
 result of either calling dtriml on a list of dpa objects or calling
 dtriml_s to remove the starting portions of the measurement. Both
-functions should be called with the option "return.fail = FALSE",
+functions should be called with the option "rreport = FALSE",
 which embeds a trimming report when returning the list of trimmed
 dpa objects.
 }
 \examples{
-## load a single file
-dpa.list <- load_dpa(folder = "data")
+## load several dpa files
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
-dpa.trimmed <- dtriml(dpa.list, "return.fail = FALSE")
+dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 ## separate trimming failures
 dpa.nofailures <- separate_trim_failures(dpa.trimmed)
 }

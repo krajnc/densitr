@@ -15,10 +15,12 @@ move to the next dpa object. Returns nothing. The entry list of dpa
 trimmed objects must include the trimming report (rreport = TRUE).
 }
 \examples{
-## load a single file
-dpa.list <- load_dpa(folder = "data")
+## load several dpa files
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
+\dontrun{
 plot_failures(dpa.list)
+}
 }
 \seealso{
 dtrim, dtrim_s, dtriml_s,

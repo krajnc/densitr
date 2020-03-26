@@ -22,7 +22,7 @@ list and combine them in a single data frame/tibble.
 }
 \examples{
 ## load all files in directory
-dpa.list <- load_dpa(dpa.directory = "data")
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 combine_footers(dpa.list)
 }
 \seealso{

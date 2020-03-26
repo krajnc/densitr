@@ -34,8 +34,8 @@ off.
 }
 \examples{
 ## load a single file
-dpa <- load_dpa("data/test.dpa")
-## get ending point
+dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' ## get ending point
 start <- dpa_detect_end(dpa, return.plot = TRUE)
 ## plot the end detection
 dpa_detect_end(dpa, return.plot = TRUE)

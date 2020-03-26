@@ -19,7 +19,9 @@ character string ("data/0005/00/00050060.dpa"), it will return only
 the file name without the extension ("00050060").
 }
 \examples{
+\dontrun{
 extract_dpa_name("data/0005/00/00050060.dpa")
+}
 }
 \references{
 https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r

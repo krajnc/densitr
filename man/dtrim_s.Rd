@@ -39,11 +39,11 @@ use \code{dtriml_s}.
 }
 \examples{
 ## load a single file
-dpa.list <- load_dpa(file = "test.dpa")
-## trim the measurements
-dpa.trimmed <- dtrim(dpa.list)
+dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+## trim the measurement at start
+dpa.trimmed <- dtrim_s(dpa)
 ## plot trimming
-dtrim(dpa.list, return.plot = TRUE)
+dtrim_s(dpa, return.plot = TRUE)
 }
 \seealso{
 dtrim, dtriml, dtrim_s

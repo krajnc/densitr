@@ -27,10 +27,10 @@ up the trimming process significantly. Only trims the starting
 side, see \code{dtriml} for trimming both side simultaneously.
 }
 \examples{
-## load a single file
-dpa.list <- load_dpa(folder = "data")
+## load several dpa files
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
-dpa.trimmed <- dtriml(dpa.list)
+dpa.trimmed <- dtrim_sl(dpa.list)
 }
 \seealso{
 dtrim, dtrim_s, dtriml_s,

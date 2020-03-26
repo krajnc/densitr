@@ -15,10 +15,12 @@ individually. Press any key to move to the next dpa object. Returns
 nothing.
 }
 \examples{
-## load a single file
-dpa.list <- load_dpa(folder = "data")
+## load several dpa files
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
+\dontrun{
 plot_end_detection(dpa.list)
+}
 }
 \seealso{
 dtrim, dtrim_s, dtriml_s,

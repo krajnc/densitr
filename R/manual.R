@@ -15,10 +15,10 @@
 #' @seealso dtriml, dtriml_s
 #' @export
 #' @examples
-#' ## load a single file
-#' dpa.list <- load_dpa(folder = "data")
+#' ## load several dpa files
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
-#' dpa.trimmed <- dtriml(dpa.list, "return.fail = FALSE")
+#' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 #' ## remove trimming failures
 #' dpa.nofailures <- remove_trim_failures(dpa.trimmed)
 remove_trim_failures  <- function(dpa.trimmed) {
@@ -49,7 +49,7 @@ remove_trim_failures  <- function(dpa.trimmed) {
 #' objects from a trimmed dpa list. Trimmed dpa list should be a
 #' result of either calling dtriml on a list of dpa objects or calling
 #' dtriml_s to remove the starting portions of the measurement. Both
-#' functions should be called with the option "return.fail = FALSE",
+#' functions should be called with the option "rreport = FALSE",
 #' which embeds a trimming report when returning the list of trimmed
 #' dpa objects.
 #'
@@ -60,10 +60,10 @@ remove_trim_failures  <- function(dpa.trimmed) {
 #' @seealso dtriml, dtriml_s
 #' @export
 #' @examples
-#' ## load a single file
-#' dpa.list <- load_dpa(folder = "data")
+#' ## load several dpa files
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
-#' dpa.trimmed <- dtriml(dpa.list, "return.fail = FALSE")
+#' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 #' ## separate trimming failures
 #' dpa.nofailures <- separate_trim_failures(dpa.trimmed)
 separate_trim_failures  <- function(dpa.trimmed) {
@@ -107,33 +107,35 @@ separate_trim_failures  <- function(dpa.trimmed) {
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa <- load_dpa("data/test.dpa")
+#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## get a starting point on the plot
+#' \dontrun{
 #' manual_trim_detect(dpa)
+#' }
 manual_trim_detect <- function(failure, label = "start") {
-  plot(failure$data$amplitude, type = "l",
+  graphics::plot(failure$data$amplitude, type = "l",
        xlab = paste0("Drilling depth"),
        ylab= paste0("Resistograph density"),
        main = paste0("Resistograph data: file ",failure$footer$ID," ",label))
   message("\n[click on graph then pick a vertical line, then confirm]\n")
-  click.loc <- locator(1)
-  abline(v=click.loc$x, col="red",lwd=3, lty=2)
+  click.loc <- graphics::locator(1)
+  graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
   keyPressed = readkeygraph(paste0("confirm selection, y or n?"))
   if (keyPressed == "y"){
     cutoff <- click.loc$x
-    dev.off()
+    grDevices::dev.off()
   } else {
-    dev.off()
-    plot(failure$data$amplitude, type = "l",
+    grDevices::dev.off()
+    graphics::plot(failure$data$amplitude, type = "l",
          xlab = paste0("Drilling depth"),
          ylab= paste0("Resistograph density"),
          main = paste0("Resistograph data: file ",failure$footer$ID))
-    click.loc <- locator(1)
-    abline(v=click.loc$x, col="red",lwd=3, lty=2)
+    click.loc <- graphics::locator(1)
+    graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
     keyPressed = readkeygraph(paste0("confirm selection, y or n?"))
     if (keyPressed == "y"){
       cutoff <- click.loc$x
-      dev.off()
+      grDevices::dev.off()
     } else {
       cutoff  <- FALSE
     }
@@ -171,11 +173,11 @@ manual_trim_detect <- function(failure, label = "start") {
 #' @export
 #' @examples
 #' ## load all dpa files
-#' dpa <- load_dpa(folder = "data")
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the list
-#' dpa.trimmed <- dtrim(dpa, "return.fail = FALSE")
+#' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 #' ## manually correct the failures
-#' dpa.corrected <- correct_failures(dpa.trimmed)
+#' \dontrun{dpa.corrected <- correct_failures(dpa.trimmed)}
 correct_failures  <- function(dpa.trimmed) {
   failures  <-  separate_trim_failures(dpa.trimmed)
   message("\nfound:\n",
@@ -189,7 +191,7 @@ correct_failures  <- function(dpa.trimmed) {
     for (i in 1:length(failures$failures.start)){
       start <- unlist(cutoffs.start[names(failures$failures.start[i])],use.names = F)
       end  <- nrow(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data)
-      dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data  <- tail(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data, -(start - 1))
+      dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data  <- utils::tail(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data, -(start - 1))
     }
   }
   message("\nstart corrections done, starting end corrections\n")
@@ -205,7 +207,7 @@ correct_failures  <- function(dpa.trimmed) {
       diff  <- end.old - end.new
       ## remove the last X values
       dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data   <-
-        head(dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data, -diff)
+        utils::head(dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data, -diff)
     }
   }
   message("\nall corrections done\n")

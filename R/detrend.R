@@ -19,16 +19,20 @@
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa <- load_dpa("data/test.dpa")
+#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' ## load several dpa objects
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurement
 #' dpa.trimmed <- dtrim(dpa)
 #' ## detrend the measurement
-#' dpa.detrended <- ddtrend(dpa, type = "linear")
+#' dpa.detrended <- ddetrend(dpa, type = "linear")
 #' ## detrend a list without displaying progress
 #' dpa.list.detrended <- lapply(dpa.list, ddetrend, type = "linear")
 #' ## detrend a list with displaying progress and run in parallel to
 #' ## speed things up - requires pbapply library
-#' dpa.list.detrended <- pblapply(dpa.list, ddetrend, type = "linear", cl = 7)
+#' \dontrun{
+#' dpa.list.detrended <- pbapply::pblapply(dpa.list, ddetrend, type = "linear", cl = 7)
+#' }
 ddetrend <- function(dpa, type = ""){
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
   df <-  dpa$data

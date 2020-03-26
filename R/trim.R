@@ -27,12 +27,12 @@
 #' @seealso dtriml, dtrim_s, dtriml_s
 #' @export
 #' @examples
-#' ## load a single file
-#' dpa.list <- load_dpa(file = "test.dpa")
+#' ## load a single dpa file
+#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## trim the measurements
-#' dpa.trimmed <- dtrim(dpa.list)
+#' dpa.trimmed <- dtrim(dpa)
 #' ## plot trimming
-#' dtrim(dpa.list, return.plot = TRUE)
+#' dtrim(dpa, return.plot = TRUE)
 dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
   if (!inherits(dpa,"dpa"))  {stop("not a dpa object")}   # check if dpa object
   if (silent == TRUE) {
@@ -43,14 +43,14 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
     end <-  dpa_detect_end(dpa)
   }
   if (return.plot == TRUE) {
-    par(mfrow=c(1,1))
-    plot(dpa$data$amplitude, type = "l",
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
+    graphics::par(mfrow=c(1,1))
+    graphics::plot(dpa$data$amplitude, type = "l",
+                   xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab = paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
          main = paste0("Resistograph data: file ",dpa$footer$ID))
-    abline(v=start, col="red", lwd=3, lty=2)
-    abline(v=end, col="red", lwd=3, lty=2)
-    p <- recordPlot()
+    graphics::abline(v=start, col="red", lwd=3, lty=2)
+    graphics::abline(v=end, col="red", lwd=3, lty=2)
+    p <- grDevices::recordPlot()
     return(p)
   } else {
     if (return.fail == FALSE){
@@ -92,8 +92,8 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
-#' ## load a single file
-#' dpa.list <- load_dpa(folder = "data")
+#' ## load several dpa files
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' dpa.trimmed <- dtriml(dpa.list)
 dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
@@ -147,11 +147,11 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa.list <- load_dpa(file = "test.dpa")
-#' ## trim the measurements
-#' dpa.trimmed <- dtrim(dpa.list)
+#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' ## trim the measurement at start
+#' dpa.trimmed <- dtrim_s(dpa)
 #' ## plot trimming
-#' dtrim(dpa.list, return.plot = TRUE)
+#' dtrim_s(dpa, return.plot = TRUE)
 dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
   ## check if dpa object
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
@@ -163,13 +163,13 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
   }
 
   if (return.plot == TRUE) {
-    par(mfrow=c(1,1))
-    plot(dpa$data$amplitude, type = "l",
-         xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
+    graphics::par(mfrow=c(1,1))
+    graphics::plot(dpa$data$amplitude, type = "l",
+                   xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab = paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
          main = paste0("Resistograph data: file ",dpa$footer$ID))
-    abline(v=start, col="red", lwd=3, lty=2)
-    p <- recordPlot()
+    graphics::abline(v=start, col="red", lwd=3, lty=2)
+    p <- grDevices::recordPlot()
     return(p)
   } else {
     if (return.fail == FALSE){
@@ -206,10 +206,10 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
-#' ## load a single file
-#' dpa.list <- load_dpa(folder = "data")
+#' ## load several dpa files
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
-#' dpa.trimmed <- dtriml(dpa.list)
+#' dpa.trimmed <- dtrim_sl(dpa.list)
 dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   message("started start trimming ", length(dpa.list), " files")
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)

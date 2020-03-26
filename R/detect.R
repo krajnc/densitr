@@ -28,7 +28,7 @@
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa <- load_dpa("data/test.dpa")
+#' dpa <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## get starting point
 #' start <- dpa_detect_start(dpa, return.plot = TRUE)
 #' ## plot the start detection
@@ -98,7 +98,7 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     graphics::abline(h=limit, col="green")
     graphics::abline(h=-limit, col="green")
     graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
-    p <- recordPlot()
+    p <- grDevices::recordPlot()
     return(p)
   } else {
     return(cutoff) # add 100 to account for rolling mean right centered
@@ -129,8 +129,8 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa <- load_dpa("data/test.dpa")
-#' ## get ending point
+#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' #' ## get ending point
 #' start <- dpa_detect_end(dpa, return.plot = TRUE)
 #' ## plot the end detection
 #' dpa_detect_end(dpa, return.plot = TRUE)
@@ -195,7 +195,7 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     graphics::abline(h=limit, col="green")
     graphics::abline(h=-limit, col="green")
     graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
-    p <- recordPlot()
+    p <- grDevices::recordPlot()
     return(p)
   } else {
     ## if end detected, add 100 to account for moving averages

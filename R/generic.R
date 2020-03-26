@@ -30,14 +30,14 @@ print.dpa <- function(x, ...) {
              x$footer$xUnit, "\n",
              "Trimmed: ", is.trimmed(x), "\n\n",
              "Data preview: \n"))
-  print.data.frame(head(x$data))
+  print.data.frame(utils::head(x$data))
   cat("...\n")
 }
 
 plot.dpa <- function(x, ...) {
   if (!inherits(x,"dpa")) {stop("not a dpa object")}
-  plot(x=x$data$position, y=x$data$amplitude, type = "l",
-       xlab = paste0("Drilling depth [", x$footer$xUnit, "]"),
-       ylab= paste0("Resistograph density [", x$footer$yUnit, "]"),
-       main = paste0("Density profile ID: ", x$footer$ID))
+  graphics::plot(x=x$data$position, y=x$data$amplitude, type = "l",
+                 xlab = paste0("Drilling depth [", x$footer$xUnit, "]"),
+                 ylab= paste0("Resistograph density [", x$footer$yUnit, "]"),
+                 main = paste0("Density profile ID: ", x$footer$ID))
 }

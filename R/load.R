@@ -8,7 +8,9 @@
 #'   many directories or in none.
 #' @return An extracted filename, a character string.
 #' @examples
+#' \dontrun{
 #' extract_dpa_name("data/0005/00/00050060.dpa")
+#' }
 #' @references
 #' https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
 extract_dpa_name  <- function(string){
@@ -16,7 +18,7 @@ extract_dpa_name  <- function(string){
     return(sapply(
       regmatches(
         string,
-        regexec("[\\w-]+?(?=\\.)",
+        regexec("[\\w-]+?(?=\\.dpa)",
                 string, perl = TRUE)),
       "[", 1))
   } else {
@@ -25,7 +27,7 @@ extract_dpa_name  <- function(string){
     return(sapply(
       regmatches(
         string,
-        regexec("[\\w-]+?(?=\\.)",
+        regexec("[\\w-]+?(?=\\.dpa)",
                 string, perl = TRUE)),
       "[", 1))
   }
@@ -44,20 +46,23 @@ extract_dpa_name  <- function(string){
 #' @return A \code{dpa} object.
 #' @seealso read_dpa.
 #' @examples
-#' read_dpa("data/test.dpa")
+#' \dontrun{
+#' read_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' }
 read_dpa <- function(file){
   ## check if the file ends in *.dpa
   if (!grepl("\\.dpa$", file)) {stop("not a *.dpa file")}
+  name <- footer <- value <- NULL
   dpa.read  <- readr::read_lines(file,skip=3)
   dpa.data <- dpa.read  %>%
-    head(n = -14) %>%
+    utils::head(n = -14) %>%
     dplyr::tibble(amplitude=.) %>%
     dplyr::mutate_at("amplitude", as.numeric) %>%
     tibble::rowid_to_column(var = "position") %>%
     dplyr::mutate(ID=extract_dpa_name(file)) %>%
     as.data.frame()
   dpa.footer <-  dpa.read %>%
-    tail(n=13) %>%
+    utils::tail(n=13) %>%
     paste(collapse = "\n")  %>%
     readr::read_csv(.,col_names = c("footer")) %>%
     tidyr::separate(footer, into = c("name","value"),sep="=") %>%
@@ -93,10 +98,10 @@ read_dpa <- function(file){
 #' @export
 #' @examples
 #' ## load a single file
-#' load_dpa("data/test.dpa")
-#' dpa <- load_dpa("data/0005/00/00050060.dpa")
+#' load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dpa <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = "data")
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
                       recursive = TRUE, name = "file") {
   if (is.null(dpa.file)) {
@@ -125,7 +130,7 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
   } else {
     ## read a single file
     ## check if file exists and is not a directory
-    if (file_test("-f", dpa.file)) {
+    if (utils::file_test("-f", dpa.file)) {
       dpa  <- read_dpa(dpa.file)
       # class(dpa) <- 'dpa'
       return(dpa)
@@ -151,7 +156,7 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
 #' @export
 #' @examples
 #' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = "data")
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' combine_footers(dpa.list)
 combine_footers  <- function(dpa.list){
    info  <- lapply(dpa.list,function(x) x$footer) %>%
@@ -174,7 +179,7 @@ combine_footers  <- function(dpa.list){
 #' @export
 #' @examples
 #' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = "data")
+#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' combine_data(dpa.list)
 combine_data  <- function(dpa.list){
   data  <- lapply(dpa.list,function(x) x$data)

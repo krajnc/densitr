@@ -15,12 +15,14 @@
 #' @seealso dtriml, dtriml_s
 #' @export
 #' @examples
+#' \dontrun{
 #' ## load several dpa files
 #' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 #' ## remove trimming failures
 #' dpa.nofailures <- remove_trim_failures(dpa.trimmed)
+#' }
 remove_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
@@ -60,12 +62,14 @@ remove_trim_failures  <- function(dpa.trimmed) {
 #' @seealso dtriml, dtriml_s
 #' @export
 #' @examples
+#' \dontrun{
 #' ## load several dpa files
 #' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 #' ## separate trimming failures
 #' dpa.nofailures <- separate_trim_failures(dpa.trimmed)
+#' }
 separate_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
@@ -120,7 +124,7 @@ manual_trim_detect <- function(failure, label = "start") {
   message("\n[click on graph then pick a vertical line, then confirm]\n")
   click.loc <- graphics::locator(1)
   graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
-  keyPressed = readkeygraph(paste0("confirm selection, y or n?"))
+  keyPressed  <- readkeygraph(paste0("confirm selection, y or n?"))
   if (keyPressed == "y"){
     cutoff <- click.loc$x
     grDevices::dev.off()
@@ -132,7 +136,7 @@ manual_trim_detect <- function(failure, label = "start") {
          main = paste0("Resistograph data: file ",failure$footer$ID))
     click.loc <- graphics::locator(1)
     graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
-    keyPressed = readkeygraph(paste0("confirm selection, y or n?"))
+    keyPressed <- readkeygraph(paste0("confirm selection, y or n?"))
     if (keyPressed == "y"){
       cutoff <- click.loc$x
       grDevices::dev.off()
@@ -173,11 +177,13 @@ manual_trim_detect <- function(failure, label = "start") {
 #' @export
 #' @examples
 #' ## load all dpa files
+#' \dontrun{
 #' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the list
 #' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 #' ## manually correct the failures
-#' \dontrun{dpa.corrected <- correct_failures(dpa.trimmed)}
+#' dpa.corrected <- correct_failures(dpa.trimmed)
+#' }
 correct_failures  <- function(dpa.trimmed) {
   failures  <-  separate_trim_failures(dpa.trimmed)
   message("\nfound:\n",

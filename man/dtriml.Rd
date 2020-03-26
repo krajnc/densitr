@@ -26,10 +26,12 @@ not trimmed. Can be run in parallel on multiple cores, this speeds
 up the trimming process significantly.
 }
 \examples{
+\dontrun{
 ## load several dpa files
 dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
 dpa.trimmed <- dtriml(dpa.list)
+}
 }
 \seealso{
 dtrim, dtrim_s, dtriml_s,

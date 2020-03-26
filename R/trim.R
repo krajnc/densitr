@@ -27,12 +27,14 @@
 #' @seealso dtriml, dtrim_s, dtriml_s
 #' @export
 #' @examples
+#' \dontrun{
 #' ## load a single dpa file
 #' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## trim the measurements
 #' dpa.trimmed <- dtrim(dpa)
 #' ## plot trimming
 #' dtrim(dpa, return.plot = TRUE)
+#' }
 dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
   if (!inherits(dpa,"dpa"))  {stop("not a dpa object")}   # check if dpa object
   if (silent == TRUE) {
@@ -92,10 +94,12 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
+#'\dontrun{
 #' ## load several dpa files
 #' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' dpa.trimmed <- dtriml(dpa.list)
+#' }
 dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
   message("started trimming ", length(dpa.list), " files")
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
@@ -146,12 +150,14 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
 #' @seealso dtrim, dtriml, dtrim_s
 #' @export
 #' @examples
+#' \dontrun{
 #' ## load a single file
 #' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## trim the measurement at start
 #' dpa.trimmed <- dtrim_s(dpa)
 #' ## plot trimming
 #' dtrim_s(dpa, return.plot = TRUE)
+#' }
 dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
   ## check if dpa object
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
@@ -200,16 +206,20 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' @param rreport Return an embedded report on automatic trim success,
 #'   mandatory when using \code{correct_failures} to manually pick
 #'   starting/ending.
-#' @param cl Number of cores to run the trimming in parallel, passed through to \code{pbapply}.
-#'   starting/ending.
-#' @return A list of trimmed dpa objects. When rreport = TRUE, it return a two-item list of (i) trimmed dpa objects and (ii) trimming report data frame.
+#' @param cl Number of cores to run the trimming in parallel, passed
+#'   through to \code{pbapply}. starting/ending.
+#' @return A list of trimmed dpa objects. When rreport = TRUE, it
+#'   return a two-item list of (i) trimmed dpa objects and (ii)
+#'   trimming report data frame.
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
+#' \dontrun{
 #' ## load several dpa files
 #' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' dpa.trimmed <- dtrim_sl(dpa.list)
+#' }
 dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   message("started start trimming ", length(dpa.list), " files")
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)

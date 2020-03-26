@@ -24,12 +24,14 @@ called with the option "return.fail = FALSE", which embeds a
 trimming report when returning the list of trimmed dpa objects.
 }
 \examples{
+\dontrun{
 ## load several dpa files
 dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
 dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
 ## remove trimming failures
 dpa.nofailures <- remove_trim_failures(dpa.trimmed)
+}
 }
 \seealso{
 dtriml, dtriml_s

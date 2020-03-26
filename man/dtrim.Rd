@@ -39,12 +39,15 @@ dpa object is returned with no changes. When running on a list of
 dpa objects, use \code{dtriml}.
 }
 \examples{
+\dontrun{
 ## load a single dpa file
 dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 ## trim the measurements
 dpa.trimmed <- dtrim(dpa)
 ## plot trimming
 dtrim(dpa, return.plot = TRUE)
+}
+
 }
 \seealso{
 dtriml, dtrim_s, dtriml_s

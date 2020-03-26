@@ -39,7 +39,7 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   ## get a rolling mean of diff lags
   fit <- stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1)
   fitted <- stats::predict(fit)
-  data.in <- zoo::rollmeanr(diff(fitted),100)
+  data.in <- baseR.rollmean(diff(fitted),100) #defined in others.R
 
   ## set limits and find segments
   limit <- abs(mean(data.in) + (cutoff.sd * stats::sd(data.in)))
@@ -139,7 +139,7 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   ## get a rolling mean of diff lags
   fit <- stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1)
   fitted <- stats::predict(fit)
-  data.in <- zoo::rollmeanr(diff(fitted),100)
+  data.in <- baseR.rollmean(diff(fitted),100) #defined in others.R
 
   ## get limits and get segments
   limit <- mean(data.in) - (cutoff.sd * stats::sd(data.in))

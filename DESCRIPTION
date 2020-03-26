@@ -1,5 +1,5 @@
 Package: densiter
-Title: Tools for analysing resistance drilling density profiles
+Title: Tools for Analysing Resistance Drilling Density Profiles
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Luka",
@@ -14,12 +14,7 @@ LazyData: true
 Imports:
         stats,
         utils,
-	dplyr,
         zoo,
-        magrittr,
-        tibble,
-        readr,
-        tidyr,
         pbapply,
         changepoint
 Suggests:

@@ -11,10 +11,11 @@ keydown <- function(key) {
 
 readkeygraph <- function(prompt)
 {
+  keyPressed  <- NULL
   grDevices::getGraphicsEvent(prompt = prompt,
                               onMouseDown = NULL, onMouseMove = NULL,
-                   onMouseUp = NULL, onKeybd = keydown,
-                   consolePrompt = "[click on graph then follow top prompt to continue]")
+                              onMouseUp = NULL, onKeybd = keydown,
+                              consolePrompt = "[click on graph then follow top prompt to continue]")
   Sys.sleep(0.01)
   return(keyPressed)
 }
@@ -138,6 +139,6 @@ plot_failures  <- function(dpa.trimmed){
                ylab= paste0("Resistograph density"),
                main = paste0("Resistograph data, trimming failure ",dpa$ID[1])))
 
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.trimmed)))
   }
 }

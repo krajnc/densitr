@@ -35,18 +35,14 @@
 #' }
 ddetrend <- function(dpa, type = ""){
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
-  df <-  dpa$data
   if (type == "linear") {
-    trend <- stats::lm(amplitude ~ position, data = df)
-    fit <- stats::predict(trend, newdata = df)
-    new  <- df %>%  dplyr::mutate(amplitude = amplitude - fit + fit[1])
-    dpa$data <- new
+    trend <- stats::lm(amplitude ~ position, data = dpa$data)
+    fit <- stats::predict(trend, newdata = dpa$data)
+    dpa$data$amplitude  <- dpa$data$amplitude - fit + fit[1]
   } else if (type == "gam") {
     if (requireNamespace("mgcv", quietly = TRUE)) {
-      m <- mgcv::gam(amplitude~s(position), data = df, method = "REML")
-      new  <- df %>%
-        dplyr::mutate(amplitude =  amplitude - m$fitted.values + m$fitted.values[1])
-      dpa$data <- new
+      m <- mgcv::gam(amplitude~s(position), data = dpa$data, method = "REML")
+      dpa$data$amplitude  <- dpa$data$amplitude - m$fitted.values + m$fitted.values[1]
     } else {stop("Package \"mgcv\" needed for GAM detrending. Please install it.")}
   } else {stop("Please specify detrending function.")}
   return(dpa)

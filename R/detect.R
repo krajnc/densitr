@@ -37,11 +37,10 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   ## check if dpa object
   if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
   ## get a rolling mean of diff lags
-  data.in <-
-    stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
-    stats::predict(.) %>%
-    base::diff(.) %>%
-    zoo::rollmeanr(.,100)
+  fit <- stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1)
+  fitted <- stats::predict(fit)
+  data.in <- zoo::rollmeanr(diff(fitted),100)
+
   ## set limits and find segments
   limit <- abs(mean(data.in) + (cutoff.sd * stats::sd(data.in)))
   segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
@@ -138,11 +137,10 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
   ## check if dpa object
   if (!inherits(dpa,"dpa"))  {stop("not a dpa object")}
   ## get a rolling mean of diff lags
-  data.in <-
-    stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1) %>%
-    stats::predict(.) %>%
-    base::diff(.) %>%
-    zoo::rollmeanr(.,100)
+  fit <- stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1)
+  fitted <- stats::predict(fit)
+  data.in <- zoo::rollmeanr(diff(fitted),100)
+
   ## get limits and get segments
   limit <- mean(data.in) - (cutoff.sd * stats::sd(data.in))
   segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,

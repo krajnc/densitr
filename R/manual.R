@@ -27,18 +27,12 @@ remove_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
   }
-  failures.start  <- dpa.trimmed$report %>%
-    dplyr::filter(detection.start == "failed") %>%
-    dplyr::select(ID) %>%
-    unlist(., use.names=FALSE)
+  failures.start <- dpa.trimmed$report[dpa.trimmed$report$detection.start %in% "failed",]$ID
   dpas <- dpa.trimmed$dpa
   dpa.subsetted <- dpas[!(names(dpas) %in% failures.start)]
   if("detection.end" %in% colnames(dpa.trimmed$report))
   {
-    failures.end  <- dpa.trimmed$report %>%
-      dplyr::filter(detection.end == "failed") %>%
-      dplyr::select(ID) %>%
-      unlist(., use.names=FALSE)
+    failures.end <- dpa.trimmed$report[dpa.trimmed$report$detection.end %in% "failed",]$ID
     dpa.subsetted <- dpas[!(names(dpas) %in% failures.end)]
   }
   return(dpa.subsetted)
@@ -74,17 +68,11 @@ separate_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
   }
-  failures.start  <- dpa.trimmed$report %>%
-    dplyr::filter(detection.start == "failed") %>%
-    dplyr::select(ID) %>%
-    unlist(., use.names=FALSE)
+  failures.start <- dpa.trimmed$report[dpa.trimmed$report$detection.start %in% "failed",]$ID
   dpas <- dpa.trimmed$dpa
   dpa.start <- dpas[(names(dpas) %in% failures.start)]
   if("detection.end" %in% colnames(dpa.trimmed$report)) {
-    failures.end  <- dpa.trimmed$report %>%
-      dplyr::filter(detection.end == "failed") %>%
-      dplyr::select(ID) %>%
-      unlist(., use.names=FALSE)
+    failures.end <- dpa.trimmed$report[dpa.trimmed$report$detection.end %in% "failed",]$ID
     dpa.end <- dpas[(names(dpas) %in% failures.end)]
     return(list("failures.start" = dpa.start, "failures.end" = dpa.end))
   } else {

@@ -47,7 +47,6 @@ dpa.trimmed <- dtrim(dpa)
 ## plot trimming
 dtrim(dpa, return.plot = TRUE)
 }
-
 }
 \seealso{
 dtriml, dtrim_s, dtriml_s

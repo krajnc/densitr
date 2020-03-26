@@ -32,13 +32,11 @@ returning the list of trimmed dpa objects.
 ## load all dpa files
 \dontrun{
 dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
-}
 ## trim the list
-\dontrun{
 dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
-}
 ## manually correct the failures
-\dontrun{dpa.corrected <- correct_failures(dpa.trimmed)}
+dpa.corrected <- correct_failures(dpa.trimmed)
+}
 }
 \seealso{
 dtrim, dtriml, manual_trim_detect

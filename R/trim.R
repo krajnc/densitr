@@ -105,9 +105,13 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-(2:3)]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
-  report  <-
-    lapply(dpa.trimmed, function(x) x[-(1)]) %>%
-    dplyr::bind_rows(., .id="ID")
+  ## there is a reason why people use dplyr bind_rows
+  ## report1  <-  lapply(dpa.trimmed, function(x) x[-(1)]) %>%
+  ##   dplyr::bind_rows(., .id="ID")
+  a  <- lapply(dpa.trimmed, function(x) x[-(1)])
+  report  <- do.call("rbind", lapply(a, as.data.frame))
+  report$ID  <- rownames(report)
+  rownames(report) <- NULL
   message("########################################\ntrimming report: \nanalysed ",
           length(dpa.list),
           " file(s) \nstart detection failed in: ",
@@ -225,9 +229,13 @@ dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-2]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
-  report  <-
-    lapply(dpa.trimmed, function(x) x[-(1)]) %>%
-    dplyr::bind_rows(., .id="ID")
+  ## there is a reason why people use dplyr bind_rows
+  ## report1  <-  lapply(dpa.trimmed, function(x) x[-(1)]) %>%
+  ##   dplyr::bind_rows(., .id="IDa  <- lapply(dpa.trimmed, function(x) x[-(1)])
+  a  <- lapply(dpa.trimmed, function(x) x[-(1)])
+  report  <- do.call("rbind", lapply(a, as.data.frame))
+  report$ID  <- rownames(report)
+  rownames(report) <- NULL
   message("########################################\ntrimming report: \nanalysed ",
           length(dpa.list),
           " files \nstart detection failed in: ",

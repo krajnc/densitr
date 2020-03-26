@@ -52,24 +52,21 @@ extract_dpa_name  <- function(string){
 read_dpa <- function(file){
   ## check if the file ends in *.dpa
   if (!grepl("\\.dpa$", file)) {stop("not a *.dpa file")}
-  name <- footer <- value <- NULL
-  dpa.read  <- readr::read_lines(file,skip=3)
-  dpa.data <- dpa.read  %>%
-    utils::head(n = -14) %>%
-    dplyr::tibble(amplitude=.) %>%
-    dplyr::mutate_at("amplitude", as.numeric) %>%
-    tibble::rowid_to_column(var = "position") %>%
-    dplyr::mutate(ID=extract_dpa_name(file)) %>%
-    as.data.frame()
-  dpa.footer <-  dpa.read %>%
-    utils::tail(n=13) %>%
-    paste(collapse = "\n")  %>%
-    readr::read_csv(.,col_names = c("footer")) %>%
-    tidyr::separate(footer, into = c("name","value"),sep="=") %>%
-    dplyr::mutate(ID=extract_dpa_name(file)) %>%
-    tidyr::pivot_wider(names_from = name, values_from = value) %>%
-    as.data.frame()
-  d  <- list("data" = dpa.data, "footer" = dpa.footer)
+  dpa.read  <- readLines(file, warn=FALSE)
+  data  <- data.frame("amplitude" =  utils::tail(utils::head(dpa.read,n = -14), -3))
+  data$position <- 1:nrow(data)
+  data$amplitude  <- as.numeric(as.character(data$amplitude))
+  data$ID <- extract_dpa_name(file)
+  footer  <-  paste(utils::tail(dpa.read, n=13), collapse = "\n")
+  footer  <- utils::read.csv(text = footer, check.names=FALSE, header = F, col.names = "footer")
+  footer$name <- sapply(strsplit(as.character(footer$footer), "="), "[", 1)
+  footer$value <- sapply(strsplit(as.character(footer$footer), "="), "[", 2)
+  footer$footer <- NULL
+  footer$ID <- extract_dpa_name(file)
+  footer <- stats::reshape(footer, idvar = "ID", timevar = "name", direction = "wide")
+  names(footer) <- gsub("(value\\.y\\.|value\\.)", "", names(footer))
+  attributes(footer)$reshapeWide  <- NULL # strip reshaping attributes
+  d  <- list("data" = data, "footer" = footer)
   class(d) <- 'dpa'
   return(d)
 }
@@ -159,10 +156,10 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
 #' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 #' combine_footers(dpa.list)
 combine_footers  <- function(dpa.list){
-   info  <- lapply(dpa.list,function(x) x$footer) %>%
-     dplyr::bind_rows()
-   return(info)
-}
+  info <- do.call("rbind", lapply(dpa.list,function(x) x$footer))
+  rownames(info) <- NULL
+  return(info)
+ }
 
 #' Combines density measurement from a dpa object list into a single
 #' data frame

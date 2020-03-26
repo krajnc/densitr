@@ -13,11 +13,13 @@ dtrim_sl(dpa.list, rreport = FALSE, cl = 1)
 mandatory when using \code{correct_failures} to manually pick
 starting/ending.}
 
-\item{cl}{Number of cores to run the trimming in parallel, passed through to \code{pbapply}.
-starting/ending.}
+\item{cl}{Number of cores to run the trimming in parallel, passed
+through to \code{pbapply}. starting/ending.}
 }
 \value{
-A list of trimmed dpa objects. When rreport = TRUE, it return a two-item list of (i) trimmed dpa objects and (ii) trimming report data frame.
+A list of trimmed dpa objects. When rreport = TRUE, it
+  return a two-item list of (i) trimmed dpa objects and (ii)
+  trimming report data frame.
 }
 \description{
 Calls \code{dtrim} on a list of dpa objects and returns a list of

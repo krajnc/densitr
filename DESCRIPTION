@@ -17,5 +17,8 @@ Imports:
         pbapply,
         changepoint
 Suggests:
-        mgcv
+    mgcv,
+    knitr,
+    rmarkdown
 RoxygenNote: 7.1.0
+VignetteBuilder: knitr

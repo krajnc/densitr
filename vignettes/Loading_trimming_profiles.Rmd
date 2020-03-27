@@ -1,0 +1,20 @@
+---
+title: "Loading and automatic trimming of density profiles"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Loading_trimming_profiles}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(densiter)
+```
+test text

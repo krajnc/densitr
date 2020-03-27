@@ -106,13 +106,13 @@ separate_trim_failures  <- function(dpa.trimmed) {
 #' }
 manual_trim_detect <- function(failure, label = "start") {
   graphics::plot(failure$data$amplitude, type = "l",
-       xlab = paste0("Drilling depth"),
-       ylab= paste0("Resistograph density"),
-       main = paste0("Resistograph data: file ",failure$footer$ID," ",label))
+                 xlab = paste0("Drilling depth"),
+                 ylab= paste0("Resistograph density"),
+                 main = paste0("Resistograph data: file ",failure$footer$ID," ",label))
   message("\n[click on graph then pick a vertical line, then confirm]\n")
   click.loc <- graphics::locator(1)
   graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
-  keyPressed  <- readkeygraph(paste0("confirm selection, y or n?"))
+  readkeygraph(paste0("confirm selection, y or n?"))
   if (keyPressed == "y"){
     cutoff <- click.loc$x
     grDevices::dev.off()
@@ -124,14 +124,14 @@ manual_trim_detect <- function(failure, label = "start") {
          main = paste0("Resistograph data: file ",failure$footer$ID))
     click.loc <- graphics::locator(1)
     graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
-    keyPressed <- readkeygraph(paste0("confirm selection, y or n?"))
+    readkeygraph(paste0("confirm selection, y or n?"))
     if (keyPressed == "y"){
       cutoff <- click.loc$x
       grDevices::dev.off()
     } else {
       cutoff  <- FALSE
+      grDevices::dev.off()
     }
-    cutoff  <- FALSE
   }
   if (is.numeric(cutoff)) {
     return(round(cutoff,0))

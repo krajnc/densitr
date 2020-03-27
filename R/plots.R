@@ -1,17 +1,19 @@
+## declare keyPressed for graph confirmation
+utils::globalVariables(c("keyPressed"))
+
 keydown <- function(key) {
   if (key == "q") {
     grDevices::dev.off()
-    #break
     stop()
   } else {
-    keyPressed  <<- key
-    ## print("11111111111")
+    ## keyPressed  <<- key
+    ##assign("keyPressed", key, inherits = TRUE, envir = .GlobalEnv)
+    assign("keyPressed", key, inherits = TRUE)
   }
 }
 
 readkeygraph <- function(prompt)
 {
-  keyPressed  <- NULL
   grDevices::getGraphicsEvent(prompt = prompt,
                               onMouseDown = NULL, onMouseMove = NULL,
                               onMouseUp = NULL, onKeybd = keydown,

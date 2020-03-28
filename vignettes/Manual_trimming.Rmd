@@ -1,0 +1,60 @@
+---
+title: "Manual trimming of density profiles"
+author: "Luka Krajnc"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Manual_trimming}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Manual trimming and detection failure correction
+
+Automatic trimming sometimes fails to detect the starting or ending point within the density profile. Failing to detect ending point is usually a consequence of the profile being bark-to-pith instead of bark-to-bark. In those cases (an others) you can trim the measurement by hand.
+
+Load the library, a few density profiles and try to trim them automatically:
+```{r setup}
+library(densiter)
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+dpa.trimmed  <- dtriml(dpa.list)
+```
+
+As you can see from the output above, the automatic trim detection of endings failed in 6 files, while no failures occurred in start detection.
+
+In such cases, inspect the failed measurements by hand using `dtrim`, or by calling either `dpa_detect_start` or `dpa_detect_end` and using the argument `return.plot = TRUE`. You can also just plot it using `plot`.
+
+```{r, fig.width=15, fig.height=5}
+dtrim(dpa.list[["00050045"]], return.plot = TRUE)
+```
+
+As seen from the plot, end detection failed due to the large increase in values towards the ending part of the profile.
+
+In such cases or where you want to make a manual correction, you can use `manual_trim_detect` on an individual profile. This will plot that profile and you can click on the plot to select the desired position. After selecting the point, your selection will be drawn on the plot and you will be asked to confirm your selection using either **y** or **n** keys. Pressing **y** will confirm your selection and return the horizontal position, which you can then use to subset that particular profile. Pressing **n** will give you one more chance to pick it the desired point and then confirm it. After two loops, the function will return `FALSE` as a result, as manual detection will be considered failed. The function will also fail if your graphics device is something other than X11, windows or quartz.
+```{r, eval = FALSE}
+manual_trim_detect(dpa.list[["00050045"]])
+```
+
+It is also possible to correct a whole set of trim failures sequentially by calling `correct_failures` on a list of trimmed profiles. In order for this to work, you have to call the `dtriml` or `dtriml_s` with the argument `rreport = TRUE`, which returns a list containing all trimmed profiles and a data frame with the trimming report. `correct_failures` will then separate the trim failures and run `manual_trim_detect` on all failures sequentially, asking you to pick a start or end for each failed profile. It will automatically subset the failed profiles and return a complete list of trimmed profiles, both those trimmed automatically and those trimmed manually.
+
+```{r, eval = FALSE}
+dpa.trimmed  <- dtriml(dpa.list, rreport = TRUE)
+dpa.new <- correct_failures(dpa.trimmed)
+```
+
+You can also just remove the trim failures from the list of trimmed profiles by calling `remove_trim_failures` on that list, it will return only those where there were no failures. Failures can also be separated out by calling `separate_trim_failures` on a list of automatically trimmed profiles, which return two lists, one containing start failures and one containing end failures.
+```{r}
+dpa.trimmed  <- dtriml(dpa.list, rreport = TRUE)
+dpa.successful <- remove_trim_failures(dpa.trimmed)
+length(dpa.successful)
+dpa.failed <- separate_trim_failures(dpa.trimmed)
+length(dpa.failed$failures.end)
+```
+

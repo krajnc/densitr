@@ -1,5 +1,7 @@
 ---
 title: "Loading and automatic trimming of density profiles"
+author: "Luka Krajnc"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Loading_trimming_profiles}
@@ -12,20 +14,20 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(pbapply)
-pbo = pboptions(type="txt")
 ```
 
 # Loading and automatic trimming of density profiles
 ## Introduction
+The use of resistance drilling for density assessment is becoming more and more used across different disciplines. This R package provides a way to do the density analysis in R by loading the measurements, trimming them automatically or by hand. It is also possible to remove trends from profiles and measure ring widths. Please note that this package was written with a focus on forestry, where density profiles are usually obtained on living standing trees. Other uses are also possible, wherever you are using density profiles.
+
+Let's load the library to see what it can do:
 ```{r setup}
 library(densiter)
 ```
 
 
-
 ## Loading resistance drilling density profiles
-In the current version of **densiter**, 0.0.1, only files (*.dpa) created by Rinntech Resistograph devices are supported. Other file types (for example, those produced by the IML Resi devices) might be added later on.
+In the current version of **densiter**, 0.0.1, only files (*.dpa) created by Rinntech Resistograph devices are supported. Other file types are currently not supported (for example, those produced by the IML Resi devices), they might be added later on. Contributions and pull requests are always welcome.
 
 Never try to load *.dpa files directly from the Resistograph device into R, always copy them first onto your computer and load them from there. Try at your own risk. This vignette uses some example density profiles recorded using an Rinntech Resistograph SC650, which are included with this package. There is a total of 15 profiles, representing various tree species. Some are drilled bark-to-bark, while others were drilled bark-to-pith because of their dimensions.
 
@@ -35,7 +37,7 @@ dpa <- load_dpa(dpa.file = system.file("extdata", "00010001.dpa", package = "den
 dpa
 ```
 
-The function returns an S3 object with the class of **dpa**, which is essentially a list with two items. In the first, data you will find a data frame with all of the actual profile data. Column *position* of that data frame holds the horizontal position as saved by the device when drilling. Column *amplitude* holds actual density values as recorded by the device. In the second list of an dpa object, $footer, you will find additional information about the individual profile, as recorded by the device.
+The function returns an S3 object with the class of **dpa**, which is essentially a list with two items. In the first, `$data`, you will find a data frame with all of the actual profile data. Column *position* of that data frame holds the horizontal position as saved by the device when drilling. Column *amplitude* holds actual density values as recorded by the device. In the second list of an dpa object, `$footer`, you will find additional information about the individual density profile, as recorded by the device.
 
 View dpa measurement data:
 ```{r}
@@ -51,30 +53,63 @@ We can also plot an individual density profile:
 ```{r, fig.width=15, fig.height=5}
 plot(dpa)
 ```
-When plotting dpa objects, units for both axis are extracted from dpa$footer, as is the measurement ID.
 
-Loading several files is also easy, just specify the argument *dpa.directory* with a folder path. This returns a list of dpa profiles. By default this function works recurively and also looks into all subfolder, set the *recursive* argument to *FALSE* avoid that.
+When plotting density profiles, units for both axis are extracted from `$footer`, as is the measurement ID.
+
+Loading several files is also easy, just specify the argument `dpa.directory` with a folder path. This returns a list of density profiles. By default this function works recursively and also looks into all subfolder, set the `recursive = FALSE` avoid that.
 ```{r, results = 'asis'}
 dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
 ```
 
-Inspect the list by displaying the first three items:
+Inspect the list by displaying the first two items:
 ```{r}
-head(dpa.list, 3)
+head(dpa.list, 2)
 ```
 
 ## Trimming
 A typical resistance drilling measurement starts with an increase in resistance values in between the measurement start and the immersion of the needle in the wood. Similarly, if the needle exits of the opposite of the wood, there will be a decrease in values due to lack of resistance. Bark-to-bark measurements should be trimmed on both sides, while bark-to-pith only at the beginning.
 
-**denister** provides two functions try to automate this: dpa\_detect\_start and dpa\_detect\_end by using checkpoint binary segmentation. Let's find where the first profile in our list actually start:
+### Looking under the hood
+**denister** provides two functions that try to automate start and end detection: `dpa_detect_start` and `dpa_detect_end` by using checkpoint binary segmentation. They are usually not used manually, see section on automatic trimming. Let's find where the first profile in our list actually starts:
 ```{r}
 dpa_detect_start(dpa.list[[1]])
 ```
-```{r, fig.width=15, fig.height=15}
+
+The function return the horizontal position (equivalent to row number), where the start was detected. See function documentation for more information on how it works. The same function can also return a diagnostic plot.
+```{r, fig.width=15, fig.height=10}
 dpa_detect_start(dpa.list[[1]], return.plot = TRUE)
 ```
-```{r, fig.width=15, fig.height=15}
-dpa_detect_end(dpa.list[[1]], return.plot = TRUE)
+
+End detection is also possible on bark-to-bark profiles:
+```{r}
+dpa_detect_end(dpa.list[[1]])
 ```
-## Examining density profiles
+
+Diagnostic plot can also be displayed when detecting profile end. If either start or end is not detected, it will also print a warning message.
+
+### Automatic trimming
+In order to trim an individual profile after obtaining start and end profiles, you would have to subset the profile using start and end positions. Calling `dtrim` on a density profile will automate the whole process. It will try do detect start and end positions and trim those portions away, returning a profile without the starting or ending portion of the profile.
+```{r}
+dtrim(dpa.list[[1]])
+```
+
+`dtrim` is also capable of displaying a diagnostic plot:
+```{r, fig.width=15, fig.height=5}
+dtrim(dpa.list[[1]], return.plot = TRUE)
+```
+
+`dtrim` can only be called on individual profiles. In order to run automatic trimming on a list of density profiles use `dtriml`. While this is just a convenience wrapper for `pbapply::pblapply` or `lapply`, it also provides a trimming report at the end:
+
+```{r}
+dpa.trimmed  <- dtriml(dpa.list)
+```
+
+If you have `pbapply` installed, you will get a nice progress bar displaying current progress. This is useful when trimming a large number of profiles at once. Note, you can also supply `dtriml` with an additional argument `cl`, which specifies number of cores to run trimming in parallel. This will significantly speed up the whole process. `pbapply` package is also required for this.
+
+The equivalent functions to `dtrim` and `dtriml` to trim the profiles only at the beginning are `dtrim_s` and `dtriml_s`.
+
+### What to do when automatic trimming fails?
+Automatic trimming sometimes fails to detect the starting or ending point within the density profile. Failing to detect ending point is usually a consequence of the profile being bark-to-pith instead of bark-to-bark. In those cases (an others) you can trim the measurement by hand. See vignette on Manual profile trimming for more information.
+
+
 

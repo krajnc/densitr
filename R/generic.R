@@ -25,13 +25,13 @@ is.trimmed  <- function(x){
 #' @export
 print.dpa <- function(x, ...) {
   if (!inherits(x,"dpa")) {stop("not a dpa object")}
-  cat(paste0("\n\nResistance drilling profile ID:\t",
+  cat(paste0("\n\nDensity profile ID:\t",
              x$footer$ID, "\n\n",
              "Total length:\t", nrow(x$data), " x ",
              x$footer$xUnit, "\n",
              "Trimmed: ", is.trimmed(x), "\n\n",
              "Data preview: \n"))
-  print.data.frame(utils::head(x$data))
+  print.data.frame(utils::head(x$data), row.names = F)
   cat("...\n")
 }
 

@@ -94,7 +94,10 @@ separate_trim_failures  <- function(dpa.trimmed) {
 #' selection will then be displayed on the plot. Use keys y/n to
 #' confirm selection, pressing n will restart the selection process.
 #' The selection can be repeated once after pressing n, next n will
-#' stop the process and it has to be restarted manually.
+#' stop the process and it has to be restarted manually. This function
+#' uses \code{grDevices::getGraphicsEvent} and
+#' \code{graphics::locator}, which only works on screen devices X11,
+#' windows and quartz. It will not work on other devices.
 #'
 #' @param failure A dpa object, usually see load_dpa.
 #' @param label Optional label to be displayed on the plot after the
@@ -109,13 +112,15 @@ separate_trim_failures  <- function(dpa.trimmed) {
 #' \dontrun{
 #' manual_trim_detect(dpa)
 #' }
-manual_trim_detect <- function(failure, label = "start") {
+manual_trim_detect <- function(failure, label = "") {
   graphics::plot(failure$data$amplitude, type = "l",
                  xlab = paste0("Drilling depth"),
                  ylab= paste0("Resistograph density"),
-                 main = paste0("Resistograph data: file ",failure$footer$ID," ",label))
+                 main = paste0("Density profile ID: ",failure$footer$ID," ",label))
   message("\n[click on graph then pick a vertical line, then confirm]\n")
   click.loc <- graphics::locator(1)
+  if (click.loc == NULL) {
+    stop("point selection not supported on your graphics device, see densiter::manual_trim_detect documentation")}
   graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
   readkeygraph(paste0("confirm selection, y or n?"))
   if (keyPressed == "y"){
@@ -124,9 +129,9 @@ manual_trim_detect <- function(failure, label = "start") {
   } else {
     grDevices::dev.off()
     graphics::plot(failure$data$amplitude, type = "l",
-         xlab = paste0("Drilling depth"),
-         ylab= paste0("Resistograph density"),
-         main = paste0("Resistograph data: file ",failure$footer$ID))
+                   xlab = paste0("Drilling depth"),
+                   ylab= paste0("Resistograph density"),
+                   main = paste0("Resistograph data: file ",failure$footer$ID))
     click.loc <- graphics::locator(1)
     graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
     readkeygraph(paste0("confirm selection, y or n?"))
@@ -166,7 +171,8 @@ manual_trim_detect <- function(failure, label = "start") {
 #'
 #' @param dpa.trimmed A list of dpa objects, trimmed, with the report
 #'   embedded ("return.fail = FALSE").
-#' @return A list of trimmed profiles, including both automatic and manual trimming.
+#' @return A list of trimmed profiles, including both automatic and
+#'   manual trimming.
 #' @seealso dtrim, dtriml, manual_trim_detect
 #' @export
 #' @examples

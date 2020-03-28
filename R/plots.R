@@ -106,6 +106,7 @@ plot_end_detection  <- function(dpa.list){
 #' plot_all(dpa.list)
 #' }
 plot_all  <- function(dpa.list){
+  if (is.list(dpa.list) == FALSE) {stop("not a list of density profiles")}
   for (i in 1:length(dpa.list)){
     dpa  <- dpa.list[[i]]
     print(graphics::plot(dpa))

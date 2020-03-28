@@ -15,8 +15,7 @@ keydown <- function(key) {
 readkeygraph <- function(prompt)
 {
   grDevices::getGraphicsEvent(prompt = prompt,
-                              onMouseDown = NULL, onMouseMove = NULL,
-                              onMouseUp = NULL, onKeybd = keydown,
+                              onKeybd = keydown,
                               consolePrompt = "[click on graph then follow top prompt to continue]")
   Sys.sleep(0.01)
   return(keyPressed)

@@ -10,6 +10,10 @@ correct_failures(dpa.trimmed)
 \item{dpa.trimmed}{A list of dpa objects, trimmed, with the report
 embedded ("return.fail = FALSE").}
 }
+\value{
+A list of trimmed profiles, including both automatic and
+  manual trimming.
+}
 \description{
 This function will take a list of trimmed dpa objects (a result of
 dtriml or dtriml_s function) and interactively ask the user to

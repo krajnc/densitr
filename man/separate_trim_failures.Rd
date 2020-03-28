@@ -13,16 +13,17 @@ calling dtriml or dtriml_s on a dpa list with
 "return.fail = FALSE".}
 }
 \value{
-A dpa list of trimmed objects with failures removed.
+Two lists, one with start failures and one with end failures.
 }
 \description{
 An inverse of remove_dpa_failures, return a list of failed trimming
 objects from a trimmed dpa list. Trimmed dpa list should be a
 result of either calling dtriml on a list of dpa objects or calling
 dtriml_s to remove the starting portions of the measurement. Both
-functions should be called with the option "rreport = FALSE",
-which embeds a trimming report when returning the list of trimmed
-dpa objects.
+functions should be called with the option "rreport = FALSE", which
+embeds a trimming report when returning the list of trimmed dpa
+objects. If no failures found, it will return a list of trimmed
+profiles without the report attached.
 }
 \examples{
 \dontrun{

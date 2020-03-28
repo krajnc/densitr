@@ -4,7 +4,7 @@
 \alias{manual_trim_detect}
 \title{Manually select a starting or ending location of a density profile}
 \usage{
-manual_trim_detect(failure, label = "start")
+manual_trim_detect(failure, label = "")
 }
 \arguments{
 \item{failure}{A dpa object, usually see load_dpa.}
@@ -23,7 +23,10 @@ your mouse to select starting/ending point on the plot, your
 selection will then be displayed on the plot. Use keys y/n to
 confirm selection, pressing n will restart the selection process.
 The selection can be repeated once after pressing n, next n will
-stop the process and it has to be restarted manually.
+stop the process and it has to be restarted manually. This function
+uses \code{grDevices::getGraphicsEvent} and
+\code{graphics::locator}, which only works on screen devices X11,
+windows and quartz. It will not work on other devices.
 }
 \examples{
 ## load a single file

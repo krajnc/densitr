@@ -12,9 +12,69 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(pbapply)
+pbo = pboptions(type="txt")
 ```
 
+# Loading and automatic trimming of density profiles
+## Introduction
 ```{r setup}
 library(densiter)
 ```
-test text
+
+
+
+## Loading resistance drilling density profiles
+In the current version of **densiter**, 0.0.1, only files (*.dpa) created by Rinntech Resistograph devices are supported. Other file types (for example, those produced by the IML Resi devices) might be added later on.
+
+Never try to load *.dpa files directly from the Resistograph device into R, always copy them first onto your computer and load them from there. Try at your own risk. This vignette uses some example density profiles recorded using an Rinntech Resistograph SC650, which are included with this package. There is a total of 15 profiles, representing various tree species. Some are drilled bark-to-bark, while others were drilled bark-to-pith because of their dimensions.
+
+Loading a single file is simple:
+```{r}
+dpa <- load_dpa(dpa.file = system.file("extdata", "00010001.dpa", package = "densiter"))
+dpa
+```
+
+The function returns an S3 object with the class of **dpa**, which is essentially a list with two items. In the first, data you will find a data frame with all of the actual profile data. Column *position* of that data frame holds the horizontal position as saved by the device when drilling. Column *amplitude* holds actual density values as recorded by the device. In the second list of an dpa object, $footer, you will find additional information about the individual profile, as recorded by the device.
+
+View dpa measurement data:
+```{r}
+head(dpa$data)
+```
+
+View dpa additional data:
+```{r}
+head(dpa$footer)
+```
+
+We can also plot an individual density profile:
+```{r, fig.width=15, fig.height=5}
+plot(dpa)
+```
+When plotting dpa objects, units for both axis are extracted from dpa$footer, as is the measurement ID.
+
+Loading several files is also easy, just specify the argument *dpa.directory* with a folder path. This returns a list of dpa profiles. By default this function works recurively and also looks into all subfolder, set the *recursive* argument to *FALSE* avoid that.
+```{r, results = 'asis'}
+dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+```
+
+Inspect the list by displaying the first three items:
+```{r}
+head(dpa.list, 3)
+```
+
+## Trimming
+A typical resistance drilling measurement starts with an increase in resistance values in between the measurement start and the immersion of the needle in the wood. Similarly, if the needle exits of the opposite of the wood, there will be a decrease in values due to lack of resistance. Bark-to-bark measurements should be trimmed on both sides, while bark-to-pith only at the beginning.
+
+**denister** provides two functions try to automate this: dpa\_detect\_start and dpa\_detect\_end by using checkpoint binary segmentation. Let's find where the first profile in our list actually start:
+```{r}
+dpa_detect_start(dpa.list[[1]])
+```
+```{r, fig.width=15, fig.height=15}
+dpa_detect_start(dpa.list[[1]], return.plot = TRUE)
+```
+```{r, fig.width=15, fig.height=15}
+dpa_detect_end(dpa.list[[1]], return.plot = TRUE)
+```
+## Examining density profiles
+

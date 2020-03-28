@@ -8,9 +8,9 @@ dpl2 <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"), r
 dp.trim <- dtrim(dp)
 dpl.trimmed <- dtriml(dpl)
 dpl.trimmed2  <- dtrim_sl(dpl)
-dpl.trimmed3  <- dtrim_sl(dpl, rreport = TRUE)
-dpa.successful <- remove_trim_failures(dpa.trimmed)
-dpa.failed <- separate_trim_failures(dpa.trimmed)
+dpl.trimmed3  <- dtriml(dpl, rreport = TRUE)
+dpa.successful <- remove_trim_failures(dpl.trimmed3)
+dpa.failed <- separate_trim_failures(dpl.trimmed3)
 
 test_that("What trim returns", {
   expect_true(is.list(dpl.trimmed))

@@ -106,11 +106,14 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
     if (dir.exists(dpa.directory)) {
       dpa.files <- list.files(path = dpa.directory, recursive = recursive, pattern="*.dpa$")
       dpa.files <- file.path(dpa.directory, dpa.files)
-      message("found ", length(dpa.files), " dpa files, loading:")
+      message("found ", length(dpa.files), " dpa files, loading...")
       if (requireNamespace("pbapply", quietly = TRUE)) {
         dpa.list <-  pbapply::pblapply(dpa.files, read_dpa)
       } else {
+        ptm <- proc.time()
         dpa.list <-  lapply(dpa.files,  read_dpa)
+        stop  <- proc.time() - ptm
+        message("loading took ", stop[3], "seconds, consider installing pbapply to show progress using a progress bar")
       }
       if (name == "file") {
         ## name only using file names
@@ -119,6 +122,7 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
         ## if recursive, name them properly also using folders
         names(dpa.list) <-  gsub("*.dpa$","",dpa.files)
       }
+      message("loading of ", length(dpa.files), " dpa files complete.")
       return(dpa.list)
     } else {
       ## fail directory doesn't exist

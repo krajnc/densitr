@@ -102,7 +102,11 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' }
 dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
   message("started trimming ", length(dpa.list), " files")
-  dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
+  if (requireNamespace("pbapply", quietly = TRUE)) {
+    dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
+  } else {
+    dpa.trimmed  <- lapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
+  }
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-(2:3)]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
   ## there is a reason why people use dplyr bind_rows
@@ -226,7 +230,11 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' }
 dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   message("started start trimming ", length(dpa.list), " files")
-  dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
+  if (requireNamespace("pbapply", quietly = TRUE)) {
+    dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
+  } else {
+    dpa.trimmed  <- lapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
+  }
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-2]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
   ## there is a reason why people use dplyr bind_rows

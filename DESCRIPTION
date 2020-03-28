@@ -14,9 +14,9 @@ LazyData: true
 Imports:
         stats,
         utils,
-        pbapply,
         changepoint
 Suggests:
+    pbapply,
     mgcv,
     knitr,
     rmarkdown

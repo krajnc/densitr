@@ -161,6 +161,7 @@ manual_trim_detect <- function(failure, label = "start") {
 #'
 #' @param dpa.trimmed A list of dpa objects, trimmed, with the report
 #'   embedded ("return.fail = FALSE").
+#' @return A list of trimmed profiles, including both automatic and manual trimming.
 #' @seealso dtrim, dtriml, manual_trim_detect
 #' @export
 #' @examples
@@ -205,5 +206,5 @@ correct_failures  <- function(dpa.trimmed) {
     }
   }
   message("\nall corrections done\n")
-  return(dpa.trimmed)
+  return(dpa.trimmed$dpa)
 }

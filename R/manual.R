@@ -45,14 +45,15 @@ remove_trim_failures  <- function(dpa.trimmed) {
 #' objects from a trimmed dpa list. Trimmed dpa list should be a
 #' result of either calling dtriml on a list of dpa objects or calling
 #' dtriml_s to remove the starting portions of the measurement. Both
-#' functions should be called with the option "rreport = FALSE",
-#' which embeds a trimming report when returning the list of trimmed
-#' dpa objects.
+#' functions should be called with the option "rreport = FALSE", which
+#' embeds a trimming report when returning the list of trimmed dpa
+#' objects. If no failures found, it will return a list of trimmed
+#' profiles without the report attached.
 #'
 #' @param dpa.trimmed A list of trimmed dpa objects, a result of
 #'   calling dtriml or dtriml_s on a dpa list with
 #'   "return.fail = FALSE".
-#' @return A dpa list of trimmed objects with failures removed.
+#' @return Two lists, one with start failures and one with end failures.
 #' @seealso dtriml, dtriml_s
 #' @export
 #' @examples
@@ -68,16 +69,20 @@ separate_trim_failures  <- function(dpa.trimmed) {
   if (names(dpa.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
   }
-  failures.start <- dpa.trimmed$report[dpa.trimmed$report$detection.start %in% "failed",]$ID
   dpas <- dpa.trimmed$dpa
-  dpa.start <- dpas[(names(dpas) %in% failures.start)]
+  failures.start <- dpa.trimmed$report[dpa.trimmed$report$detection.start %in% "failed",]$ID
+  if (length(failures.start) > 0) {
+    dpa.start <- dpas[(names(dpas) %in% failures.start)]
+  } else {
+    dpa.start <- list()
+  }
   if("detection.end" %in% colnames(dpa.trimmed$report)) {
     failures.end <- dpa.trimmed$report[dpa.trimmed$report$detection.end %in% "failed",]$ID
     dpa.end <- dpas[(names(dpas) %in% failures.end)]
-    return(list("failures.start" = dpa.start, "failures.end" = dpa.end))
   } else {
-    return(list("failures.start" = dpa.start))
+    dpa.end <- list()
   }
+  return(list("failures.start" = dpa.start, "failures.end" = dpa.end))
 }
 
 #' Manually select a starting or ending location of a density profile

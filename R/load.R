@@ -184,5 +184,6 @@ combine_footers  <- function(dpa.list){
 #' combine_data(dpa.list)
 combine_data  <- function(dpa.list){
   data  <- lapply(dpa.list,function(x) x$data)
+  data <- do.call("rbind", data)
   return(data)
 }

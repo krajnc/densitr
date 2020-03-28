@@ -86,17 +86,18 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     graphics::plot(dpa$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
          ylab= paste0("Resistograph density [", dpa$footer$yUnit, "]"),
-         main = paste0("Resistograph data: file ",dpa$footer$ID))
+         main = paste0("Density profile ID: ",dpa$footer$ID))
     graphics::abline(v=cutoff, col="red",lwd=3, lty=2)
     ## [1:length(dpa$data$amplitude)/2]
     changepoint::plot(segments.points2,
                       xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
          ylab= paste0("Moving average of lagged differences"),
-         main="Detected segments, overall mean and cutoff limits")
+         main="Detected segments")
     graphics::abline(h=mean(data.in), col="blue")
     graphics::abline(h=limit, col="green")
-    graphics::abline(h=-limit, col="green")
     graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
+    graphics::legend("topright", legend=c("Segment mean", "Overall mean", "Cutoff limit"),
+                     col=c("red", "blue", "green"), lty=1, cex=1)
     p <- grDevices::recordPlot()
     return(p)
   } else {
@@ -183,16 +184,18 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     graphics::plot(dpa$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab= paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
-         main = paste0("Resistograph data: file ",dpa$footer$ID))
+         main = paste0("Density profile ID: ",dpa$footer$ID))
     graphics::abline(v=cutoff + 100, col="red", lwd=3, lty=2)
     changepoint::plot(segments.points2,
                       xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab= paste0("Moving average of lagged differences"),
-         main="Detected segments, overall mean and cutoff limits")
+         main="Detected segments")
     graphics::abline(h=mean(data.in), col="blue")
     graphics::abline(h=limit, col="green")
-    graphics::abline(h=-limit, col="green")
     graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
+    graphics::legend("topright", legend=c("Segment mean", "Overall mean", "Cutoff limit"),
+                     col=c("red", "blue", "green"), lty=1, cex=1)
+
     p <- grDevices::recordPlot()
     return(p)
   } else {

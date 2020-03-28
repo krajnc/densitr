@@ -122,6 +122,12 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
           " file(s)\nend detection failed in: ",
           sum(report[,"detection.end"] == "failed"), " file(s).\n",
           "########################################\n")
+  if (sum(report[,"detection.start"] == "failed") > 0){
+    message("start fail(s):\n", paste(report[report$detection.start %in% "failed",]$ID, collapse = ", "), "\n")
+  }
+  if (sum(report[,"detection.end"] == "failed") > 0){
+    message("end fail(s):\n", paste(report[report$detection.end %in% "failed",]$ID, collapse = ", "))
+  }
   if (rreport == TRUE){
     return(list("dpa" = data, "report" = report))
   } else {
@@ -249,6 +255,9 @@ dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
           sum(report[,"detection.start"] == "failed"),
           " file(s).\n",
           "########################################\n")
+  if (sum(report[,"detection.start"] == "failed") > 0){
+    message("start fail(s):\n", paste(report[report$detection.start %in% "failed",]$ID, collapse = ", "), "\n")
+  }
   if (rreport == TRUE){
     return(list("dpa" = data, "report" = report))
   } else {

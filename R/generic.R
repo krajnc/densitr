@@ -22,6 +22,7 @@ is.trimmed  <- function(x){
   return(answer)
 }
 
+#' @export
 print.dpa <- function(x, ...) {
   if (!inherits(x,"dpa")) {stop("not a dpa object")}
   cat(paste0("\n\nResistance drilling profile ID:\t",
@@ -34,6 +35,7 @@ print.dpa <- function(x, ...) {
   cat("...\n")
 }
 
+#' @export
 plot.dpa <- function(x, ...) {
   if (!inherits(x,"dpa")) {stop("not a dpa object")}
   graphics::plot(x=x$data$position, y=x$data$amplitude, type = "l",

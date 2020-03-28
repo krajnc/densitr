@@ -49,7 +49,7 @@ dtrim <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
     graphics::plot(dpa$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab = paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
-         main = paste0("Resistograph data: file ",dpa$footer$ID))
+         main = paste0("Density profile ID: ",dpa$footer$ID))
     graphics::abline(v=start, col="red", lwd=3, lty=2)
     graphics::abline(v=end, col="red", lwd=3, lty=2)
     p <- grDevices::recordPlot()
@@ -105,7 +105,7 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
   if (requireNamespace("pbapply", quietly = TRUE)) {
     dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
   } else {
-    dpa.trimmed  <- lapply(dpa.list,  dtrim, return.fail = T, silent = T, cl = cl)
+    dpa.trimmed  <- lapply(dpa.list,  dtrim, return.fail = T, silent = T)
   }
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-(2:3)]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
@@ -115,13 +115,12 @@ dtriml  <- function(dpa.list, rreport = FALSE, cl = 1) {
   a  <- lapply(dpa.trimmed, function(x) x[-(1)])
   report  <- do.call("rbind", lapply(a, as.data.frame))
   report$ID  <- rownames(report)
-  rownames(report) <- NULL
   message("########################################\ntrimming report: \nanalysed ",
           length(dpa.list),
           " file(s) \nstart detection failed in: ",
-          sum(report[,2] == "failed"),
+          sum(report[,"detection.start"] == "failed"),
           " file(s)\nend detection failed in: ",
-          sum(report[,3] == "failed"), " file(s).\n",
+          sum(report[,"detection.end"] == "failed"), " file(s).\n",
           "########################################\n")
   if (rreport == TRUE){
     return(list("dpa" = data, "report" = report))
@@ -181,7 +180,7 @@ dtrim_s <- function(dpa, return.plot = FALSE, return.fail = FALSE, silent = FALS
     graphics::plot(dpa$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
          ylab = paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
-         main = paste0("Resistograph data: file ",dpa$footer$ID))
+         main = paste0("Density profile ID: ",dpa$footer$ID))
     graphics::abline(v=start, col="red", lwd=3, lty=2)
     p <- grDevices::recordPlot()
     return(p)
@@ -233,7 +232,7 @@ dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   if (requireNamespace("pbapply", quietly = TRUE)) {
     dpa.trimmed  <- pbapply::pblapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
   } else {
-    dpa.trimmed  <- lapply(dpa.list,  dtrim_s, return.fail = T, silent = T, cl = cl)
+    dpa.trimmed  <- lapply(dpa.list,  dtrim_s, return.fail = T, silent = T)
   }
   data  <- unlist(lapply(dpa.trimmed, function(x) x[-2]),recursive=FALSE)
   names(data)  <- names(dpa.trimmed)
@@ -247,7 +246,7 @@ dtrim_sl  <- function(dpa.list, rreport = FALSE, cl = 1) {
   message("########################################\ntrimming report: \nanalysed ",
           length(dpa.list),
           " files \nstart detection failed in: ",
-          sum(report[,2] == "failed"),
+          sum(report[,"detection.start"] == "failed"),
           " file(s).\n",
           "########################################\n")
   if (rreport == TRUE){

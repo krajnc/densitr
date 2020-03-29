@@ -23,8 +23,8 @@ is.trimmed  <- function(x){
 }
 
 #' @export
-print.dpa <- function(x, ...) {
-  if (!inherits(x,"dpa")) {stop("not a dpa object")}
+print.dp <- function(x, ...) {
+  if (!inherits(x,"dp")) {stop("not a dp object")}
   cat(paste0("\n\nDensity profile ID:\t",
              x$footer$ID, "\n\n",
              "Total length:\t", nrow(x$data), " x ",
@@ -36,8 +36,8 @@ print.dpa <- function(x, ...) {
 }
 
 #' @export
-plot.dpa <- function(x, ...) {
-  if (!inherits(x,"dpa")) {stop("not a dpa object")}
+plot.dp <- function(x, ...) {
+  if (!inherits(x,"dp")) {stop("not a dp object")}
   graphics::plot(x=x$data$position, y=x$data$amplitude, type = "l",
                  xlab = paste0("Drilling depth [", x$footer$xUnit, "]"),
                  ylab= paste0("Resistograph density [", x$footer$yUnit, "]"),

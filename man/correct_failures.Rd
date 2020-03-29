@@ -4,19 +4,19 @@
 \alias{correct_failures}
 \title{Manually correct failures after automatic trim detection}
 \usage{
-correct_failures(dpa.trimmed)
+correct_failures(dp.trimmed)
 }
 \arguments{
-\item{dpa.trimmed}{A list of dpa objects, trimmed, with the report
-embedded ("return.fail = FALSE").}
+\item{dp.trimmed}{A list of dp objects, trimmed, with the report
+embedded ("rreport = TRUE").}
 }
 \value{
 A list of trimmed profiles, including both automatic and
   manual trimming.
 }
 \description{
-This function will take a list of trimmed dpa objects (a result of
-dtriml or dtriml_s function) and interactively ask the user to
+This function will take a list of trimmed dp objects (a result of
+dptriml or dptriml_s function) and interactively ask the user to
 assign starting/ending points manually. Follow-up to automatic
 trim functions or to be used manually, will display a plot with the
 density profiles for each failure in trim detection sequentially.
@@ -27,21 +27,21 @@ y/n to confirm selection, pressing n will restart the selection
 process. The selection can be repeated once after pressing n, next
 n will stop the process and it has to be restarted manually. Will
 return a complete list, both with the non-failed automatically
-trimmed dpa objects and those corrected manually. The automatic
+trimmed dp objects and those corrected manually. The automatic
 trim functions should be called with the option
-"return.fail = FALSE", which embeds a trimming report when
-returning the list of trimmed dpa objects.
+"rreport = TRUE", which embeds a trimming report when
+returning the list of trimmed dp objects.
 }
 \examples{
-## load all dpa files
+## load all dp files
 \dontrun{
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 ## trim the list
-dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
+dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 ## manually correct the failures
-dpa.corrected <- correct_failures(dpa.trimmed)
+dp.corrected <- correct_failures(dp.trimmed)
 }
 }
 \seealso{
-dtrim, dtriml, manual_trim_detect
+dptrim, dptriml, manual_trim_detect
 }

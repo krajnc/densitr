@@ -22,7 +22,7 @@ extract_dpa_name  <- function(string){
                 string, perl = TRUE)),
       "[", 1))
   } else {
-    ## widnows uses backward slashes, so convert them to froward slashes for regex
+    ## windows uses backward slashes, so convert them to froward slashes for regex
     string  <- gsub("\\\\", "/", string)
     return(sapply(
       regmatches(
@@ -36,15 +36,15 @@ extract_dpa_name  <- function(string){
 
 #' Read a single Resistograph measurement file (*.dpa)
 #'
-#' Reads a single *.dpa file and returns a \code{dpa} object,
+#' Reads a single *.dpa file and returns a \code{dp} object,
 #' constructed from two lists: \code{data} and \code{footer}. The
 #' former one contains actual measurement values, the latter includes
 #' supplementary data recorded by the Resistograph device, such as
 #' time, firmware number...
 #'
 #' @param file A path to file, including file name.
-#' @return A \code{dpa} object.
-#' @seealso read_dpa.
+#' @return A \code{dp} object.
+#' @seealso dpload
 #' @examples
 #' \dontrun{
 #' read_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
@@ -67,7 +67,7 @@ read_dpa <- function(file){
   names(footer) <- gsub("(value\\.y\\.|value\\.)", "", names(footer))
   attributes(footer)$reshapeWide  <- NULL # strip reshaping attributes
   d  <- list("data" = data, "footer" = footer)
-  class(d) <- 'dpa'
+  class(d) <- 'dp'
   return(d)
 }
 
@@ -75,55 +75,54 @@ read_dpa <- function(file){
 #' of *.dpa files.
 #'
 #' Loads either a single .dpa file or a list of .dpa files. If
-#' dpa.file is specified, it will load a single file. If dpa.directory
+#' dpa.file is specified, it will load a single file. If dp.directory
 #' is specified, it will search for all dpa files in that directory
 #' (recursively in all subfolders, can be turned off) and return a
-#' list of dpa files. It will use pbapply to display progress, if
+#' list of dp files. It will use pbapply to display progress, if
 #' loading a directory.
 #'
-#' @param dpa.file A path to a single file, including file name.
-#' @param dpa.directory A directory with .dpa files.
-#' @param recursive Also look for dpa files in subfolders?
+#' @param dp.file A path to a single file, including file name.
+#' @param dp.directory A directory with .dpa files.
+#' @param recursive Also look for density profiles files in subfolders?
 #' @param name Either \code{c("file", "folder")}, used for naming of
 #'   list items. If "file", only file name withouth the complete path
 #'   will be used for naming ("00050060"). If "folder", the complete
 #'   path along with file name will be used to name the dpa objects
 #'   ("data/0005/00/00050060"). *.dpa ending is removed from the name
 #'   in both cases.
-#' @return A \code{dpa} object or a list of \code{dpa} objects.
-#' @seealso read_dpa.
+#' @return A \code{dp} object or a list of \code{dp} objects.
 #' @export
 #' @examples
 #' ## load a single file
-#' load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
-#' dpa <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
-load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
-                      recursive = TRUE, name = "file") {
-  if (is.null(dpa.file)) {
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dpload  <- function(dp.file = NULL, dp.directory = "",
+                    recursive = TRUE, name = "file") {
+  if (is.null(dp.file)) {
     ## read the whole directory, possibly recursively
-    if (dir.exists(dpa.directory)) {
-      dpa.files <- list.files(path = dpa.directory, recursive = recursive, pattern="*.dpa$")
-      dpa.files <- file.path(dpa.directory, dpa.files)
-      message("found ", length(dpa.files), " dpa files, loading...")
+    if (dir.exists(dp.directory)) {
+      dp.files <- list.files(path = dp.directory, recursive = recursive, pattern="*.dpa$")
+      dp.files <- file.path(dp.directory, dp.files)
+      message("found ", length(dp.files), " dp files, loading...")
       if (requireNamespace("pbapply", quietly = TRUE)) {
-        dpa.list <-  pbapply::pblapply(dpa.files, read_dpa)
+        dp.list <-  pbapply::pblapply(dp.files, read_dpa)
       } else {
         ptm <- proc.time()
-        dpa.list <-  lapply(dpa.files,  read_dpa)
+        dp.list <-  lapply(dp.files,  read_dpa)
         stop  <- proc.time() - ptm
         message("loading took ", stop[3], "seconds, consider installing pbapply to show progress using a progress bar")
       }
       if (name == "file") {
         ## name only using file names
-        names(dpa.list) <-  extract_dpa_name(dpa.files)
+        names(dp.list) <-  extract_dpa_name(dp.files)
       } else if (name == "folder"){
         ## if recursive, name them properly also using folders
-        names(dpa.list) <-  gsub("*.dpa$","",dpa.files)
+        names(dp.list) <-  gsub("*.dpa$","",dp.files)
       }
-      message("loading of ", length(dpa.files), " dpa files complete.")
-      return(dpa.list)
+      message("loading of ", length(dp.files), " dp files complete.")
+      return(dp.list)
     } else {
       ## fail directory doesn't exist
       warning("given directory does not exist")
@@ -131,10 +130,10 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
   } else {
     ## read a single file
     ## check if file exists and is not a directory
-    if (utils::file_test("-f", dpa.file)) {
-      dpa  <- read_dpa(dpa.file)
-      # class(dpa) <- 'dpa'
-      return(dpa)
+    if (utils::file_test("-f", dp.file)) {
+      dp  <- read_dpa(dp.file)
+      # class(dp) <- 'dp'
+      return(dp)
     } else {
       ## fail reading a single file
       warning("file not found")
@@ -142,48 +141,48 @@ load_dpa  <- function(dpa.file = NULL, dpa.directory = "",
   }
 }
 
-#' Combines footer data from a dpa object list into a single data
+#' Combines footer data from a dp object list into a single data
 #' frame
 #'
-#' Given a dpa object list, this function will extract all footers
-#' (the additional measurement data) from all dpa objects in a given
-#' list and combine them in a single data frame/tibble.
+#' Given a dp object list, this function will extract all footers
+#' (the additional measurement data) from all dp objects in a given
+#' list and combine them in a single data frame.
 #'
-#' @param dpa.list A list of dpa objects, either from loading several
-#'   files using load_dpa or combined manually. Note: the list should
-#'   include only dpa objects!
-#' @return A tibble, combining all footer data from dpa.list
-#' @seealso load_dpa, combine_data.
+#' @param dp.list A list of dp objects, either from loading several
+#'   files using dpload or combined manually. Note: the list should
+#'   include only dp objects!
+#' @return A data frame, combining all footer data from dp.list
+#' @seealso dpload, combine_data.
 #' @export
 #' @examples
 #' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
-#' combine_footers(dpa.list)
-combine_footers  <- function(dpa.list){
-  info <- do.call("rbind", lapply(dpa.list,function(x) x$footer))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' combine_footers(dp.list)
+combine_footers  <- function(dp.list){
+  info <- do.call("rbind", lapply(dp.list,function(x) x$footer))
   rownames(info) <- NULL
   return(info)
  }
 
-#' Combines density measurement from a dpa object list into a single
+#' Combines density measurement from a dp object list into a single
 #' data frame
 #'
-#' Given a dpa object list, this function will extract all density
-#' measurement data from all dpa objects in a given list and combine
-#' them in a single data frame/tibble.
+#' Given a dp object list, this function will extract all density
+#' measurement data from all dp objects in a given list and combine
+#' them in a single data frame.
 #'
-#' @param dpa.list A list of dpa objects, either from loading several
-#'   files using load_dpa or combined manually. Note: the list should
-#'   include only dpa objects!
-#' @return A tibble, combining all density data from dpa.list
-#' @seealso load_dpa, combine_footer.
+#' @param dp.list A list of dp objects, either from loading several
+#'   files using dpload or combined manually. Note: the list should
+#'   include only dp objects!
+#' @return A data frame, combining all density data from dp.list
+#' @seealso dpload, combine_footer.
 #' @export
 #' @examples
 #' ## load all files in directory
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
-#' combine_data(dpa.list)
-combine_data  <- function(dpa.list){
-  data  <- lapply(dpa.list,function(x) x$data)
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' combine_data(dp.list)
+combine_data  <- function(dp.list){
+  data  <- lapply(dp.list,function(x) x$data)
   data <- do.call("rbind", data)
   return(data)
 }

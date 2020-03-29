@@ -4,22 +4,22 @@
 \alias{plot_failures}
 \title{Plot trimming failures one by one}
 \usage{
-plot_failures(dpa.trimmed)
+plot_failures(dp.trimmed)
 }
 \arguments{
-\item{dpa.trimmed}{A list of trimmed dpa objects, see \code{load_dpa}}
+\item{dp.trimmed}{A list of trimmed dp objects, see \code{dpload}}
 }
 \description{
 Plot each failed trimming detection, one by one. Press any key to
-move to the next dpa object. Returns nothing. The entry list of dpa
+move to the next dp object. Returns nothing. The entry list of dp
 trimmed objects must include the trimming report (rreport = TRUE).
 }
 \examples{
-## load several dpa files
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+## load several dp files
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
 \dontrun{
-plot_failures(dpa.list)
+plot_failures(dp.list)
 }
 }
 \seealso{

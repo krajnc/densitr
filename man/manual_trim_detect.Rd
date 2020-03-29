@@ -7,7 +7,7 @@
 manual_trim_detect(failure, label = "")
 }
 \arguments{
-\item{failure}{A dpa object, usually see load_dpa.}
+\item{failure}{A dp object, usually see dpload.}
 
 \item{label}{Optional label to be displayed on the plot after the
 file}
@@ -30,12 +30,12 @@ windows and quartz. It will not work on other devices.
 }
 \examples{
 ## load a single file
-dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
 ## get a starting point on the plot
 \dontrun{
-manual_trim_detect(dpa)
+manual_trim_detect(dp)
 }
 }
 \seealso{
-dtrim, dtriml
+dptrim, dptriml
 }

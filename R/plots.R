@@ -21,126 +21,126 @@ readkeygraph <- function(prompt)
   return(keyPressed)
 }
 
-#' Display automatic trimming on a list of dpa objects
+#' Display automatic trimming on a list of dp objects
 #'
-#' Display an automatic trimming of dpa list, each dpa object
-#' individually. Press any key to move to the next dpa object. Returns
+#' Display an automatic trimming of dp list, each dp object
+#' individually. Press any key to move to the next dp object. Returns
 #' nothing.
 #'
-#' @param dpa.list A list of dpa objects, see \code{load_dpa}
-#' @seealso dtrim, dtrim_s, dtriml_s,
+#' @param dp.list A list of dp objects, see \code{dpload}
+#' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## plot trimming the measurements
 #' \dontrun{
-#' plot_trimming(dpa.list)
+#' plot_trimming(dp.list)
 #' }
-plot_trimming  <- function(dpa.list){
-  for (i in 1:length(dpa.list)){
-    print((dtrim(dpa.list[[i]], return.plot = T)))
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
+plot_trimming  <- function(dp.list){
+  for (i in 1:length(dp.list)){
+    print((dptrim(dp.list[[i]], return.plot = T)))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dp.list)))
   }
 }
 
-#' Display start detection on a list of dpa objects
+#' Display start detection on a list of dp objects
 #'
-#' Display an automatic start detection of dpa list, each dpa object
-#' individually. Press any key to move to the next dpa object. Returns
+#' Display an automatic start detection of dp list, each dp object
+#' individually. Press any key to move to the next dp object. Returns
 #' nothing.
 #'
-#' @param dpa.list A list of dpa objects, see \code{load_dpa}
+#' @param dp.list A list of dp objects, see \code{dpload}
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' \dontrun{
-#' plot_start_detection(dpa.list)
+#' plot_start_detection(dp.list)
 #' }
-plot_start_detection  <- function(dpa.list){
-  for (i in 1:length(dpa.list)){
-    print((dpa_detect_start(dpa.list[[i]], return.plot = T)))
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
+plot_start_detection  <- function(dp.list){
+  for (i in 1:length(dp.list)){
+    print((dpdetect_s(dp.list[[i]], return.plot = T)))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dp.list)))
   }
 }
 
-#' Display end detection on a list of dpa objects
+#' Display end detection on a list of dp objects
 #'
-#' Display an automatic end detection of dpa list, each dpa object
-#' individually. Press any key to move to the next dpa object. Returns
+#' Display an automatic end detection of dp list, each dp object
+#' individually. Press any key to move to the next dp object. Returns
 #' nothing.
 #'
-#' @param dpa.list A list of dpa objects, see \code{load_dpa}
+#' @param dp.list A list of dp objects, see \code{dpload}
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' \dontrun{
-#' plot_end_detection(dpa.list)
+#' plot_end_detection(dp.list)
 #' }
-plot_end_detection  <- function(dpa.list){
-  for (i in 1:length(dpa.list)){
-    print((dpa_detect_end(dpa.list[[i]], return.plot = T)))
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
+plot_end_detection  <- function(dp.list){
+  for (i in 1:length(dp.list)){
+    print((dpdetect_e(dp.list[[i]], return.plot = T)))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dp.list)))
   }
 }
 
-#' Plot a list of dpa objects, one by one
+#' Plot a list of dp objects, one by one
 #'
-#' Plot a list of dpa objects, one by one. Press any key to move to
-#' the next dpa object. Returns nothing.
+#' Plot a list of dp objects, one by one. Press any key to move to
+#' the next dp object. Returns nothing.
 #'
-#' @param dpa.list A list of dpa objects, see \code{load_dpa}
+#' @param dp.list A list of dp objects, see \code{dpload}
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' \dontrun{
-#' plot_all(dpa.list)
+#' plot_all(dp.list)
 #' }
-plot_all  <- function(dpa.list){
-  if (is.list(dpa.list) == FALSE) {stop("not a list of density profiles")}
-  for (i in 1:length(dpa.list)){
-    dpa  <- dpa.list[[i]]
-    print(graphics::plot(dpa))
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.list)))
+plot_all  <- function(dp.list){
+  if (is.list(dp.list) == FALSE) {stop("not a list of density profiles")}
+  for (i in 1:length(dp.list)){
+    dp  <- dp.list[[i]]
+    print(graphics::plot(dp))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dp.list)))
   }
 }
 
 #' Plot trimming failures one by one
 #'
 #' Plot each failed trimming detection, one by one. Press any key to
-#' move to the next dpa object. Returns nothing. The entry list of dpa
+#' move to the next dp object. Returns nothing. The entry list of dp
 #' trimmed objects must include the trimming report (rreport = TRUE).
 #'
-#' @param dpa.trimmed A list of trimmed dpa objects, see \code{load_dpa}
+#' @param dp.trimmed A list of trimmed dp objects, see \code{dpload}
 #' @seealso dtrim, dtrim_s, dtriml_s,
 #' @export
 #' @examples
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
 #' \dontrun{
-#' plot_failures(dpa.list)
+#' plot_failures(dp.list)
 #' }
-plot_failures  <- function(dpa.trimmed){
-  failures  <-  separate_trim_failures(dpa.trimmed)
+plot_failures  <- function(dp.trimmed){
+  failures  <-  separate_trim_failures(dp.trimmed)
   failures2  <- union(failures$failures.start, failures$failures.end)
   names(failures2)  <-  union(names(failures$failures.start), names(failures$failures.end))
   for (i in 1:length(failures2)){
-    dpa  <- failures2[[i]]$data
-    print(graphics::plot(dpa$amplitude, type = "l",
+    dp  <- failures2[[i]]$data
+    print(graphics::plot(dp$amplitude, type = "l",
                          xlab = paste0("Drilling depth"),
                ylab= paste0("Resistograph density"),
-               main = paste0("Resistograph data, trimming failure ",dpa$ID[1])))
+               main = paste0("Resistograph data, trimming failure ",dp$ID[1])))
 
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dpa.trimmed)))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dp.trimmed)))
   }
 }

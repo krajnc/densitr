@@ -2,24 +2,24 @@
 % Please edit documentation in R/plots.R
 \name{plot_end_detection}
 \alias{plot_end_detection}
-\title{Display end detection on a list of dpa objects}
+\title{Display end detection on a list of dp objects}
 \usage{
-plot_end_detection(dpa.list)
+plot_end_detection(dp.list)
 }
 \arguments{
-\item{dpa.list}{A list of dpa objects, see \code{load_dpa}}
+\item{dp.list}{A list of dp objects, see \code{dpload}}
 }
 \description{
-Display an automatic end detection of dpa list, each dpa object
-individually. Press any key to move to the next dpa object. Returns
+Display an automatic end detection of dp list, each dp object
+individually. Press any key to move to the next dp object. Returns
 nothing.
 }
 \examples{
-## load several dpa files
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+## load several dp files
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
 \dontrun{
-plot_end_detection(dpa.list)
+plot_end_detection(dp.list)
 }
 }
 \seealso{

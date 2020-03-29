@@ -10,10 +10,10 @@ read_dpa(file)
 \item{file}{A path to file, including file name.}
 }
 \value{
-A \code{dpa} object.
+A \code{dp} object.
 }
 \description{
-Reads a single *.dpa file and returns a \code{dpa} object,
+Reads a single *.dpa file and returns a \code{dp} object,
 constructed from two lists: \code{data} and \code{footer}. The
 former one contains actual measurement values, the latter includes
 supplementary data recorded by the Resistograph device, such as
@@ -25,5 +25,5 @@ read_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
 }
 }
 \seealso{
-read_dpa.
+dpload
 }

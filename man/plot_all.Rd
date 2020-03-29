@@ -2,23 +2,23 @@
 % Please edit documentation in R/plots.R
 \name{plot_all}
 \alias{plot_all}
-\title{Plot a list of dpa objects, one by one}
+\title{Plot a list of dp objects, one by one}
 \usage{
-plot_all(dpa.list)
+plot_all(dp.list)
 }
 \arguments{
-\item{dpa.list}{A list of dpa objects, see \code{load_dpa}}
+\item{dp.list}{A list of dp objects, see \code{dpload}}
 }
 \description{
-Plot a list of dpa objects, one by one. Press any key to move to
-the next dpa object. Returns nothing.
+Plot a list of dp objects, one by one. Press any key to move to
+the next dp object. Returns nothing.
 }
 \examples{
-## load several dpa files
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+## load several dp files
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
 \dontrun{
-plot_all(dpa.list)
+plot_all(dp.list)
 }
 }
 \seealso{

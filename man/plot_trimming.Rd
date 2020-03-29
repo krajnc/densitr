@@ -2,26 +2,26 @@
 % Please edit documentation in R/plots.R
 \name{plot_trimming}
 \alias{plot_trimming}
-\title{Display automatic trimming on a list of dpa objects}
+\title{Display automatic trimming on a list of dp objects}
 \usage{
-plot_trimming(dpa.list)
+plot_trimming(dp.list)
 }
 \arguments{
-\item{dpa.list}{A list of dpa objects, see \code{load_dpa}}
+\item{dp.list}{A list of dp objects, see \code{dpload}}
 }
 \description{
-Display an automatic trimming of dpa list, each dpa object
-individually. Press any key to move to the next dpa object. Returns
+Display an automatic trimming of dp list, each dp object
+individually. Press any key to move to the next dp object. Returns
 nothing.
 }
 \examples{
-## load several dpa files
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+## load several dp files
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 ## plot trimming the measurements
 \dontrun{
-plot_trimming(dpa.list)
+plot_trimming(dp.list)
 }
 }
 \seealso{
-dtrim, dtrim_s, dtriml_s,
+dptrim, dptrim_s, dptriml_s,
 }

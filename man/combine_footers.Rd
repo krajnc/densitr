@@ -2,29 +2,29 @@
 % Please edit documentation in R/load.R
 \name{combine_footers}
 \alias{combine_footers}
-\title{Combines footer data from a dpa object list into a single data
+\title{Combines footer data from a dp object list into a single data
 frame}
 \usage{
-combine_footers(dpa.list)
+combine_footers(dp.list)
 }
 \arguments{
-\item{dpa.list}{A list of dpa objects, either from loading several
-files using load_dpa or combined manually. Note: the list should
-include only dpa objects!}
+\item{dp.list}{A list of dp objects, either from loading several
+files using dpload or combined manually. Note: the list should
+include only dp objects!}
 }
 \value{
-A tibble, combining all footer data from dpa.list
+A data frame, combining all footer data from dp.list
 }
 \description{
-Given a dpa object list, this function will extract all footers
-(the additional measurement data) from all dpa objects in a given
-list and combine them in a single data frame/tibble.
+Given a dp object list, this function will extract all footers
+(the additional measurement data) from all dp objects in a given
+list and combine them in a single data frame.
 }
 \examples{
 ## load all files in directory
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
-combine_footers(dpa.list)
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+combine_footers(dp.list)
 }
 \seealso{
-load_dpa, combine_data.
+dpload, combine_data.
 }

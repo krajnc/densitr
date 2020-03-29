@@ -2,39 +2,39 @@
 % Please edit documentation in R/manual.R
 \name{separate_trim_failures}
 \alias{separate_trim_failures}
-\title{Remove automatic trim failures from a list of trimmed dpa objects
+\title{Remove automatic trim failures from a list of trimmed dp objects
 and return ONLY failures}
 \usage{
-separate_trim_failures(dpa.trimmed)
+separate_trim_failures(dp.trimmed)
 }
 \arguments{
-\item{dpa.trimmed}{A list of trimmed dpa objects, a result of
-calling dtriml or dtriml_s on a dpa list with
-"return.fail = FALSE".}
+\item{dp.trimmed}{A list of trimmed dp objects, a result of
+calling dptriml or dptriml_s on a dp list with
+"rreport = FALSE".}
 }
 \value{
 Two lists, one with start failures and one with end failures.
 }
 \description{
-An inverse of remove_dpa_failures, return a list of failed trimming
-objects from a trimmed dpa list. Trimmed dpa list should be a
-result of either calling dtriml on a list of dpa objects or calling
+An inverse of remove_trim_failures, return a list of failed trimming
+objects from a trimmed dp list. Trimmed dp list should be a
+result of either calling dtriml on a list of dp objects or calling
 dtriml_s to remove the starting portions of the measurement. Both
 functions should be called with the option "rreport = FALSE", which
-embeds a trimming report when returning the list of trimmed dpa
+embeds a trimming report when returning the list of trimmed dp
 objects. If no failures found, it will return a list of trimmed
 profiles without the report attached.
 }
 \examples{
 \dontrun{
-## load several dpa files
-dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+## load several dp files
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 ## trim the measurements
-dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
+dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 ## separate trimming failures
-dpa.nofailures <- separate_trim_failures(dpa.trimmed)
+dp.nofailures <- separate_trim_failures(dp.trimmed)
 }
 }
 \seealso{
-dtriml, dtriml_s
+dptriml, dptriml_s
 }

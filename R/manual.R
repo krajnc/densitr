@@ -1,88 +1,88 @@
-#' Remove automatic trim failures from a list of trimmed dpa objects
+#' Remove automatic trim failures from a list of trimmed dp objects
 #' and return only non-failed trimmed objects
 #'
-#' Returns a dpa list of trimmed dpa objects without the failed trim
-#' objects. Trimmed dpa list should be a result of either calling
-#' dtriml on a list of dpa objects or calling dtriml_s to remove the
+#' Returns a dp list of trimmed dp objects without the failed trim
+#' objects. Trimmed dp list should be a result of either calling
+#' dtriml on a list of dp objects or calling dtriml_s to remove the
 #' starting portions of the measurement. Both functions should be
 #' called with the option "return.fail = FALSE", which embeds a
-#' trimming report when returning the list of trimmed dpa objects.
+#' trimming report when returning the list of trimmed dp objects.
 #'
-#' @param dpa.trimmed A list of trimmed dpa objects, a result of
-#'   calling dtriml or dtriml_s on a dpa list with
+#' @param dp.trimmed A list of trimmed dp objects, a result of
+#'   calling dtriml or dtriml_s on a dp list with
 #'   "return.fail = FALSE".
-#' @return A dpa list of trimmed objects with failures removed.
-#' @seealso dtriml, dtriml_s
+#' @return A dp list of trimmed objects with failures removed.
+#' @seealso dptriml, dptriml_s
 #' @export
 #' @examples
 #' \dontrun{
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
-#' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
+#' dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 #' ## remove trimming failures
-#' dpa.nofailures <- remove_trim_failures(dpa.trimmed)
+#' dp.nofailures <- remove_trim_failures(dp.trimmed)
 #' }
-remove_trim_failures  <- function(dpa.trimmed) {
-  if (names(dpa.trimmed[2]) != "report") {
+remove_trim_failures  <- function(dp.trimmed) {
+  if (names(dp.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
   }
-  failures.start <- dpa.trimmed$report[dpa.trimmed$report$detection.start %in% "failed",]$ID
-  dpas <- dpa.trimmed$dpa
-  dpa.subsetted <- dpas[!(names(dpas) %in% failures.start)]
-  if("detection.end" %in% colnames(dpa.trimmed$report))
+  failures.start <- dp.trimmed$report[dp.trimmed$report$detection.start %in% "failed",]$ID
+  dps <- dp.trimmed$dp
+  dp.subsetted <- dps[!(names(dps) %in% failures.start)]
+  if("detection.end" %in% colnames(dp.trimmed$report))
   {
-    failures.end <- dpa.trimmed$report[dpa.trimmed$report$detection.end %in% "failed",]$ID
-    dpa.subsetted <- dpas[!(names(dpas) %in% failures.end)]
+    failures.end <- dp.trimmed$report[dp.trimmed$report$detection.end %in% "failed",]$ID
+    dp.subsetted <- dps[!(names(dps) %in% failures.end)]
   }
-  return(dpa.subsetted)
+  return(dp.subsetted)
 }
 
-#' Remove automatic trim failures from a list of trimmed dpa objects
+#' Remove automatic trim failures from a list of trimmed dp objects
 #' and return ONLY failures
 #'
-#' An inverse of remove_dpa_failures, return a list of failed trimming
-#' objects from a trimmed dpa list. Trimmed dpa list should be a
-#' result of either calling dtriml on a list of dpa objects or calling
+#' An inverse of remove_trim_failures, return a list of failed trimming
+#' objects from a trimmed dp list. Trimmed dp list should be a
+#' result of either calling dtriml on a list of dp objects or calling
 #' dtriml_s to remove the starting portions of the measurement. Both
 #' functions should be called with the option "rreport = FALSE", which
-#' embeds a trimming report when returning the list of trimmed dpa
+#' embeds a trimming report when returning the list of trimmed dp
 #' objects. If no failures found, it will return a list of trimmed
 #' profiles without the report attached.
 #'
-#' @param dpa.trimmed A list of trimmed dpa objects, a result of
-#'   calling dtriml or dtriml_s on a dpa list with
-#'   "return.fail = FALSE".
+#' @param dp.trimmed A list of trimmed dp objects, a result of
+#'   calling dptriml or dptriml_s on a dp list with
+#'   "rreport = FALSE".
 #' @return Two lists, one with start failures and one with end failures.
-#' @seealso dtriml, dtriml_s
+#' @seealso dptriml, dptriml_s
 #' @export
 #' @examples
 #' \dontrun{
-#' ## load several dpa files
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' ## load several dp files
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurements
-#' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
+#' dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 #' ## separate trimming failures
-#' dpa.nofailures <- separate_trim_failures(dpa.trimmed)
+#' dp.nofailures <- separate_trim_failures(dp.trimmed)
 #' }
-separate_trim_failures  <- function(dpa.trimmed) {
-  if (names(dpa.trimmed[2]) != "report") {
+separate_trim_failures  <- function(dp.trimmed) {
+  if (names(dp.trimmed[2]) != "report") {
     stop("not report attached, trim again with rreport = TRUE")
   }
-  dpas <- dpa.trimmed$dpa
-  failures.start <- dpa.trimmed$report[dpa.trimmed$report$detection.start %in% "failed",]$ID
+  dps <- dp.trimmed$dp
+  failures.start <- dp.trimmed$report[dp.trimmed$report$detection.start %in% "failed",]$ID
   if (length(failures.start) > 0) {
-    dpa.start <- dpas[(names(dpas) %in% failures.start)]
+    dp.start <- dps[(names(dps) %in% failures.start)]
   } else {
-    dpa.start <- list()
+    dp.start <- list()
   }
-  if("detection.end" %in% colnames(dpa.trimmed$report)) {
-    failures.end <- dpa.trimmed$report[dpa.trimmed$report$detection.end %in% "failed",]$ID
-    dpa.end <- dpas[(names(dpas) %in% failures.end)]
+  if("detection.end" %in% colnames(dp.trimmed$report)) {
+    failures.end <- dp.trimmed$report[dp.trimmed$report$detection.end %in% "failed",]$ID
+    dp.end <- dps[(names(dps) %in% failures.end)]
   } else {
-    dpa.end <- list()
+    dp.end <- list()
   }
-  return(list("failures.start" = dpa.start, "failures.end" = dpa.end))
+  return(list("failures.start" = dp.start, "failures.end" = dp.end))
 }
 
 #' Manually select a starting or ending location of a density profile
@@ -99,18 +99,18 @@ separate_trim_failures  <- function(dpa.trimmed) {
 #' \code{graphics::locator}, which only works on screen devices X11,
 #' windows and quartz. It will not work on other devices.
 #'
-#' @param failure A dpa object, usually see load_dpa.
+#' @param failure A dp object, usually see dpload.
 #' @param label Optional label to be displayed on the plot after the
 #'   file
 #' @return The x position selected on the graph, row number in the dpa$data data frame.
-#' @seealso dtrim, dtriml
+#' @seealso dptrim, dptriml
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## get a starting point on the plot
 #' \dontrun{
-#' manual_trim_detect(dpa)
+#' manual_trim_detect(dp)
 #' }
 manual_trim_detect <- function(failure, label = "") {
   graphics::plot(failure$data$amplitude, type = "l",
@@ -152,8 +152,8 @@ manual_trim_detect <- function(failure, label = "") {
 
 #' Manually correct failures after automatic trim detection
 #'
-#' This function will take a list of trimmed dpa objects (a result of
-#' dtriml or dtriml_s function) and interactively ask the user to
+#' This function will take a list of trimmed dp objects (a result of
+#' dptriml or dptriml_s function) and interactively ask the user to
 #' assign starting/ending points manually. Follow-up to automatic
 #' trim functions or to be used manually, will display a plot with the
 #' density profiles for each failure in trim detection sequentially.
@@ -164,28 +164,28 @@ manual_trim_detect <- function(failure, label = "") {
 #' process. The selection can be repeated once after pressing n, next
 #' n will stop the process and it has to be restarted manually. Will
 #' return a complete list, both with the non-failed automatically
-#' trimmed dpa objects and those corrected manually. The automatic
+#' trimmed dp objects and those corrected manually. The automatic
 #' trim functions should be called with the option
-#' "return.fail = FALSE", which embeds a trimming report when
-#' returning the list of trimmed dpa objects.
+#' "rreport = TRUE", which embeds a trimming report when
+#' returning the list of trimmed dp objects.
 #'
-#' @param dpa.trimmed A list of dpa objects, trimmed, with the report
-#'   embedded ("return.fail = FALSE").
+#' @param dp.trimmed A list of dp objects, trimmed, with the report
+#'   embedded ("rreport = TRUE").
 #' @return A list of trimmed profiles, including both automatic and
 #'   manual trimming.
-#' @seealso dtrim, dtriml, manual_trim_detect
+#' @seealso dptrim, dptriml, manual_trim_detect
 #' @export
 #' @examples
-#' ## load all dpa files
+#' ## load all dp files
 #' \dontrun{
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the list
-#' dpa.trimmed <- dtriml(dpa.list, rreport = TRUE)
+#' dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 #' ## manually correct the failures
-#' dpa.corrected <- correct_failures(dpa.trimmed)
+#' dp.corrected <- correct_failures(dp.trimmed)
 #' }
-correct_failures  <- function(dpa.trimmed) {
-  failures  <-  separate_trim_failures(dpa.trimmed)
+correct_failures  <- function(dp.trimmed) {
+  failures  <-  separate_trim_failures(dp.trimmed)
   message("\nfound:\n",
           length(failures$failures.start),
           " start failures \n",
@@ -196,8 +196,8 @@ correct_failures  <- function(dpa.trimmed) {
       lapply(failures$failures.start, manual_trim_detect, label = " - PICK START")
     for (i in 1:length(failures$failures.start)){
       start <- unlist(cutoffs.start[names(failures$failures.start[i])],use.names = F)
-      end  <- nrow(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data)
-      dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data  <- utils::tail(dpa.trimmed$dpa[names(failures$failures.start[i])][[1]]$data, -(start - 1))
+      end  <- nrow(dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data)
+      dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data  <- utils::tail(dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data, -(start - 1))
     }
   }
   message("\nstart corrections done, starting end corrections\n")
@@ -205,17 +205,17 @@ correct_failures  <- function(dpa.trimmed) {
     cutoffs.end <- lapply(failures$failures.end, manual_trim_detect, label = " - PICK STOP")
     for (i in 1:length(failures$failures.end)){
       end.old  <-
-        nrow(dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data)
+        nrow(dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data)
 
       end.new <-
         unlist(cutoffs.end[names(failures$failures.end[i])],use.names = F)
 
       diff  <- end.old - end.new
       ## remove the last X values
-      dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data   <-
-        utils::head(dpa.trimmed$dpa[names(failures$failures.end[i])][[1]]$data, -diff)
+      dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data   <-
+        utils::head(dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data, -diff)
     }
   }
   message("\nall corrections done\n")
-  return(dpa.trimmed$dpa)
+  return(dp.trimmed$dp)
 }

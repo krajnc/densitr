@@ -1,49 +1,49 @@
 #' Detrend (remove a trend) a density profile either using linear or
 #' GAM regression
 #'
-#' This function will take a dpa object and remove the trend from the
+#' This function will take a dp object and remove the trend from the
 #' measurement either by fitting a linear regression or by fitting a
 #' GAM regression using REML. The trend is then subtracted from the
-#' actual data and a detrended dpa object is returned. Be advised
+#' actual data and a detrended dp object is returned. Be advised
 #' detrending should be done on measurements without the starting or
 #' ending point, e.g. they should be trimmed. GAM is more useful in
 #' tree ring detection, while linear regression is more commonly used
 #' for further analysis of the density data. GAM requires \code{mcgv}
 #' package to run.
 #'
-#' @param dpa A dpa object, see load_dpa.
+#' @param dp A dp object, see dpload.
 #' @param type Either "linear" for a fitting linear regression or
 #'   "gam" for a GAM fit using REML.
-#' @return A dpa object without the trend.
-#' @seealso dtrim, dtriml
+#' @return A dp object without the trend.
+#' @seealso dptrim, dptriml, dptrim_s, dptriml_s
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
-#' ## load several dpa objects
-#' dpa.list <- load_dpa(dpa.directory = system.file("extdata", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' ## load several dp objects
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
 #' ## trim the measurement
-#' dpa.trimmed <- dtrim(dpa)
+#' dp.trimmed <- dptrim(dp)
 #' ## detrend the measurement
-#' dpa.detrended <- ddetrend(dpa, type = "linear")
+#' dp.detrended <- dpdetrend(dp, type = "linear")
 #' ## detrend a list without displaying progress
-#' dpa.list.detrended <- lapply(dpa.list, ddetrend, type = "linear")
+#' dp.list.detrended <- lapply(dp.list, dpdetrend, type = "linear")
 #' ## detrend a list with displaying progress and run in parallel to
 #' ## speed things up - requires pbapply library
 #' \dontrun{
-#' dpa.list.detrended <- pbapply::pblapply(dpa.list, ddetrend, type = "linear", cl = 7)
+#' dp.list.detrended <- pbapply::pblapply(dp.list, dpdetrend, type = "linear", cl = 7)
 #' }
-ddetrend <- function(dpa, type = ""){
-  if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
+dpdetrend <- function(dp, type = ""){
+  if (!inherits(dp,"dp")) {stop("not a dp object")}
   if (type == "linear") {
-    trend <- stats::lm(amplitude ~ position, data = dpa$data)
-    fit <- stats::predict(trend, newdata = dpa$data)
-    dpa$data$amplitude  <- dpa$data$amplitude - fit + fit[1]
+    trend <- stats::lm(amplitude ~ position, data = dp$data)
+    fit <- stats::predict(trend, newdata = dp$data)
+    dp$data$amplitude  <- dp$data$amplitude - fit + fit[1]
   } else if (type == "gam") {
     if (requireNamespace("mgcv", quietly = TRUE)) {
-      m <- mgcv::gam(amplitude~s(position), data = dpa$data, method = "REML")
-      dpa$data$amplitude  <- dpa$data$amplitude - m$fitted.values + m$fitted.values[1]
+      m <- mgcv::gam(amplitude~s(position), data = dp$data, method = "REML")
+      dp$data$amplitude  <- dp$data$amplitude - m$fitted.values + m$fitted.values[1]
     } else {stop("Package \"mgcv\" needed for GAM detrending. Please install it.")}
-  } else {stop("Please specify detrending function.")}
-  return(dpa)
+  } else {stop("Please specify detrending function, either 'gam' or 'linear'.")}
+  return(dp)
 }

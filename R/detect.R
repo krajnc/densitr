@@ -10,34 +10,34 @@
 #' \code{changepoint}, which separates the measurement in segments
 #' based on their mean and variance. Start is detected, when the
 #' segment mean is outside of the cutoff limit, see \code{return.plot
-#' = TRUE} to display the actual process. This function will only
+#' = TRUE} to display the diagnostic plot. This function will only
 #' check the mean values of the first four (4) segments and compare
-#' them to the cutoff value. The function is called on a dpa object
+#' them to the cutoff value. The function is called on a dp object
 #' and returns either a row number of the starting point or a plot
 #' displaying the segmentation and detection. The sensitivity can be
 #' adjusted using the cutoff.sd parameter, which is an indicator on
 #' how many standard deviations the segment mean value can be before
 #' cutting it off. Will return a warning if start not detected.
-#' @param dpa A dpa object, see load_dpa.
+#' @param dp A dp object, see dpload.
 #' @param cutoff.sd How many standard deviations for the cutoff limit?
 #' @param return.plot If true, will return a plot displaying segment
-#'   detection for the current dpa file.
+#'   detection for the current dp file.
 #' @return Either a row number where the actual measurement starts or
 #'   a plot, displaying changepoint segmentation and set limits.
-#' @seealso dpa_detect_end, dtrim, dtriml, dtrim_s, dtriml_s
+#' @seealso dpdetect_e, dptrim, dptriml, dptrim_s, dptriml_s
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' ## get starting point
-#' start <- dpa_detect_start(dpa, return.plot = TRUE)
+#' start <- dpdetect_s(dp, return.plot = TRUE)
 #' ## plot the start detection
-#' dpa_detect_start(dpa, return.plot = TRUE)
-dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
-  ## check if dpa object
-  if (!inherits(dpa,"dpa")) {stop("not a dpa object")}
+#' dpdetect_s(dp, return.plot = TRUE)
+dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
+  ## check if dp object
+  if (!inherits(dp,"dp")) {stop("not a dp object")}
   ## get a rolling mean of diff lags
-  fit <- stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1)
+  fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span=0.1)
   fitted <- stats::predict(fit)
   data.in <- baseR.rollmean(diff(fitted),100) #defined in others.R
 
@@ -57,7 +57,7 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
         if (segment.value(1) < limit) {
           ## no segments found outside the limit in the first 4
           ## segments
-          warning(paste("start not detected in measurement ",dpa$footer$ID[1],sep="" ))
+          warning(paste("start not detected in measurement ",dp$footer$ID[1],sep="" ))
           cutoff <- 1
         } else {
           cutoff <- segments.points[1]
@@ -83,14 +83,14 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
     graphics::par(mfrow=c(2,1))
-    graphics::plot(dpa$data$amplitude, type = "l",
-                   xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
-         ylab= paste0("Resistograph density [", dpa$footer$yUnit, "]"),
-         main = paste0("Density profile ID: ",dpa$footer$ID))
+    graphics::plot(dp$data$amplitude, type = "l",
+                   xlab = paste0("Drilling depth [", dp$footer$xUnit, "]"),
+         ylab= paste0("Resistograph density [", dp$footer$yUnit, "]"),
+         main = paste0("Density profile ID: ",dp$footer$ID))
     graphics::abline(v=cutoff, col="red",lwd=3, lty=2)
-    ## [1:length(dpa$data$amplitude)/2]
+    ## [1:length(dp$data$amplitude)/2]
     changepoint::plot(segments.points2,
-                      xlab = paste0("Drilling depth [", dpa$footer$xUnit, "]"),
+                      xlab = paste0("Drilling depth [", dp$footer$xUnit, "]"),
          ylab= paste0("Moving average of lagged differences"),
          main="Detected segments")
     graphics::abline(h=mean(data.in), col="blue")
@@ -108,37 +108,37 @@ dpa_detect_start <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
 #' Detect measurement ending point automatically using changepoint
 #' segmentation
 #'
-#' The opposite of the dpa_detect_start, it will check the mean values
+#' The opposite of the dpdetect_s, it will check the mean values
 #' of the last four segments and compare them to the cutoff limit.
 #' Will give a warning if end not detected, which is expected on
 #' measurements where the needle did not exit the tree on the opposite
 #' side of the tree. See \code{return.plot = TRUE} to display the
-#' actual process. The function is called on a dpa object and returns
+#' actual process. The function is called on a dp object and returns
 #' either a row number of the measurement ending or a plot displaying
 #' the segmentation and detection. The sensitivity can be adjusted
 #' using the cutoff.sd parameter, which is an indicator on how many
 #' standard deviations the segment mean value can be before cutting it
 #' off.
-#' @param dpa A dpa object, see load_dpa.
+#' @param dp A dp object, see dpload.
 #' @param cutoff.sd How many standard deviations for the cutoff limit?
 #' @param return.plot If true, will return a plot displaying segment
-#'   detection for the current dpa file.
+#'   detection for the current dp file.
 #' @return Either a row number where the actual measurement ends or
 #'   a plot, displaying changepoint segmentation and set limits.
-#' @seealso dpa_detect_start, dtrim, dtriml, dtrim_s, dtriml_s
+#' @seealso dpdetect_s, dptrim, dptriml, dptrim_s, dptriml_s
 #' @export
 #' @examples
 #' ## load a single file
-#' dpa  <- load_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
 #' #' ## get ending point
-#' start <- dpa_detect_end(dpa, return.plot = TRUE)
+#' start <- dpdetect_e(dp, return.plot = TRUE)
 #' ## plot the end detection
-#' dpa_detect_end(dpa, return.plot = TRUE)
-dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
-  ## check if dpa object
-  if (!inherits(dpa,"dpa"))  {stop("not a dpa object")}
+#' dpdetect_e(dp, return.plot = TRUE)
+dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
+  ## check if dp object
+  if (!inherits(dp,"dp"))  {stop("not a dp object")}
   ## get a rolling mean of diff lags
-  fit <- stats::loess(dpa$data$amplitude ~ dpa$data$position, span=0.1)
+  fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span=0.1)
   fitted <- stats::predict(fit)
   data.in <- baseR.rollmean(diff(fitted),100) #defined in others.R
 
@@ -169,8 +169,8 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
           cutoff <- segments.points[length(segments.points)-1]
         } else {
           ## no segments deleted, no end detected
-          warning(paste("end not detected in file ",dpa$footer$ID[1],sep="" ))
-          cutoff <- nrow(dpa$data)
+          warning(paste("end not detected in file ",dp$footer$ID[1],sep="" ))
+          cutoff <- nrow(dp$data)
         }
       }
     }
@@ -181,14 +181,14 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
     graphics::par(mfrow=c(2,1))
-    graphics::plot(dpa$data$amplitude, type = "l",
-                   xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
-         ylab= paste0("Resistograph density [", dpa$footer$yUnit[1], "]"),
-         main = paste0("Density profile ID: ",dpa$footer$ID))
+    graphics::plot(dp$data$amplitude, type = "l",
+                   xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
+                   ylab= paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
+                   main = paste0("Density profile ID: ",dp$footer$ID))
     graphics::abline(v=cutoff + 100, col="red", lwd=3, lty=2)
     changepoint::plot(segments.points2,
-                      xlab = paste0("Drilling depth [", dpa$footer$xUnit[1], "]"),
-         ylab= paste0("Moving average of lagged differences"),
+                      xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
+                      ylab= paste0("Moving average of lagged differences"),
          main="Detected segments")
     graphics::abline(h=mean(data.in), col="blue")
     graphics::abline(h=limit, col="green")
@@ -200,7 +200,7 @@ dpa_detect_end <- function(dpa, cutoff.sd = 1, return.plot = FALSE){
     return(p)
   } else {
     ## if end detected, add 100 to account for moving averages
-    if (cutoff == nrow(dpa$data)) {
+    if (cutoff == nrow(dp$data)) {
       return(cutoff)
     } else {
       return(cutoff + 100)

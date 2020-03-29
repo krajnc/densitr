@@ -54,8 +54,14 @@ read_dpa <- function(file){
   if (!grepl("\\.dpa$", file)) {stop("not a *.dpa file")}
   dpa.read  <- readLines(file, warn=FALSE)
   data  <- data.frame("amplitude" =  utils::tail(utils::head(dpa.read,n = -14), -3))
-  data$position <- 1:nrow(data)
-  data$amplitude  <- as.numeric(as.character(data$amplitude))
+  if (nrow(data)!= 0){
+    data$position <- 1:nrow(data)
+    data$amplitude  <- as.numeric(as.character(data$amplitude))
+  } else {
+    data <- NULL
+    data$position <- NA
+    data$amplitude <- NA
+  }
   data$ID <- extract_dpa_name(file)
   footer  <-  paste(utils::tail(dpa.read, n=13), collapse = "\n")
   footer  <- utils::read.csv(text = footer, check.names=FALSE, header = F, col.names = "footer")
@@ -184,5 +190,6 @@ combine_footers  <- function(dp.list){
 combine_data  <- function(dp.list){
   data  <- lapply(dp.list,function(x) x$data)
   data <- do.call("rbind", data)
+  rownames(data) <- NULL
   return(data)
 }

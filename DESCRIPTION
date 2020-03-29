@@ -1,13 +1,18 @@
 Package: densiter
 Title: Tools for Analysing Density Profiles from Resistance Drilling
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person(given = "Luka",
            family = "Krajnc",
            role = c("aut", "cre"),
            email = "luka.krajnc@gozdis.si",
            comment = c(ORCID = "0000-0002-3120-559X"))
-Description: What the package does (one paragraph).
+Description: Provides various tools for analysing density profiles
+    obtained by resistance drilling. It can load individual or multiple
+    files and trim the starting and ending part of each density profile.
+    It also provides tools to trim profiles manually, to detrend the
+    measurements using several methods and to plot the profiles. Written
+    with a focus on forestry use of resistance drilling in standing trees.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

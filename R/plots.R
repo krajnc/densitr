@@ -141,6 +141,6 @@ plot_failures  <- function(dp.trimmed){
                ylab= paste0("Resistograph density"),
                main = paste0("Resistograph data, trimming failure ",dp$ID[1])))
 
-    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(dp.trimmed)))
+    keyPressed = readkeygraph(paste0("[any key to continue, q to quit] file ",i,"/",length(failures2)))
   }
 }

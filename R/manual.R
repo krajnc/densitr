@@ -119,8 +119,8 @@ manual_trim_detect <- function(failure, label = "") {
                  main = paste0("Density profile ID: ",failure$footer$ID," ",label))
   message("\n[click on graph then pick a vertical line, then confirm]\n")
   click.loc <- graphics::locator(1)
-  if (click.loc == NULL) {
-    stop("point selection not supported on your graphics device, see densiter::manual_trim_detect documentation")}
+  ## if (click.loc == "") {
+  ##   stop("point selection not supported on your graphics device, see densiter::manual_trim_detect documentation")}
   graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
   readkeygraph(paste0("confirm selection, y or n?"))
   if (keyPressed == "y"){

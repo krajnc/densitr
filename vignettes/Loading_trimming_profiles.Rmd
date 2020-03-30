@@ -69,7 +69,7 @@ head(dp.list, 2)
 A typical resistance drilling measurement starts with an increase in resistance values in between the measurement start and the immersion of the needle in the wood. Similarly, if the needle exits of the opposite of the wood, there will be a decrease in values due to lack of resistance. Bark-to-bark measurements should be trimmed on both sides, while bark-to-pith only at the beginning.
 
 ## Looking under the hood
-**denister** provides two functions that try to automate start and end detection: `dpdetect_s` and `dpdetect_e` by using checkpoint binary segmentation. They are usually not used manually, see section on automatic trimming. Let's find where the first profile in our list actually starts:
+**densiter** provides two functions that try to automate start and end detection: `dpdetect_s` and `dpdetect_e` by using checkpoint binary segmentation. They are usually not used manually, see section on automatic trimming. Let's find where the first profile in our list actually starts:
 ```{r}
 dpdetect_s(dp.list[[1]])
 ```

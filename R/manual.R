@@ -104,7 +104,7 @@ separate_trim_failures  <- function(dp.trimmed) {
 #' @param failure A dp object, usually see dpload.
 #' @param label Optional label to be displayed on the plot after the
 #'   file
-#' @return The x position selected on the graph, row number in the dpa$data data frame.
+#' @return The x position selected on the graph, row number in the dp$data data frame.
 #' @seealso dptrim, dptriml
 #' @export
 #' @examples

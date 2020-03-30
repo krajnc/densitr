@@ -51,7 +51,7 @@ plot_trimming  <- function(dp.list){
 #' nothing.
 #'
 #' @param dp.list A list of dp objects, see \code{dpload}
-#' @seealso dtrim, dtrim_s, dtriml_s,
+#' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
 #' ## load several dp files
@@ -74,7 +74,7 @@ plot_start_detection  <- function(dp.list){
 #' nothing.
 #'
 #' @param dp.list A list of dp objects, see \code{dpload}
-#' @seealso dtrim, dtrim_s, dtriml_s,
+#' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
 #' ## load several dp files
@@ -96,7 +96,7 @@ plot_end_detection  <- function(dp.list){
 #' the next dp object. Returns nothing.
 #'
 #' @param dp.list A list of dp objects, see \code{dpload}
-#' @seealso dtrim, dtrim_s, dtriml_s,
+#' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
 #' ## load several dp files
@@ -121,7 +121,7 @@ plot_all  <- function(dp.list){
 #' trimmed objects must include the trimming report (rreport = TRUE).
 #'
 #' @param dp.trimmed A list of trimmed dp objects, see \code{dpload}
-#' @seealso dtrim, dtrim_s, dtriml_s,
+#' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
 #' ## load several dp files

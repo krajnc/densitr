@@ -9,7 +9,7 @@
 #' returned object will also include information on whether both
 #' cutoff points were detected. If starting/ending point not detected,
 #' dp object is returned with no changes. When running on a list of
-#' dp objects, use \code{dtriml}.
+#' dp objects, use \code{dptriml}.
 #'
 #' @param dp An dp object, see \code{dpload}
 #' @param return.plot Return a plot instead of dp object? If TRUE,
@@ -20,11 +20,11 @@
 #'   included when returning a dp object?
 #' @param silent Mute detection warnings, used when calling on list. A
 #'   list of trimmed dp objects, a result of calling dtriml or
-#'   dtriml_s on a dp list with return.fail = FALSE.
+#'   dptriml_s on a dp list with return.fail = FALSE.
 #' @return A trimmed dp object, with the beginning and ending
 #'   removed, if they were detected. When return.plot = TRUE, it
 #'   returns a plot displaying the process.
-#' @seealso dtriml, dtrim_s, dtriml_s
+#' @seealso dptriml, dptrim_s, dptriml_s
 #' @export
 #' @examples
 #' \dontrun{
@@ -139,7 +139,7 @@ dptriml  <- function(dp.list, rreport = FALSE, cl = 1) {
 #'
 #' Calls dpdetect_s on a given dpa object and returns a trimmed
 #' dpa object with the the row before the starting point removed. If
-#' return.plot = TRUE, it will return a plot displaying the dpa object
+#' return.plot = TRUE, it will return a plot displaying the dp object
 #' with detected starting point. If called with the option
 #' return.fail = FALSE and return.plot = FALSE, the returned
 #' object will also include information on whether starting cutoff
@@ -155,12 +155,12 @@ dptriml  <- function(dp.list, rreport = FALSE, cl = 1) {
 #' @param return.fail Should information on the success of trimming be
 #'   included when returning a dp object?
 #' @param silent Mute detection warnings, used when calling on list. A
-#'   list of trimmed dp objects, a result of calling dtriml or
-#'   dtriml_s on a dp list with return.fail = FALSE.
+#'   list of trimmed dp objects, a result of calling dptriml or
+#'   dptriml_s on a dp list with rreport = FALSE.
 #' @return A trimmed dp object, with the beginning and ending
 #'   removed, if they were detected. When return.plot = TRUE, it
 #'   returns a plot displaying the process.
-#' @seealso dtrim, dtriml, dtrim_s
+#' @seealso dptrim, dptriml, dptriml_s
 #' @export
 #' @examples
 #' \dontrun{
@@ -209,11 +209,11 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 
 #' Automatically trim a list of density profiles on the starting side
 #'
-#' Calls \code{dtrim} on a list of dp objects and returns a list of
+#' Calls \code{dptrim} on a list of dp objects and returns a list of
 #' trimmed objects. If automatic detection fails, the dp objects are
 #' not trimmed. Can be run in parallel on multiple cores, this speeds
 #' up the trimming process significantly. Only trims the starting
-#' side, see \code{dtriml} for trimming both side simultaneously.
+#' side, see \code{dptriml} for trimming both side simultaneously.
 #'
 #' @param dp.list A list of dp objects, see \code{dpload}
 #' @param rreport Return an embedded report on automatic trim success,
@@ -224,7 +224,7 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' @return A list of trimmed dp objects. When rreport = TRUE, it
 #'   return a two-item list of (i) trimmed dp objects and (ii)
 #'   trimming report data frame.
-#' @seealso dtrim, dtrim_s, dtriml_s,
+#' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
 #' \dontrun{

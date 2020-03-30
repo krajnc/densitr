@@ -15,10 +15,12 @@ Description: Provides various tools for analysing density profiles
     with a focus on forestry use of resistance drilling in standing trees.
 License: GPL-3
 Encoding: UTF-8
-URL: http://github.com/krajnc/densiter
-BugReports: http://github.com/krajnc/densiter/issues
+URL: https://github.com/krajnc/densiter
+BugReports: https://github.com/krajnc/densiter/issues
 LazyData: true
 Imports:
+    stats,
+    utils,
     changepoint (>= 2.2.2)
 Suggests:
     pbapply,

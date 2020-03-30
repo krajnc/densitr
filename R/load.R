@@ -63,6 +63,7 @@ read_dpa <- function(file){
     data$amplitude <- NA
   }
   data$ID <- extract_dpa_name(file)
+  row.names(data)  <- NULL
   footer  <-  paste(utils::tail(dpa.read, n=13), collapse = "\n")
   footer  <- utils::read.csv(text = footer, check.names=FALSE, header = F, col.names = "footer")
   footer$name <- sapply(strsplit(as.character(footer$footer), "="), "[", 1)

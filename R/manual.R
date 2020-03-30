@@ -115,6 +115,7 @@ separate_trim_failures  <- function(dp.trimmed) {
 #' manual_trim_detect(dp)
 #' }
 manual_trim_detect <- function(failure, label = "") {
+  x  <- NULL
   graphics::plot(failure$data$amplitude, type = "l",
                  xlab = paste0("Drilling depth [", x$footer$xUnit, "]"),
                  ylab = paste0("Resistograph density [", x$footer$yUnit, "]"),
@@ -122,11 +123,12 @@ manual_trim_detect <- function(failure, label = "") {
   message("\n[click on graph to pick a vertical line]")
   cutoff <- tryCatch(
   {
-    x.value <- graphics::locator(1)$x
-    if ((x.value < 0) | (x.value > nrow(failure$data)) ){
+    clicked <- graphics::locator(1)
+    xl <- clicked$x
+    if ((xl < 0) | (xl > nrow(failure$data)) ){
       stop()
     }
-    x.value
+    xl
   },
   error = function(e){
     if (label == " - PICK START") {

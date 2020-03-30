@@ -43,6 +43,7 @@ dpdetrend <- function(dp, type = ""){
     if (requireNamespace("mgcv", quietly = TRUE)) {
       m <- mgcv::gam(amplitude~s(position), data = dp$data, method = "REML")
       dp$data$amplitude  <- dp$data$amplitude - m$fitted.values + m$fitted.values[1]
+      rownames(dp$data)  <- NULL
     } else {stop("Package \"mgcv\" needed for GAM detrending. Please install it.")}
   } else {stop("Please specify detrending function, either 'gam' or 'linear'.")}
   return(dp)

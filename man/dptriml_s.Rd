@@ -22,11 +22,11 @@ A list of trimmed dp objects. When rreport = TRUE, it
   trimming report data frame.
 }
 \description{
-Calls \code{dtrim} on a list of dp objects and returns a list of
+Calls \code{dptrim} on a list of dp objects and returns a list of
 trimmed objects. If automatic detection fails, the dp objects are
 not trimmed. Can be run in parallel on multiple cores, this speeds
 up the trimming process significantly. Only trims the starting
-side, see \code{dtriml} for trimming both side simultaneously.
+side, see \code{dptriml} for trimming both side simultaneously.
 }
 \examples{
 \dontrun{
@@ -37,5 +37,5 @@ dp.trimmed <- dptrim_sl(dp.list)
 }
 }
 \seealso{
-dtrim, dtrim_s, dtriml_s,
+dptrim, dptrim_s, dptriml_s,
 }

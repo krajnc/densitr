@@ -19,7 +19,7 @@ included when returning a dp object?}
 
 \item{silent}{Mute detection warnings, used when calling on list. A
 list of trimmed dp objects, a result of calling dtriml or
-dtriml_s on a dp list with return.fail = FALSE.}
+dptriml_s on a dp list with return.fail = FALSE.}
 }
 \value{
 A trimmed dp object, with the beginning and ending
@@ -36,7 +36,7 @@ starting and ending point. If called with the option
 returned object will also include information on whether both
 cutoff points were detected. If starting/ending point not detected,
 dp object is returned with no changes. When running on a list of
-dp objects, use \code{dtriml}.
+dp objects, use \code{dptriml}.
 }
 \examples{
 \dontrun{
@@ -49,5 +49,5 @@ dptrim(dp, return.plot = TRUE)
 }
 }
 \seealso{
-dtriml, dtrim_s, dtriml_s
+dptriml, dptrim_s, dptriml_s
 }

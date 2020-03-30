@@ -15,7 +15,7 @@ dpload(dp.file = NULL, dp.directory = "", recursive = TRUE, name = "file")
 \item{recursive}{Also look for density profiles files in subfolders?}
 
 \item{name}{Either \code{c("file", "folder")}, used for naming of
-list items. If "file", only file name withouth the complete path
+list items. If "file", only file name without the complete path
 will be used for naming ("00050060"). If "folder", the complete
 path along with file name will be used to name the dpa objects
 ("data/0005/00/00050060"). *.dpa ending is removed from the name

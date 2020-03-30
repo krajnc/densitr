@@ -18,8 +18,8 @@ and end trimming success.}
 included when returning a dp object?}
 
 \item{silent}{Mute detection warnings, used when calling on list. A
-list of trimmed dp objects, a result of calling dtriml or
-dtriml_s on a dp list with return.fail = FALSE.}
+list of trimmed dp objects, a result of calling dptriml or
+dptriml_s on a dp list with rreport = FALSE.}
 }
 \value{
 A trimmed dp object, with the beginning and ending
@@ -29,7 +29,7 @@ A trimmed dp object, with the beginning and ending
 \description{
 Calls dpdetect_s on a given dpa object and returns a trimmed
 dpa object with the the row before the starting point removed. If
-return.plot = TRUE, it will return a plot displaying the dpa object
+return.plot = TRUE, it will return a plot displaying the dp object
 with detected starting point. If called with the option
 return.fail = FALSE and return.plot = FALSE, the returned
 object will also include information on whether starting cutoff
@@ -48,5 +48,5 @@ dptrim_s(dp, return.plot = TRUE)
 }
 }
 \seealso{
-dtrim, dtriml, dtrim_s
+dptrim, dptriml, dptriml_s
 }

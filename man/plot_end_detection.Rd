@@ -23,5 +23,5 @@ plot_end_detection(dp.list)
 }
 }
 \seealso{
-dtrim, dtrim_s, dtriml_s,
+dptrim, dptrim_s, dptriml_s,
 }

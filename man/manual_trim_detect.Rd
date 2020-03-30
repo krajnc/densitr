@@ -13,7 +13,7 @@ manual_trim_detect(failure, label = "")
 file}
 }
 \value{
-The x position selected on the graph, row number in the dpa$data data frame.
+The x position selected on the graph, row number in the dp$data data frame.
 }
 \description{
 Follow-up to automatic trim functions or to be used manually, will

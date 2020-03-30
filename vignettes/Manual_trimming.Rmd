@@ -16,8 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Manual trimming and detection failure correction
-
+# Manual trimming
 Automatic trimming sometimes fails to detect the starting or ending point within the density profile. Failing to detect ending point is usually a consequence of the profile being bark-to-pith instead of bark-to-bark. In those cases (an others) you can trim the measurement by hand.
 
 Load the library, a few density profiles and try to trim them automatically:

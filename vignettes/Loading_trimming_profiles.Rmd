@@ -4,7 +4,7 @@ author: "Luka Krajnc"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Loading_trimming_profiles}
+  %\VignetteIndexEntry{Loading and automatic trimming of density profiles}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,8 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Loading and automatic trimming of density profiles
-## Introduction
+# Introduction
 The use of resistance drilling for density assessment is becoming more and more used across different disciplines. This R package provides a way to do the density analysis in R by loading the measurements, trimming them automatically or by hand. It is also possible to remove trends from profiles and measure ring widths. Please note that this package was written with a focus on forestry, where density profiles are usually obtained on living standing trees. Other uses are also possible, wherever you are using density profiles.
 
 Let's load the library to see what it can do:
@@ -26,7 +25,7 @@ library(densiter)
 ```
 
 
-## Loading resistance drilling density profiles
+# Loading resistance drilling density profiles
 In the current version of **densiter**, 0.0.1, only files (*.dpa) created by Rinntech Resistograph devices are supported. Other file types are currently not supported (for example, those produced by the IML Resi devices), they might be added later on. Contributions and pull requests are always welcome.
 
 Never try to load *.dpa files directly from the Resistograph device into R, always copy them first onto your computer and load them from there. Try at your own risk. This vignette uses some example density profiles recorded using an Rinntech Resistograph SC650, which are included with this package. There is a total of 15 profiles, representing various tree species. Some are drilled bark-to-bark, while others were drilled bark-to-pith because of their dimensions.
@@ -66,10 +65,10 @@ Inspect the list by displaying the first two items:
 head(dp.list, 2)
 ```
 
-## Trimming
+# Trimming
 A typical resistance drilling measurement starts with an increase in resistance values in between the measurement start and the immersion of the needle in the wood. Similarly, if the needle exits of the opposite of the wood, there will be a decrease in values due to lack of resistance. Bark-to-bark measurements should be trimmed on both sides, while bark-to-pith only at the beginning.
 
-### Looking under the hood
+## Looking under the hood
 **denister** provides two functions that try to automate start and end detection: `dpdetect_s` and `dpdetect_e` by using checkpoint binary segmentation. They are usually not used manually, see section on automatic trimming. Let's find where the first profile in our list actually starts:
 ```{r}
 dpdetect_s(dp.list[[1]])
@@ -87,7 +86,7 @@ dpdetect_e(dp.list[[1]])
 
 Diagnostic plot can also be displayed when detecting profile end. If either start or end is not detected, it will also print a warning message.
 
-### Automatic trimming
+## Automatic trimming
 In order to trim an individual profile after obtaining start and end profiles, you would have to subset the profile using start and end positions. Calling `dptrim` on a density profile will automate the whole process. It will try do detect start and end positions and trim those portions away, returning a profile without the starting or ending portion of the profile.
 ```{r}
 dptrim(dp.list[[1]])
@@ -108,7 +107,7 @@ If you have `pbapply` installed, you will get a nice progress bar displaying cur
 
 The equivalent functions to `dptrim` and `dptriml` to trim the profiles only at the beginning are `dptrim_s` and `dptriml_s`.
 
-### What to do when automatic trimming fails?
+## What to do when automatic trimming fails?
 Automatic trimming sometimes fails to detect the starting or ending point within the density profile. Failing to detect ending point is usually a consequence of the profile being bark-to-pith instead of bark-to-bark. In those cases (an others) you can trim the measurement by hand. See vignette on Manual profile trimming for more information.
 
 

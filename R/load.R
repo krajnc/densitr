@@ -111,14 +111,14 @@ dpload  <- function(dp.file = NULL, dp.directory = "",
     if (dir.exists(dp.directory)) {
       dp.files <- list.files(path = dp.directory, recursive = recursive, pattern="*.dpa$")
       dp.files <- file.path(dp.directory, dp.files)
-      message("found ", length(dp.files), " dp files, loading...")
+      message("found ", length(dp.files), " density profiles, loading...")
       if (requireNamespace("pbapply", quietly = TRUE)) {
         dp.list <-  pbapply::pblapply(dp.files, read_dpa)
       } else {
         ptm <- proc.time()
         dp.list <-  lapply(dp.files,  read_dpa)
         stop  <- proc.time() - ptm
-        message("loading took ", stop[3], "seconds, consider installing pbapply to show progress using a progress bar")
+        message("loading took ", round(stop[3],0), " seconds, consider installing pbapply to show progress using a progress bar")
       }
       if (name == "file") {
         ## name only using file names
@@ -127,7 +127,7 @@ dpload  <- function(dp.file = NULL, dp.directory = "",
         ## if recursive, name them properly also using folders
         names(dp.list) <-  gsub("*.dpa$","",dp.files)
       }
-      message("loading of ", length(dp.files), " dp files complete.")
+      message("loaded ", length(dp.files), " density profiles")
       return(dp.list)
     } else {
       ## fail directory doesn't exist

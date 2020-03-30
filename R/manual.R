@@ -91,13 +91,15 @@ separate_trim_failures  <- function(dp.trimmed) {
 #' display a plot with the density profiles. Most commonly used in
 #' automatic failure corrections by the function correct_failures. Use
 #' your mouse to select starting/ending point on the plot, your
-#' selection will then be displayed on the plot. Use keys y/n to
-#' confirm selection, pressing n will restart the selection process.
-#' The selection can be repeated once after pressing n, next n will
-#' stop the process and it has to be restarted manually. This function
-#' uses \code{grDevices::getGraphicsEvent} and
-#' \code{graphics::locator}, which only works on screen devices X11,
-#' windows and quartz. It will not work on other devices.
+#' selection will then be displayed on the plot. Either returns a
+#' numeric value or NA in case of errors. There are two special cases:
+#' when encountering an error with a label = " - PICK START" it will
+#' return the starting position, and with label " - PICK STOP" it will
+#' return the ending position. These labels are used when correcting
+#' several density profiles at once using \code{correct_failures}.
+#' This function uses \code{graphics::locator}, which only works on
+#' screen devices X11, windows and quartz. It will not work on other
+#' devices, returning NA.
 #'
 #' @param failure A dp object, usually see dpload.
 #' @param label Optional label to be displayed on the plot after the
@@ -114,35 +116,29 @@ separate_trim_failures  <- function(dp.trimmed) {
 #' }
 manual_trim_detect <- function(failure, label = "") {
   graphics::plot(failure$data$amplitude, type = "l",
-                 xlab = paste0("Drilling depth"),
-                 ylab= paste0("Resistograph density"),
+                 xlab = paste0("Drilling depth [", x$footer$xUnit, "]"),
+                 ylab = paste0("Resistograph density [", x$footer$yUnit, "]"),
                  main = paste0("Density profile ID: ",failure$footer$ID," ",label))
-  message("\n[click on graph then pick a vertical line, then confirm]\n")
-  click.loc <- graphics::locator(1)
-  ## if (click.loc == "") {
-  ##   stop("point selection not supported on your graphics device, see densiter::manual_trim_detect documentation")}
-  graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
-  readkeygraph(paste0("confirm selection, y or n?"))
-  if (keyPressed == "y"){
-    cutoff <- click.loc$x
-    grDevices::dev.off()
-  } else {
-    grDevices::dev.off()
-    graphics::plot(failure$data$amplitude, type = "l",
-                   xlab = paste0("Drilling depth"),
-                   ylab= paste0("Resistograph density"),
-                   main = paste0("Resistograph data: file ",failure$footer$ID))
-    click.loc <- graphics::locator(1)
-    graphics::abline(v=click.loc$x, col="red",lwd=3, lty=2)
-    readkeygraph(paste0("confirm selection, y or n?"))
-    if (keyPressed == "y"){
-      cutoff <- click.loc$x
-      grDevices::dev.off()
+  message("\n[click on graph to pick a vertical line]")
+  cutoff <- tryCatch(
+  {
+    x.value <- graphics::locator(1)$x
+    if ((x.value < 0) | (x.value > nrow(failure$data)) ){
+      stop()
+    }
+    x.value
+  },
+  error = function(e){
+    if (label == " - PICK START") {
+      1
+    } else if (label == " - PICK STOP") {
+      nrow(failure$data)
     } else {
-      cutoff  <- FALSE
-      grDevices::dev.off()
+      NA
     }
   }
+  )
+  graphics::abline(v=cutoff, col="red",lwd=3, lty=2)
   if (is.numeric(cutoff)) {
     return(round(cutoff,0))
   } else {

@@ -20,13 +20,15 @@ Follow-up to automatic trim functions or to be used manually, will
 display a plot with the density profiles. Most commonly used in
 automatic failure corrections by the function correct_failures. Use
 your mouse to select starting/ending point on the plot, your
-selection will then be displayed on the plot. Use keys y/n to
-confirm selection, pressing n will restart the selection process.
-The selection can be repeated once after pressing n, next n will
-stop the process and it has to be restarted manually. This function
-uses \code{grDevices::getGraphicsEvent} and
-\code{graphics::locator}, which only works on screen devices X11,
-windows and quartz. It will not work on other devices.
+selection will then be displayed on the plot. Either returns a
+numeric value or NA in case of errors. There are two special cases:
+when encountering an error with a label = " - PICK START" it will
+return the starting position, and with label " - PICK STOP" it will
+return the ending position. These labels are used when correcting
+several density profiles at once using \code{correct_failures}.
+This function uses \code{graphics::locator}, which only works on
+screen devices X11, windows and quartz. It will not work on other
+devices, returning NA.
 }
 \examples{
 ## load a single file

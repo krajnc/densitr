@@ -4,7 +4,7 @@ author: "Luka Krajnc"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Manual_trimming}
+  %\VignetteIndexEntry{Manual trimming of density profiles}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -37,7 +37,7 @@ dptrim(dp.list[["00050045"]], return.plot = TRUE)
 
 As seen from the plot, end detection failed due to the large increase in values towards the ending part of the profile.
 
-In such cases or where you want to make a manual correction, you can use `manual_trim_detect` on an individual profile. This will plot that profile and you can click on the plot to select the desired position. After selecting the point, your selection will be drawn on the plot and you will be asked to confirm your selection using either **y** or **n** keys. Pressing **y** will confirm your selection and return the horizontal position, which you can then use to subset that particular profile. Pressing **n** will give you one more chance to pick it the desired point and then confirm it. After two loops, the function will return `FALSE` as a result, as manual detection will be considered failed. The function will also fail if your graphics device is something other than X11, windows or quartz.
+In such cases or where you want to make a manual correction, you can use `manual_trim_detect` on an individual profile. This will plot that profile and you can click on the plot to select the desired position. After selecting the point, your selection will be drawn on the plot. The function will also fail if your graphics device is something other than X11, windows or quartz.
 ```{r, eval = FALSE}
 manual_trim_detect(dp.list[["00050045"]])
 ```
@@ -58,3 +58,4 @@ dp.failed <- separate_trim_failures(dp.trimmed)
 length(dp.failed$failures.end)
 ```
 
+Trim failures can also be ignored in some cases. For example, if trimming both beginning and end, end trimming will sometimes fail due to the profile being bark-to-pith and not bark-to-bark. Plot the failures and inspect them before disregarding them, if no manual corrections are being done.

@@ -65,7 +65,7 @@ dpid_rw  <- function(dp, min_rw_width = 200, return.plot = FALSE, smooth = FALSE
     values  <- values[order(values$value),]
     values$amplitude <- dp$data$amplitude[values$value]
   } else {
-    y.smooth <- loess(amplitude ~ position, data=dp$data, span=span)$fitted
+    y.smooth <- stats::loess(amplitude ~ position, data=dp$data, span=span)$fitted
     pk <- find_peaks(y.smooth, m = min_rw_width / 2)
     val  <- find_peaks(-y.smooth, m = min_rw_width / 2)
     values  <- rbind(data.frame(value = pk, type = "1"),

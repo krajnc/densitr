@@ -26,9 +26,9 @@ library(densiter)
 
 
 # Loading resistance drilling density profiles
-In the current version of **densiter**, 0.0.1, only files (*.dpa) created by Rinntech Resistograph devices are supported. Other file types are currently not supported (for example, those produced by the IML Resi devices), they might be added later on. Contributions and pull requests are always welcome.
+In the current version of **densiter**, only files (*.dpa) created by Rinntech Resistograph® devices are supported.  It was tested to work on files produced by R650-RC Resistograph®. Other file types are currently not supported, they might be added later on. Contributions and pull requests are always welcome.
 
-Never try to load *.dpa files directly from the Resistograph device into R, always copy them first onto your computer and load them from there. Try at your own risk. This vignette uses some example density profiles recorded using an Rinntech Resistograph SC650, which are included with this package. There is a total of 15 profiles, representing various tree species. Some are drilled bark-to-bark, while others were drilled bark-to-pith because of their dimensions.
+Never try to load *.dpa files directly from the Resistograph device into R, always copy them first onto your computer and load them from there. Try at your own risk. This vignette uses some example density profiles recorded using an Rinntech Resistograph® R650-SC, which are included with this package. There is a total of 15 profiles, representing various tree species. Some are drilled bark-to-bark, while others were drilled bark-to-pith because of their dimensions.
 
 Loading a single file is simple:
 ```{r}

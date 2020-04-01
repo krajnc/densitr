@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{read_dpa}
 \alias{read_dpa}
-\title{Read a single Resistograph measurement file (*.dpa)}
+\title{Read a single resistance-drilling density profile measurement file (*.dpa)}
 \usage{
 read_dpa(file)
 }
@@ -16,7 +16,7 @@ A \code{dp} object.
 Reads a single *.dpa file and returns a \code{dp} object,
 constructed from two lists: \code{data} and \code{footer}. The
 former one contains actual measurement values, the latter includes
-supplementary data recorded by the Resistograph device, such as
+supplementary data recorded by the Resistograph® device, such as
 time, firmware number...
 }
 \examples{

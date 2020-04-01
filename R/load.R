@@ -34,12 +34,12 @@ extract_dpa_name  <- function(string){
   ## tidyverse alternative: str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
 }
 
-#' Read a single Resistograph measurement file (*.dpa)
+#' Read a single resistance-drilling density profile measurement file (*.dpa)
 #'
 #' Reads a single *.dpa file and returns a \code{dp} object,
 #' constructed from two lists: \code{data} and \code{footer}. The
 #' former one contains actual measurement values, the latter includes
-#' supplementary data recorded by the Resistograph device, such as
+#' supplementary data recorded by the Resistograph® device, such as
 #' time, firmware number...
 #'
 #' @param file A path to file, including file name.
@@ -78,7 +78,7 @@ read_dpa <- function(file){
   return(d)
 }
 
-#' Load a single Resistograph measurement file (*.dpa) or a directory
+#' Load a single density profile measurement file (*.dpa) or a directory
 #' of *.dpa files.
 #'
 #' Loads either a single .dpa file or a list of .dpa files. If
@@ -87,6 +87,10 @@ read_dpa <- function(file){
 #' (recursively in all subfolders, can be turned off) and return a
 #' list of dp files. It will use pbapply to display progress, if
 #' loading a directory.
+#'
+#' NOTE: for now this function only supports loading density profiles
+#' created by the Rinntech Resistograph® resistance drilling device
+#' (*.dpa). It was tested to work on files produced by R650-RC drill.
 #'
 #' @param dp.file A path to a single file, including file name.
 #' @param dp.directory A directory with .dpa files.

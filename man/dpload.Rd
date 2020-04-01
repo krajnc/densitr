@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{dpload}
 \alias{dpload}
-\title{Load a single Resistograph measurement file (*.dpa) or a directory
+\title{Load a single density profile measurement file (*.dpa) or a directory
 of *.dpa files.}
 \usage{
 dpload(dp.file = NULL, dp.directory = "", recursive = TRUE, name = "file")
@@ -31,6 +31,11 @@ is specified, it will search for all dpa files in that directory
 (recursively in all subfolders, can be turned off) and return a
 list of dp files. It will use pbapply to display progress, if
 loading a directory.
+}
+\details{
+NOTE: for now this function only supports loading density profiles
+created by the Rinntech Resistograph® resistance drilling device
+(*.dpa). It was tested to work on files produced by R650-RC drill.
 }
 \examples{
 ## load a single file

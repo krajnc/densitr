@@ -1,0 +1,63 @@
+---
+title: "Tree ring detection and ring width measurement from density profiles"
+author: "Luka Krajnc"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tree ring detection and ring width measurement from density profiles}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+# Introduction
+Load the library, an example density profile and then trim it and detrend it. While ring detection will work on untrimmed and undetrended density profiles, you will obtain better results by trimming and detrending the density profile. 
+```{r setup}
+library(densiter)
+dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densiter"))
+dp.trimmed <- dptrim(dp)
+dp.detrended  <- dpdetrend(dp.trimmed, type = "gam")
+```
+
+# Detecting tree rings
+
+Tree rings can identified using `dprings` function, which will identify local peaks and valleys inside the density profile. It will return a data frame by default, where the value is the horizontal index of the peak/valley:
+```{r}
+rings <- dprings(dp.detrended)
+head(rings)
+```
+
+When `dprings` is called with `return.plot = TRUE`, the function will return a diagnostic plot. The green points are valleys, blue points are peaks and red points were either a repetition of peak or valley that was automatically excluded.
+```{r, fig.width=15, fig.height=10}
+dprings(dp.detrended, return.plot = TRUE)
+```
+
+The dashed line on the graph is the minimum peak value limit, represented by the overall mean of the profile. You could also remove some noise by smoothing the profile first by adding the argument `smooth = TRUE`. This applies a LOESS regression with a given span and removes some of the noise.
+```{r, fig.width=15, fig.height=10}
+dprings(dp.detrended, smooth = TRUE, return.plot = TRUE)
+```
+
+Different tree species will require different parameters, try to adjust either `pps` or `threshold.sd` to get better results. Best results are expected in softwoods, as they have a clearer transition between early and late wood.
+
+
+# Extracting ring widths
+To extract ring widths from the ring detection, use `get_RW` on the data frame returned by `dprings`, which will a vector of peak-to-peak distances representing ring widths. The unit is dictated by the unit of the original density profile, which can be extracted using `dp$footer$xUnit`.
+```{r}
+get_RW(rings)
+dp$footer$xUnit
+length(get_RW(rings))
+```
+
+Overall, in this particular density profile we have detected 33 rings, the values can then be further examined as demonstrated below.
+```{r}
+rw <- get_RW(rings)
+## convert to milimetres
+rw <- rw / 100
+summary(rw)
+
+```

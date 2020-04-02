@@ -8,11 +8,13 @@ Authors@R:
            email = "luka.krajnc@gozdis.si",
            comment = c(ORCID = "0000-0002-3120-559X"))
 Description: Provides various tools for analysing density profiles
-    obtained by resistance drilling. It can load individual or multiple
-    files and trim the starting and ending part of each density profile.
-    It also provides tools to trim profiles manually, to detrend the
-    measurements using several methods and to plot the profiles. Written
-    with a focus on forestry use of resistance drilling in standing trees.
+    obtained by resistance drilling. It can load individual or
+    multiple files and trim the starting and ending part of each
+    density profile. Tools are also provided to trim profiles
+    manually, to remove the trend from measurements using several
+    methods, to plot the profiles and to detect tree rings
+    automatically. Written with a focus on forestry use of resistance
+    drilling in standing trees.
 License: GPL-3
 Encoding: UTF-8
 URL: https://github.com/krajnc/densiter

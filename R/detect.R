@@ -85,14 +85,14 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     graphics::par(mfrow=c(2,1))
     graphics::plot(dp$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit, "]"),
-         ylab= paste0("Resistograph density [", dp$footer$yUnit, "]"),
-         main = paste0("Density profile ID: ",dp$footer$ID))
+                   ylab= paste0("Resistograph density [", dp$footer$yUnit, "]"),
+                   main = paste0("Density profile ID: ",dp$footer$ID))
     graphics::abline(v=cutoff, col="red",lwd=3, lty=2)
     ## [1:length(dp$data$amplitude)/2]
     changepoint::plot(segments.points2,
                       xlab = paste0("Drilling depth [", dp$footer$xUnit, "]"),
-         ylab= paste0("Moving average of lagged differences"),
-         main="Detected segments")
+                      ylab= paste0("Moving average of lagged differences"),
+                      main="Detected segments")
     graphics::abline(h=mean(data.in), col="blue")
     graphics::abline(h=limit, col="green")
     graphics::abline(v=cutoff, col="red", lwd=3, lty=2)

@@ -48,8 +48,8 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
     graphics::par(mfrow=c(1,1))
     graphics::plot(dp$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
-         ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
-         main = paste0("Density profile ID: ",dp$footer$ID))
+                   ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
+                   main = paste0("Density profile ID: ",dp$footer$ID))
     graphics::abline(v=start, col="red", lwd=3, lty=2)
     graphics::abline(v=end, col="red", lwd=3, lty=2)
     p <- grDevices::recordPlot()

@@ -22,6 +22,7 @@ is.trimmed  <- function(x){
   return(answer)
 }
 
+#' @method print dp
 #' @export
 print.dp <- function(x, ...) {
   if (!inherits(x,"dp")) {stop("not a dp object")}
@@ -41,6 +42,7 @@ print.dp <- function(x, ...) {
   }
  }
 
+#' @method plot dp
 #' @export
 plot.dp <- function(x, ...) {
   if (!inherits(x,"dp")) {stop("not a dp object")}

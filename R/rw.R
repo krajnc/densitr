@@ -3,7 +3,7 @@ dprings  <- function(dp, pps = 200, threshold.sd = 0,
                      return.plot = FALSE, smooth = FALSE, span = 0.01) {
   if (smooth == FALSE) {
     cutoff <- mean(dp$data$amplitude, na.rm = TRUE) +
-      (threshold.sd * sd(dp$data$amplitude, na.rm = TRUE))
+      (threshold.sd * stats::sd(dp$data$amplitude, na.rm = TRUE))
     pk <- find_peaks(dp$data$amplitude, m = pps / 2)
     ## delete all peaks below threshold, valleys will be removed by remove_duplicates()
     pk <- pk[dp$data$amplitude[pk] > cutoff]
@@ -15,11 +15,11 @@ dprings  <- function(dp, pps = 200, threshold.sd = 0,
   } else {
     y.smooth <- stats::loess(amplitude ~ position, data=dp$data, span=span)$fitted
     cutoff <- mean(y.smooth, na.rm = TRUE) +
-      (threshold.sd * sd(y.smooth, na.rm = TRUE))
-    pk <- find_peaks(y.smooth, m = min_rw_width / 2)
+      (threshold.sd * stats::sd(y.smooth, na.rm = TRUE))
+    pk <- find_peaks(y.smooth, m = pps / 2)
     ## delete all peaks below threshold, valleys will be removed by remove_duplicates()
     pk <- pk[y.smooth[pk] > cutoff]
-    val  <- find_peaks(-y.smooth, m = min_rw_width / 2)
+    val  <- find_peaks(-y.smooth, m = pps / 2)
     values  <- rbind(data.frame(value = pk, type = "peak"),
                      data.frame(value = val, type = "valley"))
     values  <- values[order(values$value),]

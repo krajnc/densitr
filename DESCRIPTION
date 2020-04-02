@@ -1,6 +1,6 @@
 Package: densiter
 Title: Tools for Analysing Density Profiles from Resistance Drilling
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R:
     person(given = "Luka",
            family = "Krajnc",

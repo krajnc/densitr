@@ -1,4 +1,14 @@
+## ring width id
+get_RW  <- function(rings) {
+  if (is.data.frame(rings) == FALSE |
+        all(colnames(rings) == c("value", "type", "amplitude")) == FALSE) {
+    stop("not a result of densiter::dprings()")
+  }
+  return(tryCatch(diff(rings[rings$type == "peak",]$value,
+                       error=function(e) NULL)))
+}
 
+##
 dprings  <- function(dp, pps = 200, threshold.sd = 0,
                      return.plot = FALSE, smooth = FALSE, span = 0.01) {
   if (smooth == FALSE) {

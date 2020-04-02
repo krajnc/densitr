@@ -101,6 +101,7 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' dp.trimmed <- dptriml(dp.list)
 #' }
 dptriml  <- function(dp.list, rreport = FALSE, cl = 1) {
+  if (is.list(dp.list) && !inherits(dp.list[[1]],"dp")) {stop("not a dp list")}
   message("started trimming ", length(dp.list), " files")
   if (requireNamespace("pbapply", quietly = TRUE)) {
     dp.trimmed  <- pbapply::pblapply(dp.list,  dptrim, return.fail = T, silent = T, cl = cl)
@@ -234,6 +235,7 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' dp.trimmed <- dptrim_sl(dp.list)
 #' }
 dptriml_s  <- function(dp.list, rreport = FALSE, cl = 1) {
+  if (is.list(dp.list) && !inherits(dp.list[[1]],"dp")) {stop("not a dp list")}
   message("started start trimming ", length(dp.list), " files")
   if (requireNamespace("pbapply", quietly = TRUE)) {
     dp.trimmed  <- pbapply::pblapply(dp.list,  dptrim_s, return.fail = T, silent = T, cl = cl)

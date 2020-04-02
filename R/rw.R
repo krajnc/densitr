@@ -20,14 +20,14 @@ get_duplicates  <- function(values){
     # values[2,]
     if (values[i,]$type == values[k,]$type) {
       ## i je val, k je val, vzames ta nižjega
-      if ((values[i,]$type == "0") && (values[k,]$type == "0")) {
+      if ((values[i,]$type == "valley") && (values[k,]$type == "valley")) {
         ##  message("dve dolini")
         if (values[i,]$amplitude <= values[k,]$amplitude) {
           removals  <- c(removals, k)
         } else {
           removals  <- c(removals, i)
         }
-      } else if ((values[i,]$type == "1") && (values[k,]$type == "1")) {
+      } else if ((values[i,]$type == "peak") && (values[k,]$type == "peak")) {
         ## i je peak, k je peak, vzameš ta višjega
         ## message("dva vrha")
         if (values[i,]$amplitude >= values[k,]$amplitude) {
@@ -42,7 +42,7 @@ get_duplicates  <- function(values){
 }
 
 ## this should be run multiple times to remove sequences until we are happy
-remove.duplicates <- function(values) {
+remove_duplicates <- function(values) {
   success <- FALSE
   while (!success) {
     # do something
@@ -56,24 +56,33 @@ remove.duplicates <- function(values) {
   return(values)
 }
 
-dpid_rw  <- function(dp, min_rw_width = 200, return.plot = FALSE, smooth = FALSE, span = 0.01) {
+dprings  <- function(dp, pps = 200, threshold.sd = 0,
+                     return.plot = FALSE, smooth = FALSE, span = 0.01) {
   if (smooth == FALSE) {
-    pk <- find_peaks(dp$data$amplitude, m = min_rw_width / 2)
-    val  <- find_peaks(-dp$data$amplitude, m = min_rw_width / 2)
-    values  <- rbind(data.frame(value = pk, type = "1"),
-                     data.frame(value = val, type = "0"))
+    cutoff <- mean(dp$data$amplitude, na.rm = TRUE) +
+      (threshold.sd * sd(dp$data$amplitude, na.rm = TRUE))
+    pk <- find_peaks(dp$data$amplitude, m = pps / 2)
+    ## delete all peaks below threshold, valleys will be removed by remove_duplicates()
+    pk <- pk[dp$data$amplitude[pk] > cutoff]
+    val  <- find_peaks(-dp$data$amplitude, m = pps / 2)
+    values  <- rbind(data.frame(value = pk, type = "peak"),
+                     data.frame(value = val, type = "valley"))
     values  <- values[order(values$value),]
     values$amplitude <- dp$data$amplitude[values$value]
   } else {
     y.smooth <- stats::loess(amplitude ~ position, data=dp$data, span=span)$fitted
+    cutoff <- mean(y.smooth, na.rm = TRUE) +
+      (threshold.sd * sd(y.smooth, na.rm = TRUE))
     pk <- find_peaks(y.smooth, m = min_rw_width / 2)
+    ## delete all peaks below threshold, valleys will be removed by remove_duplicates()
+    pk <- pk[y.smooth[pk] > cutoff]
     val  <- find_peaks(-y.smooth, m = min_rw_width / 2)
-    values  <- rbind(data.frame(value = pk, type = "1"),
-                     data.frame(value = val, type = "0"))
+    values  <- rbind(data.frame(value = pk, type = "peak"),
+                     data.frame(value = val, type = "valley"))
     values  <- values[order(values$value),]
     values$amplitude <- y.smooth[values$value]
   }
-  values2 <- remove.duplicates(values)
+  values2 <- remove_duplicates(values)
   removed <- values[!(values$value %in% values2$value),]
   if (return.plot == TRUE) {
     graphics::par(mfrow=c(1,1))
@@ -88,6 +97,7 @@ dpid_rw  <- function(dp, min_rw_width = 200, return.plot = FALSE, smooth = FALSE
                        y = dp$data$amplitude[val], col = "green", pch = 16)
       graphics::points(x = dp$data$position[removed$value],
                        y = removed$amplitude, col = "red", cex = 2, pch = 16)
+      graphics::abline(h = cutoff, col = "black", lty = 2)
     } else {
       graphics::plot(x=dp$data$position,y=y.smooth, type = "l",
                      xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
@@ -99,9 +109,10 @@ dpid_rw  <- function(dp, min_rw_width = 200, return.plot = FALSE, smooth = FALSE
                        y = y.smooth[val], col = "green", pch = 16)
       graphics::points(x = dp$data$position[removed$value],
                        y = removed$amplitude, col = "red", cex = 2, pch = 16)
+      graphics::abline(h = cutoff, col = "black", lty = 2)
     }
     p <- grDevices::recordPlot()
     return(p)
   }
-  return(values2$value)
+  return(values2)
 }

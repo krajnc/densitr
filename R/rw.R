@@ -1,60 +1,3 @@
-## https://github.com/stas-g/findPeaks
-find_peaks <- function (x, m = 3){
-  shape <- diff(sign(diff(x, na.pad = FALSE)))
-  pks <- sapply(which(shape < 0), FUN = function(i){
-    z <- i - m + 1
-    z <- ifelse(z > 0, z, 1)
-    w <- i + m + 1
-    w <- ifelse(w < length(x), w, length(x))
-    if(all(x[c(z : i, (i + 2) : w)] <= x[i + 1])) return(i + 1) else return(numeric(0))
-  })
-  pks <- unlist(pks)
-  pks
-}
-
-get_duplicates  <- function(values){
-  removals <- c()
-  for (i in 1:(nrow(values) - 1)){
-    # i <- 84
-    k <- i + 1
-    # values[2,]
-    if (values[i,]$type == values[k,]$type) {
-      ## i je val, k je val, vzames ta nižjega
-      if ((values[i,]$type == "valley") && (values[k,]$type == "valley")) {
-        ##  message("dve dolini")
-        if (values[i,]$amplitude <= values[k,]$amplitude) {
-          removals  <- c(removals, k)
-        } else {
-          removals  <- c(removals, i)
-        }
-      } else if ((values[i,]$type == "peak") && (values[k,]$type == "peak")) {
-        ## i je peak, k je peak, vzameš ta višjega
-        ## message("dva vrha")
-        if (values[i,]$amplitude >= values[k,]$amplitude) {
-          removals  <- c(removals, k)
-        } else {
-          removals  <- c(removals, i)
-        }
-      }
-    }
-  }
-  return(removals)
-}
-
-## this should be run multiple times to remove sequences until we are happy
-remove_duplicates <- function(values) {
-  success <- FALSE
-  while (!success) {
-    # do something
-    duplicates  <- get_duplicates(values)
-    if (length(duplicates) > 0) {
-      values <- values[-duplicates ,]
-    }
-    # check for success
-    success <-  length(duplicates) == 0
-  }
-  return(values)
-}
 
 dprings  <- function(dp, pps = 200, threshold.sd = 0,
                      return.plot = FALSE, smooth = FALSE, span = 0.01) {
@@ -115,4 +58,67 @@ dprings  <- function(dp, pps = 200, threshold.sd = 0,
     return(p)
   }
   return(values2)
+}
+
+## Will take a df of rings and compare them one by one. Peak should
+## always be followed by a valley, this function returns those
+## duplicating values
+get_duplicates  <- function(values){
+  removals <- c()
+  for (i in 1:(nrow(values) - 1)){
+     k <- i + 1
+      if (values[i,]$type == values[k,]$type) {
+        ## i je val, k je val, vzames ta nižjega
+        if ((values[i,]$type == "valley") && (values[k,]$type == "valley")) {
+          ##  message("dve dolini")
+          if (values[i,]$amplitude <= values[k,]$amplitude) {
+            removals  <- c(removals, k)
+          } else {
+            removals  <- c(removals, i)
+          }
+        } else if ((values[i,]$type == "peak") && (values[k,]$type == "peak")) {
+          ## i je peak, k je peak, vzameš ta višjega
+          ## message("dva vrha")
+          if (values[i,]$amplitude >= values[k,]$amplitude) {
+            removals  <- c(removals, k)
+          } else {
+            removals  <- c(removals, i)
+          }
+        }
+     }
+  }
+  return(removals)
+}
+
+## If there are peak-peak or valley-valley present, the higher peak
+## and the lower valley should stay, the rest will be removed. This is
+## run sequentially until there are always peak-valley combinations,
+## e.g. will run get_duplicates to remove sequences until we are happy
+remove_duplicates <- function(values) {
+  success <- FALSE
+  while (!success) {
+     duplicates  <- get_duplicates(values)
+     if (length(duplicates) > 0) {
+       values <- values[-duplicates ,]
+     }
+      success <-  length(duplicates) == 0
+  }
+  return(values)
+}
+
+### Written by Stasia Grinberg, licensed under GPL-3
+## A simple algorithm to find local maxima/minima in sequential data
+## https://github.com/stas-g/findPeaks
+## https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data/164830#164830
+find_peaks <- function (x, m = 3){
+  shape <- diff(sign(diff(x, na.pad = FALSE)))
+  pks <- sapply(which(shape < 0), FUN = function(i){
+    z <- i - m + 1
+    z <- ifelse(z > 0, z, 1)
+    w <- i + m + 1
+    w <- ifelse(w < length(x), w, length(x))
+    if(all(x[c(z : i, (i + 2) : w)] <= x[i + 1])) return(i + 1) else return(numeric(0))
+  })
+  pks <- unlist(pks)
+  pks
 }

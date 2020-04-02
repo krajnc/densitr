@@ -58,9 +58,8 @@ read_dpa <- function(file){
     data$position <- 1:nrow(data)
     data$amplitude  <- as.numeric(as.character(data$amplitude))
   } else {
-    data <- NULL
-    data$position <- NA
-    data$amplitude <- NA
+    warning(paste0("empty density profile: ", file, ", skipped "))
+    return(NULL)
   }
   data$ID <- extract_dpa_name(file)
   row.names(data)  <- NULL
@@ -132,7 +131,8 @@ dpload  <- function(dp.file = NULL, dp.directory = "",
         ## if recursive, name them properly also using folders
         names(dp.list) <-  gsub("*.dpa$","",dp.files)
       }
-      message("loaded ", length(dp.files), " density profiles")
+      dp.list <- dp.list[lengths(dp.list) != 0] # delete all NULL entries
+      message("loaded ", length(dp.list), " density profiles")
       return(dp.list)
     } else {
       ## fail directory doesn't exist

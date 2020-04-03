@@ -1,0 +1,9 @@
+This is a new submission.
+
+Tested on:
+* win-builder (devel and release)
+* local Fedora R-release
+* Fedora R-devel.
+
+R CMD check results:
+There were no errors, warnings or notes.

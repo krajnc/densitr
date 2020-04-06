@@ -15,9 +15,9 @@ the next dp object. Returns nothing.
 }
 \examples{
 ## load several dp files
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
-\dontrun{
+\donttest{
 plot_all(dp.list)
 }
 }

@@ -1,4 +1,14 @@
-This is a new submission.
+This is a resubmission of the package densiter under a new name, which was first submitted to CRAN a couple of days ago.
+
+I have implemented the CRAN comments and renamed the package to densitr, the following issues were implemented as suggested by the CRAN reviewer:
+
+- Stasia Grinberg was added to contributors.
+- The title was changed as suggested, omitting "Tools" and adding reference about trees.
+- There is no publication describing the methods yet, I will add it once I publish it.
+- Examples for unexported functions were removed.
+- The \dontrun{} were replaced with \donttest{} in the relevant examples to avoid taking > 5 seconds.
+- Changes to par were either removed or on.exit() is called to restore previous par setting.
+
 
 Tested on:
 * win-builder (devel and release)
@@ -7,3 +17,7 @@ Tested on:
 
 R CMD check results:
 There were no errors, warnings or notes.
+
+
+
+

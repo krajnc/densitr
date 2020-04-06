@@ -22,7 +22,7 @@ them in a single data frame.
 }
 \examples{
 ## load all files in directory
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 combine_data(dp.list)
 }
 \seealso{

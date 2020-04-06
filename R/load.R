@@ -7,10 +7,6 @@
 #' @param string A path to file, including file name. Can be nested in
 #'   many directories or in none.
 #' @return An extracted filename, a character string.
-#' @examples
-#' \dontrun{
-#' extract_dpa_name("data/0005/00/00050060.dpa")
-#' }
 #' @references
 #' https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
 extract_dpa_name  <- function(string){
@@ -45,10 +41,6 @@ extract_dpa_name  <- function(string){
 #' @param file A path to file, including file name.
 #' @return A \code{dp} object.
 #' @seealso dpload
-#' @examples
-#' \dontrun{
-#' read_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
-#' }
 read_dpa <- function(file){
   ## check if the file ends in *.dpa
   if (!grepl("\\.dpa$", file)) {stop("not a *.dpa file")}
@@ -104,10 +96,10 @@ read_dpa <- function(file){
 #' @export
 #' @examples
 #' ## load a single file
-#' dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
-#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## load all files in directory
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 dpload  <- function(dp.file = NULL, dp.directory = "",
                     recursive = TRUE, name = "file") {
   if (is.null(dp.file)) {
@@ -167,7 +159,7 @@ dpload  <- function(dp.file = NULL, dp.directory = "",
 #' @export
 #' @examples
 #' ## load all files in directory
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' combine_footers(dp.list)
 combine_footers  <- function(dp.list){
   info <- do.call("rbind", lapply(dp.list,function(x) x$footer))
@@ -190,7 +182,7 @@ combine_footers  <- function(dp.list){
 #' @export
 #' @examples
 #' ## load all files in directory
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' combine_data(dp.list)
 combine_data  <- function(dp.list){
   message("\ncombining data from", length(dp.list), " denisty profiles...")

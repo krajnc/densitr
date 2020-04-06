@@ -1,12 +1,15 @@
-Package: densiter
-Title: Tools for Analysing Density Profiles from Resistance Drilling
-Version: 0.1.0.9000
-Authors@R:
+Package: densitr
+Title: Analysing Density Profiles from Resistance Drilling of Trees
+Version: 0.1.0
+Authors@R: c(
     person(given = "Luka",
-           family = "Krajnc",
-           role = c("aut", "cre"),
-           email = "luka.krajnc@gozdis.si",
-           comment = c(ORCID = "0000-0002-3120-559X"))
+    family = "Krajnc",
+    role = c("aut", "cre"),
+    email = "luka.krajnc@gozdis.si",
+    comment = c(ORCID = "0000-0002-3120-559X")),
+    person(given = "Stasia",
+    family = "Grinberg",
+    role = c("ctb")))
 Description: Provides various tools for analysing density profiles
     obtained by resistance drilling. It can load individual or
     multiple files and trim the starting and ending part of each
@@ -17,13 +20,13 @@ Description: Provides various tools for analysing density profiles
     drilling in standing trees.
 License: GPL-3
 Encoding: UTF-8
-URL: https://github.com/krajnc/densiter
-BugReports: https://github.com/krajnc/densiter/issues
+URL: https://github.com/krajnc/densitr
+BugReports: https://github.com/krajnc/densitr/issues
 LazyData: true
 Imports:
     stats,
     utils,
-    changepoint (>= 2.2.2)
+    changepoint (>= 2.2.2)      
 Suggests:
     pbapply,
     mgcv,

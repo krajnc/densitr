@@ -34,8 +34,8 @@ returning the list of trimmed dp objects.
 }
 \examples{
 ## load all dp files
-\dontrun{
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+\donttest{
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the list
 dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 ## manually correct the failures

@@ -29,9 +29,9 @@ up the trimming process significantly. Only trims the starting
 side, see \code{dptriml} for trimming both side simultaneously.
 }
 \examples{
-\dontrun{
+\donttest{
 ## load several dp files
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptrim_sl(dp.list)
 }

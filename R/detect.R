@@ -28,26 +28,30 @@
 #' @export
 #' @examples
 #' ## load a single file
-#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## get starting point
-#' start <- dpdetect_s(dp, return.plot = TRUE)
+#' start <- dpdetect_s(dp)
 #' ## plot the start detection
+#' \donttest{
 #' dpdetect_s(dp, return.plot = TRUE)
+#' }
 dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
   ## check if dp object
   if (!inherits(dp,"dp")) {stop("not a dp object")}
+  ## save and restore par setting
+  oldpar <-  graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
   ## get a rolling mean of diff lags
   fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span=0.1)
   fitted <- stats::predict(fit)
-  data.in <- baseR.rollmean(diff(fitted),100) #defined in others.R
-
+  data.in <- baseR.rollmean(diff(fitted),100) # defined in others.R
   ## set limits and find segments
   limit <- abs(mean(data.in) + (cutoff.sd * stats::sd(data.in)))
   segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                method="BinSeg", Q=10,
                                                                minseglen=250,class=FALSE))
   segments.list <- splitAt(data.in,segments.points)
-  segments.list[length(segments.list)] <- NULL  #remove the last item in a list
+  segments.list[length(segments.list)] <- NULL  # remove the last item in a list
   segment.value <- function(number){return(abs(mean(segments.list[[number]])))}
   ## check the first four segments, if they are outside of the set,
   ## limit and return the end positions of those segments
@@ -77,7 +81,6 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     ## four segments
     cutoff <- segments.points[4]
   }
-
   if (return.plot == TRUE) {
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
@@ -129,19 +132,23 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
 #' @export
 #' @examples
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
-#' #' ## get ending point
-#' start <- dpdetect_e(dp, return.plot = TRUE)
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' ## get ending point
+#' start <- dpdetect_e(dp)
 #' ## plot the end detection
+#' \donttest{
 #' dpdetect_e(dp, return.plot = TRUE)
+#' }
 dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
   ## check if dp object
   if (!inherits(dp,"dp"))  {stop("not a dp object")}
+  ## save and restore par setting
+  oldpar <-  graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
   ## get a rolling mean of diff lags
   fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span=0.1)
   fitted <- stats::predict(fit)
   data.in <- baseR.rollmean(diff(fitted),100) #defined in others.R
-
   ## get limits and get segments
   limit <- mean(data.in) - (cutoff.sd * stats::sd(data.in))
   segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
@@ -149,9 +156,7 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
                                                                minseglen=250,class=FALSE))
   segments.list <- splitAt(data.in,segments.points)
   segments.list[length(segments.list)] <- NULL  #remove the last item in a list
-
   segment.value2 <- function(number){return(mean(segments.list[[length(segments.list)-number]]))}
-
   if (segment.value2(3) < limit) {
     ## delete the last 4 segments
     cutoff <- segments.points[length(segments.points)-4]
@@ -175,7 +180,6 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
       }
     }
   }
-
   if (return.plot == TRUE) {
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
@@ -195,7 +199,6 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     graphics::abline(v=cutoff, col="red", lwd=3, lty=2)
     graphics::legend("topright", legend=c("Segment mean", "Overall mean", "Cutoff limit"),
                      col=c("red", "blue", "green"), lty=1, cex=1)
-
     p <- grDevices::recordPlot()
     return(p)
   } else {

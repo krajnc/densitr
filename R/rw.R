@@ -10,9 +10,8 @@
 #' @seealso dprings
 #' @export
 #' @examples
-#' \dontrun{
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim and detrend the measurement
 #' dp.trimmed <- dptrim(dp)
 #' dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
@@ -20,11 +19,10 @@
 #' rings <- dprings(dp.detrended)
 #' ## get tree ring widths:
 #' get_RW(rings)
-#' }
 get_RW  <- function(rings) {
   if (is.data.frame(rings) == FALSE |
         all(colnames(rings) == c("value", "type", "amplitude")) == FALSE) {
-    stop("not a result of densiter::dprings()")
+    stop("not a result of densitr::dprings()")
   }
   return(tryCatch(diff(rings[rings$type == "peak",]$value,
                        error=function(e) NULL)))
@@ -81,15 +79,15 @@ get_RW  <- function(rings) {
 #' @seealso get_RW
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim and detrend the measurement
 #' dp.trimmed <- dptrim(dp)
 #' dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
 #' ## identify rings
 #' rings <- dprings(dp.detrended)
-#' ## plot a dignostic
+#' ## plot a diagnostic
 #' dprings(dp.detrended, return.plot = TRUE)
 #' ## get tree ring widths:
 #' get_RW(rings)
@@ -123,7 +121,6 @@ dprings  <- function(dp, pps = 200, threshold.sd = 0,
   values2 <- remove_duplicates(values)
   removed <- values[!(values$value %in% values2$value),]
   if (return.plot == TRUE) {
-    graphics::par(mfrow=c(1,1))
     if (smooth == FALSE) {
       graphics::plot(x=dp$data$position,y=dp$data$amplitude, type = "l",
                      xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),

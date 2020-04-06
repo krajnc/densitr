@@ -16,7 +16,7 @@ trimmed objects must include the trimming report (rreport = TRUE).
 }
 \examples{
 ## load several dp files
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
 \dontrun{
 plot_failures(dp.list)

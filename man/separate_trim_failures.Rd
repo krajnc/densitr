@@ -26,9 +26,9 @@ objects. If no failures found, it will return a list of trimmed
 profiles without the report attached.
 }
 \examples{
-\dontrun{
+\donttest{
 ## load several dp files
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 ## separate trimming failures

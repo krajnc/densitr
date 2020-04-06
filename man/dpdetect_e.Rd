@@ -34,11 +34,13 @@ off.
 }
 \examples{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
-#' ## get ending point
-start <- dpdetect_e(dp, return.plot = TRUE)
+dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+## get ending point
+start <- dpdetect_e(dp)
 ## plot the end detection
+\donttest{
 dpdetect_e(dp, return.plot = TRUE)
+}
 }
 \seealso{
 dpdetect_s, dptrim, dptriml, dptrim_s, dptriml_s

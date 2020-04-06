@@ -24,9 +24,9 @@ called with the option "return.fail = FALSE", which embeds a
 trimming report when returning the list of trimmed dp objects.
 }
 \examples{
-\dontrun{
+\donttest{
 ## load several dp files
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 ## remove trimming failures

@@ -40,11 +40,13 @@ cutting it off. Will return a warning if start not detected.
 }
 \examples{
 ## load a single file
-dp <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## get starting point
-start <- dpdetect_s(dp, return.plot = TRUE)
+start <- dpdetect_s(dp)
 ## plot the start detection
+\donttest{
 dpdetect_s(dp, return.plot = TRUE)
+}
 }
 \seealso{
 dpdetect_e, dptrim, dptriml, dptrim_s, dptriml_s

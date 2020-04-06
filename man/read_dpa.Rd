@@ -19,11 +19,6 @@ former one contains actual measurement values, the latter includes
 supplementary data recorded by the Resistograph® device, such as
 time, firmware number...
 }
-\examples{
-\dontrun{
-read_dpa(system.file("extdata", "00010001.dpa", package = "densiter"))
-}
-}
 \seealso{
 dpload
 }

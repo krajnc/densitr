@@ -82,7 +82,7 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
-    plot.new()
+    graphics::plot.new()
     ## save and restore par setting
     oldpar <-  graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
@@ -183,7 +183,7 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
-    plot.new()
+    graphics::plot.new()
     ## save and restore par setting
     oldpar <-  graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))

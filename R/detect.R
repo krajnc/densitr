@@ -38,9 +38,6 @@
 dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
   ## check if dp object
   if (!inherits(dp,"dp")) {stop("not a dp object")}
-  ## save and restore par setting
-  oldpar <-  graphics::par(no.readonly = TRUE)
-  on.exit(graphics::par(oldpar))
   ## get a rolling mean of diff lags
   fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span=0.1)
   fitted <- stats::predict(fit)
@@ -85,6 +82,11 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
+    plot.new()
+    ## save and restore par setting
+    oldpar <-  graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(oldpar))
+    ## plot
     graphics::par(mfrow=c(2,1))
     graphics::plot(dp$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit, "]"),
@@ -142,9 +144,6 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE){
 dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
   ## check if dp object
   if (!inherits(dp,"dp"))  {stop("not a dp object")}
-  ## save and restore par setting
-  oldpar <-  graphics::par(no.readonly = TRUE)
-  on.exit(graphics::par(oldpar))
   ## get a rolling mean of diff lags
   fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span=0.1)
   fitted <- stats::predict(fit)
@@ -184,6 +183,11 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE){
     segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
                                                                   method="BinSeg", Q=10,
                                                                   minseglen=250,class=TRUE))
+    plot.new()
+    ## save and restore par setting
+    oldpar <-  graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(oldpar))
+    ## plot
     graphics::par(mfrow=c(2,1))
     graphics::plot(dp$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),

@@ -1,4 +1,4 @@
 library(testthat)
-library(densiter)
+library(densitr)
 
-test_check("densiter")
+test_check("densitr")

@@ -4,9 +4,9 @@ string1 <- "data/0005/00/00050060.dpa"
 string2  <- "00050060.dpa"
 
 
-dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densiter"))
-dpl <- dpload(dp.directory = system.file("extdata", package = "densiter"))
-dpl2 <- dpload(dp.directory = system.file("extdata", package = "densiter"), recursive = FALSE)
+dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densitr"))
+dpl <- dpload(dp.directory = system.file("extdata", package = "densitr"))
+dpl2 <- dpload(dp.directory = system.file("extdata", package = "densitr"), recursive = FALSE)
 
 test_that("Extract dpa regex", {
   expect_match(extract_dpa_name(string1), "00050060")

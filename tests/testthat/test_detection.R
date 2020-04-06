@@ -1,7 +1,7 @@
 context("Detection tests")
 
-dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densiter"))
-dp.noend <-  dpload(dp.file = system.file("extdata", "subfolder/00050045.dpa", package = "densiter"))
+dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densitr"))
+dp.noend <-  dpload(dp.file = system.file("extdata", "subfolder/00050045.dpa", package = "densitr"))
 
 dp.nostart  <- dp
 dp.nostart$data  <-  dp$data[5000:nrow(dp$data),]

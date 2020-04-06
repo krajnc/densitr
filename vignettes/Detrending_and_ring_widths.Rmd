@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 Load the library, a few density profiles and try to trim them automatically:
 ```{r setup}
 library(densitr)
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 dp.trimmed  <- dptriml(dp.list)
 ```
 You can either trim failed density profiles by hand or just check the failures by plotting them and deciding to ignore them, as demonstrated in vignette "Manual trimming of density profiles".
@@ -28,7 +28,7 @@ You can either trim failed density profiles by hand or just check the failures b
 
 When drilling into wood and recording resistance to drilling, there is an underlying trend to values from those measurements. This is most likely due to the increased friction as the drilling needle is drilling deeper, but other explanations are also possible. Whatever the case, some people (including the author of this package) consider detrending the measurements essential before calculating any derived values from density profiles. 
 
-Detrending work by fitting a function to density profiles and substracting those values from the original values. The workhorse for this in densiter is function `dpdetrend`, which takes a density profile, detrends it using the specified function and returns the modified density profile. 
+Detrending work by fitting a function to density profiles and substracting those values from the original values. The workhorse for this in densitr is function `dpdetrend`, which takes a density profile, detrends it using the specified function and returns the modified density profile. 
 
 Two detrending functions are currently implemented: linear regression and generalized additive model (GAM). The latter requires the package `mcgv` to work, the default smoothing parameter estimation method is "REML", as it is a relatively safe choice - see `mgcv::gam` documentation for more. It is also easy to implement your own detrending functions using `lapply` on a list of density profiles.
 

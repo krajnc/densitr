@@ -22,7 +22,7 @@ Automatic trimming sometimes fails to detect the starting or ending point within
 Load the library, a few density profiles and try to trim them automatically:
 ```{r setup}
 library(densitr)
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 dp.trimmed  <- dptriml(dp.list)
 ```
 

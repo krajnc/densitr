@@ -67,15 +67,15 @@ also be denoised by setting \code{smooth = TRUE}, which applies a
 loess regression to smooth the data using the span parameter.
 }
 \examples{
-\dontrun{
+\donttest{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## trim and detrend the measurement
 dp.trimmed <- dptrim(dp)
 dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
 ## identify rings
 rings <- dprings(dp.detrended)
-## plot a dignostic
+## plot a diagnostic
 dprings(dp.detrended, return.plot = TRUE)
 ## get tree ring widths:
 get_RW(rings)

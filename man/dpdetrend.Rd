@@ -29,9 +29,9 @@ package to run.
 }
 \examples{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## load several dp objects
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurement
 dp.trimmed <- dptrim(dp)
 ## detrend the measurement
@@ -40,7 +40,7 @@ dp.detrended <- dpdetrend(dp, type = "linear")
 dp.list.detrended <- lapply(dp.list, dpdetrend, type = "linear")
 ## detrend a list with displaying progress and run in parallel to
 ## speed things up - requires pbapply library
-\dontrun{
+\donttest{
 dp.list.detrended <- pbapply::pblapply(dp.list, dpdetrend, type = "linear", cl = 7)
 }
 }

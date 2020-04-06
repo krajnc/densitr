@@ -32,9 +32,9 @@ readkeygraph <- function(prompt)
 #' @export
 #' @examples
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## plot trimming the measurements
-#' \dontrun{
+#' \donttest{
 #' plot_trimming(dp.list)
 #' }
 plot_trimming  <- function(dp.list){
@@ -55,9 +55,9 @@ plot_trimming  <- function(dp.list){
 #' @export
 #' @examples
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
-#' \dontrun{
+#' \donttest{
 #' plot_start_detection(dp.list)
 #' }
 plot_start_detection  <- function(dp.list){
@@ -78,9 +78,9 @@ plot_start_detection  <- function(dp.list){
 #' @export
 #' @examples
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
-#' \dontrun{
+#' \donttest{
 #' plot_end_detection(dp.list)
 #' }
 plot_end_detection  <- function(dp.list){
@@ -100,9 +100,9 @@ plot_end_detection  <- function(dp.list){
 #' @export
 #' @examples
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
-#' \dontrun{
+#' \donttest{
 #' plot_all(dp.list)
 #' }
 plot_all  <- function(dp.list){
@@ -125,7 +125,7 @@ plot_all  <- function(dp.list){
 #' @export
 #' @examples
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' \dontrun{
 #' plot_failures(dp.list)

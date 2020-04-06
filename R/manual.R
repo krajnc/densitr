@@ -15,9 +15,9 @@
 #' @seealso dptriml, dptriml_s
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 #' ## remove trimming failures
@@ -57,9 +57,9 @@ remove_trim_failures  <- function(dp.trimmed) {
 #' @seealso dptriml, dptriml_s
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 #' ## separate trimming failures
@@ -109,9 +109,9 @@ separate_trim_failures  <- function(dp.trimmed) {
 #' @export
 #' @examples
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## get a starting point on the plot
-#' \dontrun{
+#' \donttest{
 #' manual_trim_detect(dp)
 #' }
 manual_trim_detect <- function(failure, label = "") {
@@ -175,8 +175,8 @@ manual_trim_detect <- function(failure, label = "") {
 #' @export
 #' @examples
 #' ## load all dp files
-#' \dontrun{
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' \donttest{
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the list
 #' dp.trimmed <- dptriml(dp.list, rreport = TRUE)
 #' ## manually correct the failures

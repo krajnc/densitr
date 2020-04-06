@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 # Introduction
 Load the library, an example density profile and then trim it and detrend it. While ring detection will work on untrimmed and undetrended density profiles, you will obtain better results by trimming and detrending the density profile. 
 ```{r setup}
-library(densiter)
+library(densitr)
 dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densiter"))
 dp.trimmed <- dptrim(dp)
 dp.detrended  <- dpdetrend(dp.trimmed, type = "gam")

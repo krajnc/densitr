@@ -19,9 +19,8 @@ widths for all detected rings. The units are determined by the
 xUnit from the footer of density profile.
 }
 \examples{
-\dontrun{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## trim and detrend the measurement
 dp.trimmed <- dptrim(dp)
 dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
@@ -29,7 +28,6 @@ dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
 rings <- dprings(dp.detrended)
 ## get tree ring widths:
 get_RW(rings)
-}
 }
 \seealso{
 dprings

@@ -16,9 +16,9 @@ nothing.
 }
 \examples{
 ## load several dp files
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## plot trimming the measurements
-\dontrun{
+\donttest{
 plot_trimming(dp.list)
 }
 }

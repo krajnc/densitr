@@ -39,9 +39,9 @@ dp object is returned with no changes. When running on a list of
 dp objects, use \code{dptriml}.
 }
 \examples{
-\dontrun{
+\donttest{
 ## load a single dp file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptrim(dp)
 ## plot trimming

@@ -39,8 +39,8 @@ created by the Rinntech Resistograph® resistance drilling device
 }
 \examples{
 ## load a single file
-dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
-dp <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## load all files in directory
-dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 }

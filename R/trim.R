@@ -27,9 +27,9 @@
 #' @seealso dptriml, dptrim_s, dptriml_s
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## load a single dp file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptrim(dp)
 #' ## plot trimming
@@ -45,7 +45,6 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
     end <-  dpdetect_e(dp)
   }
   if (return.plot == TRUE) {
-    graphics::par(mfrow=c(1,1))
     graphics::plot(dp$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
                    ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
@@ -94,9 +93,9 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
-#'\dontrun{
+#'\donttest{
 #' ## load several dpa files
-#' dp.list <- dpload(dpa.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dpa.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptriml(dp.list)
 #' }
@@ -164,9 +163,9 @@ dptriml  <- function(dp.list, rreport = FALSE, cl = 1) {
 #' @seealso dptrim, dptriml, dptriml_s
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densiter"))
+#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim the measurement at start
 #' dp.trimmed <- dptrim_s(dp)
 #' ## plot trimming
@@ -183,7 +182,6 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
   }
 
   if (return.plot == TRUE) {
-    graphics::par(mfrow=c(1,1))
     graphics::plot(dp$data$amplitude, type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
          ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
@@ -228,9 +226,9 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## load several dp files
-#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densiter"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptrim_sl(dp.list)
 #' }

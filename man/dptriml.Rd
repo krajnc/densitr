@@ -26,9 +26,9 @@ not trimmed. Can be run in parallel on multiple cores, this speeds
 up the trimming process significantly.
 }
 \examples{
-\dontrun{
+\donttest{
 ## load several dpa files
-dp.list <- dpload(dpa.directory = system.file("extdata", package = "densiter"))
+dp.list <- dpload(dpa.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptriml(dp.list)
 }

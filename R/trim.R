@@ -29,49 +29,55 @@
 #' @examples
 #' \donttest{
 #' ## load a single dp file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptrim(dp)
 #' ## plot trimming
 #' dptrim(dp, return.plot = TRUE)
 #' }
-dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
-  if (!inherits(dp,"dp"))  {stop("not a dp object")}   # check if dp object
+dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE) {
+  if (!inherits(dp, "dp")) {
+    stop("not a dp object")
+  } # check if dp object
   if (silent == TRUE) {
     start <- suppressWarnings(dpdetect_s(dp))
-    end <-  suppressWarnings(dpdetect_e(dp))
+    end <- suppressWarnings(dpdetect_e(dp))
   } else {
     start <- dpdetect_s(dp)
-    end <-  dpdetect_e(dp)
+    end <- dpdetect_e(dp)
   }
   if (return.plot == TRUE) {
-    graphics::plot(dp$data$amplitude, type = "l",
+    graphics::plot(dp$data$amplitude,
+                   type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
                    ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
-                   main = paste0("Density profile ID: ",dp$footer$ID))
-    graphics::abline(v=start, col="red", lwd=3, lty=2)
-    graphics::abline(v=end, col="red", lwd=3, lty=2)
+                   main = paste0("Density profile ID: ", dp$footer$ID)
+                   )
+    graphics::abline(v = start, col = "red", lwd = 3, lty = 2)
+    graphics::abline(v = end, col = "red", lwd = 3, lty = 2)
     p <- grDevices::recordPlot()
     return(p)
   } else {
-    if (return.fail == FALSE){
+    if (return.fail == FALSE) {
       dp$data <- dp$data[start:end, ]
       return(dp)
     } else {
-      if (start == 1){
-        start.status  <- "failed"
+      if (start == 1) {
+        start.status <- "failed"
       } else {
         start.status <- "succeeded"
       }
-      if (end == nrow(dp$data)){
+      if (end == nrow(dp$data)) {
         end.status <- "failed"
       } else {
         end.status <- "succeeded"
       }
       dp$data <- dp$data[start:end, ]
-      return(list("dp" = dp,
-                  "detection.start" = start.status,
-                  "detection.end" = end.status))
+      return(list(
+        "dp" = dp,
+        "detection.start" = start.status,
+        "detection.end" = end.status
+      ))
     }
   }
 }
@@ -93,42 +99,46 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
-#'\donttest{
+#' \donttest{
 #' ## load several dpa files
 #' dp.list <- dpload(dpa.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptriml(dp.list)
 #' }
-dptriml  <- function(dp.list, rreport = FALSE, cl = 1) {
-  if (is.list(dp.list) && !inherits(dp.list[[1]],"dp")) {stop("not a dp list")}
+dptriml <- function(dp.list, rreport = FALSE, cl = 1) {
+  if (is.list(dp.list) && !inherits(dp.list[[1]], "dp")) {
+    stop("not a dp list")
+  }
   message("started trimming ", length(dp.list), " files")
   if (requireNamespace("pbapply", quietly = TRUE)) {
-    dp.trimmed  <- pbapply::pblapply(dp.list,  dptrim, return.fail = T, silent = T, cl = cl)
+    dp.trimmed <- pbapply::pblapply(dp.list, dptrim, return.fail = T, silent = T, cl = cl)
   } else {
-    dp.trimmed  <- lapply(dp.list,  dptrim, return.fail = T, silent = T)
+    dp.trimmed <- lapply(dp.list, dptrim, return.fail = T, silent = T)
   }
-  data  <- unlist(lapply(dp.trimmed, function(x) x[-(2:3)]),recursive=FALSE)
-  names(data)  <- names(dp.trimmed)
+  data <- unlist(lapply(dp.trimmed, function(x) x[-(2:3)]), recursive = FALSE)
+  names(data) <- names(dp.trimmed)
   ## there is a reason why people use dplyr bind_rows
   ## report1  <-  lapply(dp.trimmed, function(x) x[-(1)]) %>%
   ##   dplyr::bind_rows(., .id="ID")
-  a  <- lapply(dp.trimmed, function(x) x[-(1)])
-  report  <- do.call("rbind", lapply(a, as.data.frame))
-  report$ID  <- rownames(report)
-  message("########################################\ntrimming report: \nanalysed ",
-          length(dp.list),
-          " file(s) \nstart detection failed in: ",
-          sum(report[,"detection.start"] == "failed"),
-          " file(s)\nend detection failed in: ",
-          sum(report[,"detection.end"] == "failed"), " file(s).\n",
-          "########################################\n")
-  if (sum(report[,"detection.start"] == "failed") > 0){
-    message("start fail(s):\n", paste(report[report$detection.start %in% "failed",]$ID, collapse = ", "), "\n")
+  a <- lapply(dp.trimmed, function(x) x[-(1)])
+  report <- do.call("rbind", lapply(a, as.data.frame))
+  report$ID <- rownames(report)
+  message(
+    "########################################\ntrimming report: \nanalysed ",
+    length(dp.list),
+    " file(s) \nstart detection failed in: ",
+    sum(report[, "detection.start"] == "failed"),
+    " file(s)\nend detection failed in: ",
+    sum(report[, "detection.end"] == "failed"), " file(s).\n",
+    "########################################\n"
+  )
+  if (sum(report[, "detection.start"] == "failed") > 0) {
+    message("start fail(s):\n", paste(report[report$detection.start %in% "failed", ]$ID, collapse = ", "), "\n")
   }
-  if (sum(report[,"detection.end"] == "failed") > 0){
-    message("end fail(s):\n", paste(report[report$detection.end %in% "failed",]$ID, collapse = ", "))
+  if (sum(report[, "detection.end"] == "failed") > 0) {
+    message("end fail(s):\n", paste(report[report$detection.end %in% "failed", ]$ID, collapse = ", "))
   }
-  if (rreport == TRUE){
+  if (rreport == TRUE) {
     return(list("dp" = data, "report" = report))
   } else {
     return(data)
@@ -165,15 +175,17 @@ dptriml  <- function(dp.list, rreport = FALSE, cl = 1) {
 #' @examples
 #' \donttest{
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim the measurement at start
 #' dp.trimmed <- dptrim_s(dp)
 #' ## plot trimming
 #' dptrim_s(dp, return.plot = TRUE)
 #' }
-dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE){
+dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE) {
   ## check if dp object
-  if (!inherits(dp,"dp")) {stop("not a dp object")}
+  if (!inherits(dp, "dp")) {
+    stop("not a dp object")
+  }
 
   if (silent == TRUE) {
     start <- suppressWarnings(dpdetect_s(dp))
@@ -182,26 +194,30 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
   }
 
   if (return.plot == TRUE) {
-    graphics::plot(dp$data$amplitude, type = "l",
+    graphics::plot(dp$data$amplitude,
+                   type = "l",
                    xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
-         ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
-         main = paste0("Density profile ID: ",dp$footer$ID))
-    graphics::abline(v=start, col="red", lwd=3, lty=2)
+                   ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
+                   main = paste0("Density profile ID: ", dp$footer$ID)
+                   )
+    graphics::abline(v = start, col = "red", lwd = 3, lty = 2)
     p <- grDevices::recordPlot()
     return(p)
   } else {
-    if (return.fail == FALSE){
+    if (return.fail == FALSE) {
       dp$data <- dp$data[start:nrow(dp$data), ]
       return(dp)
     } else {
-      if (start == 1){
-        start.status  <- "failed"
+      if (start == 1) {
+        start.status <- "failed"
       } else {
         start.status <- "succeeded"
       }
       dp$data <- dp$data[start:nrow(dp$data), ]
-      return(list("dp" = dp,
-                  "detection.start" = start.status))
+      return(list(
+        "dp" = dp,
+        "detection.start" = start.status
+      ))
     }
   }
 }
@@ -232,33 +248,37 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' ## trim the measurements
 #' dp.trimmed <- dptrim_sl(dp.list)
 #' }
-dptriml_s  <- function(dp.list, rreport = FALSE, cl = 1) {
-  if (is.list(dp.list) && !inherits(dp.list[[1]],"dp")) {stop("not a dp list")}
+dptriml_s <- function(dp.list, rreport = FALSE, cl = 1) {
+  if (is.list(dp.list) && !inherits(dp.list[[1]], "dp")) {
+    stop("not a dp list")
+  }
   message("started start trimming ", length(dp.list), " files")
   if (requireNamespace("pbapply", quietly = TRUE)) {
-    dp.trimmed  <- pbapply::pblapply(dp.list,  dptrim_s, return.fail = T, silent = T, cl = cl)
+    dp.trimmed <- pbapply::pblapply(dp.list, dptrim_s, return.fail = T, silent = T, cl = cl)
   } else {
-    dp.trimmed  <- lapply(dp.list,  dptrim_s, return.fail = T, silent = T)
+    dp.trimmed <- lapply(dp.list, dptrim_s, return.fail = T, silent = T)
   }
-  data  <- unlist(lapply(dp.trimmed, function(x) x[-2]),recursive=FALSE)
-  names(data)  <- names(dp.trimmed)
+  data <- unlist(lapply(dp.trimmed, function(x) x[-2]), recursive = FALSE)
+  names(data) <- names(dp.trimmed)
   ## there is a reason why people use dplyr bind_rows
   ## report1  <-  lapply(dp.trimmed, function(x) x[-(1)]) %>%
   ##   dplyr::bind_rows(., .id="IDa  <- lapply(dp.trimmed, function(x) x[-(1)])
-  a  <- lapply(dp.trimmed, function(x) x[-(1)])
-  report  <- do.call("rbind", lapply(a, as.data.frame))
-  report$ID  <- rownames(report)
+  a <- lapply(dp.trimmed, function(x) x[-(1)])
+  report <- do.call("rbind", lapply(a, as.data.frame))
+  report$ID <- rownames(report)
   rownames(report) <- NULL
-  message("########################################\ntrimming report: \nanalysed ",
-          length(dp.list),
-          " files \nstart detection failed in: ",
-          sum(report[,"detection.start"] == "failed"),
-          " file(s).\n",
-          "########################################\n")
-  if (sum(report[,"detection.start"] == "failed") > 0){
-    message("start fail(s):\n", paste(report[report$detection.start %in% "failed",]$ID, collapse = ", "), "\n")
+  message(
+    "########################################\ntrimming report: \nanalysed ",
+    length(dp.list),
+    " files \nstart detection failed in: ",
+    sum(report[, "detection.start"] == "failed"),
+    " file(s).\n",
+    "########################################\n"
+  )
+  if (sum(report[, "detection.start"] == "failed") > 0) {
+    message("start fail(s):\n", paste(report[report$detection.start %in% "failed", ]$ID, collapse = ", "), "\n")
   }
-  if (rreport == TRUE){
+  if (rreport == TRUE) {
     return(list("dp" = data, "report" = report))
   } else {
     return(data)

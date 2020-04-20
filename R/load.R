@@ -9,23 +9,31 @@
 #' @return An extracted filename, a character string.
 #' @references
 #' https://stackoverflow.com/questions/47678725/how-to-do-str-extract-with-base-r
-extract_dpa_name  <- function(string){
-  if(.Platform$OS.type == "unix") {
+extract_dpa_name <- function(string) {
+  if (.Platform$OS.type == "unix") {
     return(sapply(
       regmatches(
         string,
         regexec("[\\w-]+?(?=\\.dpa)",
-                string, perl = TRUE)),
-      "[", 1))
+                string,
+                perl = TRUE
+                )
+      ),
+      "[", 1
+    ))
   } else {
     ## windows uses backward slashes, so convert them to froward slashes for regex
-    string  <- gsub("\\\\", "/", string)
+    string <- gsub("\\\\", "/", string)
     return(sapply(
       regmatches(
         string,
         regexec("[\\w-]+?(?=\\.dpa)",
-                string, perl = TRUE)),
-      "[", 1))
+                string,
+                perl = TRUE
+                )
+      ),
+      "[", 1
+    ))
   }
   ## tidyverse alternative: str_extract( "data/00040001.dpa", regex("[\\w-]+?(?=\\.)"))
 }
@@ -41,31 +49,33 @@ extract_dpa_name  <- function(string){
 #' @param file A path to file, including file name.
 #' @return A \code{dp} object.
 #' @seealso dpload
-read_dpa <- function(file){
+read_dpa <- function(file) {
   ## check if the file ends in *.dpa
-  if (!grepl("\\.dpa$", file)) {stop("not a *.dpa file")}
-  dpa.read  <- readLines(file, warn=FALSE)
-  data  <- data.frame("amplitude" =  utils::tail(utils::head(dpa.read,n = -14), -3))
-  if (nrow(data)!= 0){
+  if (!grepl("\\.dpa$", file)) {
+    stop("not a *.dpa file")
+  }
+  dpa.read <- readLines(file, warn = FALSE)
+  data <- data.frame("amplitude" = utils::tail(utils::head(dpa.read, n = -14), -3))
+  if (nrow(data) != 0) {
     data$position <- 1:nrow(data)
-    data$amplitude  <- as.numeric(as.character(data$amplitude))
+    data$amplitude <- as.numeric(as.character(data$amplitude))
   } else {
     warning(paste0("empty density profile: ", file, ", skipped "))
     return(NULL)
   }
   data$ID <- extract_dpa_name(file)
-  row.names(data)  <- NULL
-  footer  <-  paste(utils::tail(dpa.read, n=13), collapse = "\n")
-  footer  <- utils::read.csv(text = footer, check.names=FALSE, header = F, col.names = "footer")
+  row.names(data) <- NULL
+  footer <- paste(utils::tail(dpa.read, n = 13), collapse = "\n")
+  footer <- utils::read.csv(text = footer, check.names = FALSE, header = F, col.names = "footer")
   footer$name <- sapply(strsplit(as.character(footer$footer), "="), "[", 1)
   footer$value <- sapply(strsplit(as.character(footer$footer), "="), "[", 2)
   footer$footer <- NULL
   footer$ID <- extract_dpa_name(file)
   footer <- stats::reshape(footer, idvar = "ID", timevar = "name", direction = "wide")
   names(footer) <- gsub("(value\\.y\\.|value\\.)", "", names(footer))
-  attributes(footer)$reshapeWide  <- NULL # strip reshaping attributes
-  d  <- list("data" = data, "footer" = footer)
-  class(d) <- 'dp'
+  attributes(footer)$reshapeWide <- NULL # strip reshaping attributes
+  d <- list("data" = data, "footer" = footer)
+  class(d) <- "dp"
   return(d)
 }
 
@@ -100,28 +110,28 @@ read_dpa <- function(file){
 #' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## load all files in directory
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
-dpload  <- function(dp.file = NULL, dp.directory = "",
-                    recursive = TRUE, name = "file") {
+dpload <- function(dp.file = NULL, dp.directory = "",
+                   recursive = TRUE, name = "file") {
   if (is.null(dp.file)) {
     ## read the whole directory, possibly recursively
     if (dir.exists(dp.directory)) {
-      dp.files <- list.files(path = dp.directory, recursive = recursive, pattern="*.dpa$")
+      dp.files <- list.files(path = dp.directory, recursive = recursive, pattern = "*.dpa$")
       dp.files <- file.path(dp.directory, dp.files)
       message("found ", length(dp.files), " density profiles, loading...")
       if (requireNamespace("pbapply", quietly = TRUE)) {
-        dp.list <-  pbapply::pblapply(dp.files, read_dpa)
+        dp.list <- pbapply::pblapply(dp.files, read_dpa)
       } else {
         ptm <- proc.time()
-        dp.list <-  lapply(dp.files,  read_dpa)
-        stop  <- proc.time() - ptm
-        message("loading took ", round(stop[3],0), " seconds, consider installing pbapply to show progress using a progress bar")
+        dp.list <- lapply(dp.files, read_dpa)
+        stop <- proc.time() - ptm
+        message("loading took ", round(stop[3], 0), " seconds, consider installing pbapply to show progress using a progress bar")
       }
       if (name == "file") {
         ## name only using file names
-        names(dp.list) <-  extract_dpa_name(dp.files)
-      } else if (name == "folder"){
+        names(dp.list) <- extract_dpa_name(dp.files)
+      } else if (name == "folder") {
         ## if recursive, name them properly also using folders
-        names(dp.list) <-  gsub("*.dpa$","",dp.files)
+        names(dp.list) <- gsub("*.dpa$", "", dp.files)
       }
       dp.list <- dp.list[lengths(dp.list) != 0] # delete all NULL entries
       message("loaded ", length(dp.list), " density profiles")
@@ -134,7 +144,7 @@ dpload  <- function(dp.file = NULL, dp.directory = "",
     ## read a single file
     ## check if file exists and is not a directory
     if (utils::file_test("-f", dp.file)) {
-      dp  <- read_dpa(dp.file)
+      dp <- read_dpa(dp.file)
       # class(dp) <- 'dp'
       return(dp)
     } else {
@@ -161,11 +171,11 @@ dpload  <- function(dp.file = NULL, dp.directory = "",
 #' ## load all files in directory
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' combine_footers(dp.list)
-combine_footers  <- function(dp.list){
-  info <- do.call("rbind", lapply(dp.list,function(x) x$footer))
+combine_footers <- function(dp.list) {
+  info <- do.call("rbind", lapply(dp.list, function(x) x$footer))
   rownames(info) <- NULL
   return(info)
- }
+}
 
 #' Combines density measurement from a dp object list into a single
 #' data frame
@@ -184,9 +194,9 @@ combine_footers  <- function(dp.list){
 #' ## load all files in directory
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' combine_data(dp.list)
-combine_data  <- function(dp.list){
+combine_data <- function(dp.list) {
   message("\ncombining data from ", length(dp.list), " denisty profiles...")
-  data  <- lapply(dp.list,function(x) x$data)
+  data <- lapply(dp.list, function(x) x$data)
   data <- do.call("rbind", data)
   rownames(data) <- NULL
   message("\n...done.")

@@ -11,7 +11,7 @@
 #' @export
 #' @examples
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim and detrend the measurement
 #' dp.trimmed <- dptrim(dp)
 #' dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
@@ -19,13 +19,14 @@
 #' rings <- dprings(dp.detrended)
 #' ## get tree ring widths:
 #' get_RW(rings)
-get_RW  <- function(rings) {
+get_RW <- function(rings) {
   if (is.data.frame(rings) == FALSE |
         all(colnames(rings) == c("value", "type", "amplitude")) == FALSE) {
     stop("not a result of densitr::dprings()")
   }
-  return(tryCatch(diff(rings[rings$type == "peak",]$value,
-                       error=function(e) NULL)))
+  return(tryCatch(diff(rings[rings$type == "peak", ]$value,
+                       error = function(e) NULL
+                       )))
 }
 
 #' Automatically identify tree rings in a density profile
@@ -81,7 +82,7 @@ get_RW  <- function(rings) {
 #' @examples
 #' \donttest{
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## trim and detrend the measurement
 #' dp.trimmed <- dptrim(dp)
 #' dp.detrended <- dpdetrend(dp.trimmed, type = "gam")
@@ -179,27 +180,27 @@ dprings <- function(dp, pps = 200, threshold.sd = 0,
 ## Will take a df of rings and compare them one by one. Peak should
 ## always be followed by a valley, this function returns those
 ## duplicating values
-get_duplicates  <- function(values){
+get_duplicates <- function(values) {
   removals <- c()
-  for (i in 1:(nrow(values) - 1)){
-     k <- i + 1
-      if (values[i,]$type == values[k,]$type) {
-        ## compare two valleys, keep the lowest
-        if ((values[i,]$type == "valley") && (values[k,]$type == "valley")) {
-          if (values[i,]$amplitude <= values[k,]$amplitude) {
-            removals  <- c(removals, k)
-          } else {
-            removals  <- c(removals, i)
-          }
-        } else if ((values[i,]$type == "peak") && (values[k,]$type == "peak")) {
-          ## compare two peaks, take the higher one
-          if (values[i,]$amplitude >= values[k,]$amplitude) {
-            removals  <- c(removals, k)
-          } else {
-            removals  <- c(removals, i)
-          }
+  for (i in 1:(nrow(values) - 1)) {
+    k <- i + 1
+    if (values[i, ]$type == values[k, ]$type) {
+      ## compare two valleys, keep the lowest
+      if ((values[i, ]$type == "valley") && (values[k, ]$type == "valley")) {
+        if (values[i, ]$amplitude <= values[k, ]$amplitude) {
+          removals <- c(removals, k)
+        } else {
+          removals <- c(removals, i)
         }
-     }
+      } else if ((values[i, ]$type == "peak") && (values[k, ]$type == "peak")) {
+        ## compare two peaks, take the higher one
+        if (values[i, ]$amplitude >= values[k, ]$amplitude) {
+          removals <- c(removals, k)
+        } else {
+          removals <- c(removals, i)
+        }
+      }
+    }
   }
   return(removals)
 }
@@ -212,11 +213,11 @@ get_duplicates  <- function(values){
 remove_duplicates <- function(values) {
   success <- FALSE
   while (!success) {
-     duplicates  <- get_duplicates(values)
-     if (length(duplicates) > 0) {
-       values <- values[-duplicates ,]
-     }
-      success <-  length(duplicates) == 0
+    duplicates <- get_duplicates(values)
+    if (length(duplicates) > 0) {
+      values <- values[-duplicates, ]
+    }
+    success <- length(duplicates) == 0
   }
   return(values)
 }
@@ -226,14 +227,18 @@ remove_duplicates <- function(values) {
 ## used for peak detection in dprings.
 ## https://github.com/stas-g/findPeaks
 ## https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data/164830#164830
-find_peaks <- function (x, m = 3){
+find_peaks <- function(x, m = 3) {
   shape <- diff(sign(diff(x, na.pad = FALSE)))
-  pks <- sapply(which(shape < 0), FUN = function(i){
+  pks <- sapply(which(shape < 0), FUN = function(i) {
     z <- i - m + 1
     z <- ifelse(z > 0, z, 1)
     w <- i + m + 1
     w <- ifelse(w < length(x), w, length(x))
-    if(all(x[c(z : i, (i + 2) : w)] <= x[i + 1])) return(i + 1) else return(numeric(0))
+    if (all(x[c(z:i, (i + 2):w)] <= x[i + 1])) {
+      return(i + 1)
+    } else {
+      return(numeric(0))
+    }
   })
   pks <- unlist(pks)
   pks

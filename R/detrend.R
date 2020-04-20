@@ -19,7 +19,7 @@
 #' @export
 #' @examples
 #' ## load a single file
-#' dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+#' dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 #' ## load several dp objects
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurement
@@ -33,18 +33,24 @@
 #' \donttest{
 #' dp.list.detrended <- pbapply::pblapply(dp.list, dpdetrend, type = "linear", cl = 7)
 #' }
-dpdetrend <- function(dp, type = ""){
-  if (!inherits(dp,"dp")) {stop("not a dp object")}
+dpdetrend <- function(dp, type = "") {
+  if (!inherits(dp, "dp")) {
+    stop("not a dp object")
+  }
   if (type == "linear") {
     trend <- stats::lm(amplitude ~ position, data = dp$data)
     fit <- stats::predict(trend, newdata = dp$data)
-    dp$data$amplitude  <- dp$data$amplitude - fit + fit[1]
+    dp$data$amplitude <- dp$data$amplitude - fit + fit[1]
   } else if (type == "gam") {
     if (requireNamespace("mgcv", quietly = TRUE)) {
-      m <- mgcv::gam(amplitude~s(position), data = dp$data, method = "REML")
-      dp$data$amplitude  <- dp$data$amplitude - m$fitted.values + m$fitted.values[1]
-      rownames(dp$data)  <- NULL
-    } else {stop("Package \"mgcv\" needed for GAM detrending. Please install it.")}
-  } else {stop("Please specify detrending function, either 'gam' or 'linear'.")}
+      m <- mgcv::gam(amplitude ~ s(position), data = dp$data, method = "REML")
+      dp$data$amplitude <- dp$data$amplitude - m$fitted.values + m$fitted.values[1]
+      rownames(dp$data) <- NULL
+    } else {
+      stop("Package \"mgcv\" needed for GAM detrending. Please install it.")
+    }
+  } else {
+    stop("Please specify detrending function, either 'gam' or 'linear'.")
+  }
   return(dp)
 }

@@ -46,10 +46,11 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
   data.in <- baseR.rollmean(diff(fitted), 100) # defined in others.R
   ## set limits and find segments
   limit <- abs(mean(data.in) + (cutoff.sd * stats::sd(data.in)))
-  segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
-                                                               method = "BinSeg", Q = 10,
-                                                               minseglen = 250, class = FALSE
-                                                               ))
+  segments.points <- suppressWarnings(
+    changepoint::cpt.meanvar(data.in,
+                             method = "BinSeg", Q = 10,
+                             minseglen = 250, class = FALSE
+                             ))
   segments.list <- splitAt(data.in, segments.points)
   segments.list[length(segments.list)] <- NULL # remove the last item in a list
   segment.value <- function(number) {
@@ -63,7 +64,9 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
         if (segment.value(1) < limit) {
           ## no segments found outside the limit in the first 4
           ## segments
-          warning(paste("start not detected in measurement ", dp$footer$ID[1], sep = ""))
+          warning(paste("start not detected in measurement ",
+                        dp$footer$ID[1],
+                        sep = ""))
           cutoff <- 1
         } else {
           cutoff <- segments.points[1]
@@ -84,10 +87,11 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
     cutoff <- segments.points[4]
   }
   if (return.plot == TRUE) {
-    segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
-                                                                  method = "BinSeg", Q = 10,
-                                                                  minseglen = 250, class = TRUE
-                                                                  ))
+    segments.points2 <- suppressWarnings(
+      changepoint::cpt.meanvar(data.in,
+                               method = "BinSeg", Q = 10,
+                               minseglen = 250, class = TRUE
+                               ))
     graphics::plot.new()
     ## save and restore par setting
     oldpar <- graphics::par(no.readonly = TRUE)
@@ -96,8 +100,10 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
     graphics::par(mfrow = c(2, 1))
     graphics::plot(dp$data$amplitude,
                    type = "l",
-                   xlab = paste0("Drilling depth [", dp$footer$xUnit, "]"),
-                   ylab = paste0("Resistograph density [", dp$footer$yUnit, "]"),
+                   xlab = paste0("Drilling depth [",
+                                 dp$footer$xUnit, "]"),
+                   ylab = paste0("Resistograph density [",
+                                 dp$footer$yUnit, "]"),
                    main = paste0("Density profile ID: ", dp$footer$ID)
                    )
     graphics::abline(v = cutoff, col = "red", lwd = 3, lty = 2)
@@ -163,10 +169,11 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
   data.in <- baseR.rollmean(diff(fitted), 100) # defined in others.R
   ## get limits and get segments
   limit <- mean(data.in) - (cutoff.sd * stats::sd(data.in))
-  segments.points <- suppressWarnings(changepoint::cpt.meanvar(data.in,
-                                                               method = "BinSeg", Q = 10,
-                                                               minseglen = 250, class = FALSE
-                                                               ))
+  segments.points <- suppressWarnings(
+    changepoint::cpt.meanvar(data.in,
+                             method = "BinSeg", Q = 10,
+                             minseglen = 250, class = FALSE
+                             ))
   segments.list <- splitAt(data.in, segments.points)
   segments.list[length(segments.list)] <- NULL # remove the last item in a list
   segment.value2 <- function(number) {
@@ -189,17 +196,19 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
           cutoff <- segments.points[length(segments.points) - 1]
         } else {
           ## no segments deleted, no end detected
-          warning(paste("end not detected in file ", dp$footer$ID[1], sep = ""))
+          warning(paste("end not detected in file ",
+                        dp$footer$ID[1], sep = ""))
           cutoff <- nrow(dp$data)
         }
       }
     }
   }
   if (return.plot == TRUE) {
-    segments.points2 <- suppressWarnings(changepoint::cpt.meanvar(data.in,
-                                                                  method = "BinSeg", Q = 10,
-                                                                  minseglen = 250, class = TRUE
-                                                                  ))
+    segments.points2 <- suppressWarnings(
+      changepoint::cpt.meanvar(data.in,
+                               method = "BinSeg", Q = 10,
+                               minseglen = 250, class = TRUE
+                               ))
     graphics::plot.new()
     ## save and restore par setting
     oldpar <- graphics::par(no.readonly = TRUE)
@@ -208,13 +217,16 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
     graphics::par(mfrow = c(2, 1))
     graphics::plot(dp$data$amplitude,
                    type = "l",
-                   xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
-                   ylab = paste0("Resistograph density [", dp$footer$yUnit[1], "]"),
+                   xlab = paste0("Drilling depth [",
+                                 dp$footer$xUnit[1], "]"),
+                   ylab = paste0("Resistograph density [",
+                                 dp$footer$yUnit[1], "]"),
                    main = paste0("Density profile ID: ", dp$footer$ID)
                    )
     graphics::abline(v = cutoff + 100, col = "red", lwd = 3, lty = 2)
     changepoint::plot(segments.points2,
-                      xlab = paste0("Drilling depth [", dp$footer$xUnit[1], "]"),
+                      xlab = paste0("Drilling depth [",
+                                    dp$footer$xUnit[1], "]"),
                       ylab = paste0("Moving average of lagged differences"),
                       main = "Detected segments"
                       )

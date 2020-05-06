@@ -195,7 +195,7 @@ combine_footers <- function(dp.list) {
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' combine_data(dp.list)
 combine_data <- function(dp.list) {
-  message("\ncombining data from ", length(dp.list), " denisty profiles...")
+  message("\ncombining data from ", length(dp.list), " density profiles...")
   data <- lapply(dp.list, function(x) x$data)
   data <- do.call("rbind", data)
   rownames(data) <- NULL

@@ -194,8 +194,13 @@ correct_failures <- function(dp.trimmed) {
       lapply(failures$failures.start, manual_trim_detect, label = " - PICK START")
     for (i in 1:length(failures$failures.start)) {
       start <- unlist(cutoffs.start[names(failures$failures.start[i])], use.names = F)
-      end <- nrow(dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data)
-      dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data <- utils::tail(dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data, -(start - 1))
+      ## end <- nrow(dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data)
+      ## for some reason, calling head or tail with a -0 as argument returns NA
+      ## just skip to next iteration if this is the case
+      if (start > 1) {
+        dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data <- utils::tail(dp.trimmed$dp[names(failures$failures.start[i])][[1]]$data, -(start - 1))
+      }
+      next()
     }
   }
   message("\nstart corrections done, starting end corrections\n")
@@ -210,8 +215,11 @@ correct_failures <- function(dp.trimmed) {
 
       diff <- end.old - end.new
       ## remove the last X values
-      dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data <-
-        utils::head(dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data, -diff)
+      if (diff > 0) {
+        dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data <-
+          utils::head(dp.trimmed$dp[names(failures$failures.end[i])][[1]]$data, -diff)
+      }
+      next()
     }
   }
   message("\nall corrections done\n")
@@ -255,12 +263,19 @@ trim_manually <- function(dp.list) {
 
     diff <- end.old - end.new
 
-    ## remove the last X values
-    dp.list[[i]]$data <-
-      utils::head(dp.list[[i]]$data, -diff)
+    ## for some reason, calling head or tail with a -0 as argument returns NA
+    ## just skip to next iteration if this is the case
+    if (diff > 0) {
+      dp.list[[i]]$data <-
+        utils::head(dp.list[[i]]$data, -diff)
+    }
 
-    dp.list[[i]]$data <-
-      utils::tail(dp.list[[i]]$data, -(start - 1))
+    if (start > 1) {
+      dp.list[[i]]$data <-
+        utils::tail(dp.list[[i]]$data, -(start - 1))
+    }
+
+    next()
   }
   message("\nall corrections done\n")
   return(dp.list)

@@ -158,10 +158,7 @@ manual_trim_detect <- function(failure, label = "") {
 #' density profiles for each failure in trim detection sequentially.
 #' The plot title will display whether you are selection start or end
 #' positions. Use your mouse to select starting/ending point on the
-#' plot, your selection will then be displayed on the plot. Use keys
-#' y/n to confirm selection, pressing n will restart the selection
-#' process. The selection can be repeated once after pressing n, next
-#' n will stop the process and it has to be restarted manually. Will
+#' plot, your selection will then be displayed on the plot. Will
 #' return a complete list, both with the non-failed automatically
 #' trimmed dp objects and those corrected manually. The automatic
 #' trim functions should be called with the option

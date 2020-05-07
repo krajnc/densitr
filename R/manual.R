@@ -217,3 +217,50 @@ correct_failures <- function(dp.trimmed) {
   message("\nall corrections done\n")
   return(dp.trimmed$dp)
 }
+
+#' Manually trim a list of density profiles
+#'
+#' This function will take a list of dp objects and interactively ask
+#' the user to assign starting/ending points manually for all density
+#' profiles in sequentially. Used as alternative to automatic trim
+#' functions. The plot title will display whether you are selecting
+#' start or end position. Use your mouse to select starting/ending
+#' points on the plot.
+#'
+#' @param dp.list A list of dp objects.
+#' @return A list of trimmed density profiles.
+#' @seealso dptrim, dptriml, manual_trim_detect
+#' @export
+#' @examples
+#' ## load all dp files
+#' \donttest{
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
+#' ## manually trim the list
+#' dp.trimmed <- trim_manually(dp.list)
+#' }
+trim_manually <- function(dp.list) {
+  if (is.list(dp.list) && !inherits(dp.list[[1]], "dp")) {
+    stop("not a dp list")
+  }
+  cutoffs.start <-
+    lapply(dp.list, manual_trim_detect, label = " - PICK START")
+  message("\nstart corrections done, starting end corrections\n")
+  cutoffs.end <- lapply(dp.list, manual_trim_detect, label = " - PICK STOP")
+  for (i in 1:length(dp.list)) {
+    start <- unlist(cutoffs.start[names(dp.list[i])], use.names = F)
+    end.old <-
+      nrow(dp.list[names(dp.list[i])][[1]]$data)
+    end.new <-
+      unlist(cutoffs.end[names(dp.list[i])], use.names = F)
+
+    diff <- end.old - end.new
+    ## remove the last X values
+    dp.list[names(dp.list[i])][[1]]$data <-
+      utils::head(dp.list[names(dp.list[i])][[1]]$data, -diff)
+
+    dp.list[names(dp.list[i])][[1]]$data <- utils::tail(dp.list[names(dp.list[i])][[1]]$data, -(start - 1))
+  }
+
+  message("\nall corrections done\n")
+  return(dp.list)
+}

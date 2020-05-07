@@ -254,13 +254,15 @@ trim_manually <- function(dp.list) {
       unlist(cutoffs.end[names(dp.list[i])], use.names = F)
 
     diff <- end.old - end.new
+
     ## remove the last X values
-    dp.list[names(dp.list[i])][[1]]$data <-
-      utils::head(dp.list[names(dp.list[i])][[1]]$data, -diff)
+    dp.list[[i]]$data <-
+      utils::head(dp.list[[i]]$data, -diff)
 
-    dp.list[names(dp.list[i])][[1]]$data <- utils::tail(dp.list[names(dp.list[i])][[1]]$data, -(start - 1))
+    dp.list[[i]]$data <-
+      utils::tail(dp.list[[i]]$data, -(start - 1))
+
   }
-
   message("\nall corrections done\n")
   return(dp.list)
 }

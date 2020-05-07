@@ -247,11 +247,11 @@ trim_manually <- function(dp.list) {
   message("\nstart corrections done, starting end corrections\n")
   cutoffs.end <- lapply(dp.list, manual_trim_detect, label = " - PICK STOP")
   for (i in 1:length(dp.list)) {
-    start <- unlist(cutoffs.start[names(dp.list[i])], use.names = F)
+    start <- unlist(cutoffs.start[[i]], use.names = F)
     end.old <-
-      nrow(dp.list[names(dp.list[i])][[1]]$data)
+      nrow(dp.list[[i]]$data)
     end.new <-
-      unlist(cutoffs.end[names(dp.list[i])], use.names = F)
+      unlist(cutoffs.end[[i]], use.names = F)
 
     diff <- end.old - end.new
 
@@ -261,7 +261,6 @@ trim_manually <- function(dp.list) {
 
     dp.list[[i]]$data <-
       utils::tail(dp.list[[i]]$data, -(start - 1))
-
   }
   message("\nall corrections done\n")
   return(dp.list)

@@ -41,7 +41,7 @@ dp objects, use \code{dptriml}.
 \examples{
 \donttest{
 ## load a single dp file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptrim(dp)
 ## plot trimming

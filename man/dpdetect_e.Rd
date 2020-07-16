@@ -34,7 +34,7 @@ off.
 }
 \examples{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## get ending point
 start <- dpdetect_e(dp)
 ## plot the end detection

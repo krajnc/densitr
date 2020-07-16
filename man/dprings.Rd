@@ -69,7 +69,7 @@ loess regression to smooth the data using the span parameter.
 \examples{
 \donttest{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## trim and detrend the measurement
 dp.trimmed <- dptrim(dp)
 dp.detrended <- dpdetrend(dp.trimmed, type = "gam")

@@ -29,7 +29,7 @@ package to run.
 }
 \examples{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## load several dp objects
 dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurement

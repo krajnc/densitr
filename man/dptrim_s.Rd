@@ -40,7 +40,7 @@ use \code{dtriml_s}.
 \examples{
 \donttest{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## trim the measurement at start
 dp.trimmed <- dptrim_s(dp)
 ## plot trimming

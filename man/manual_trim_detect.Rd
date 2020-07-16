@@ -32,7 +32,7 @@ devices, returning NA.
 }
 \examples{
 ## load a single file
-dp  <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
+dp <- dpload(system.file("extdata", "00010001.dpa", package = "densitr"))
 ## get a starting point on the plot
 \donttest{
 manual_trim_detect(dp)

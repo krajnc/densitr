@@ -3,8 +3,10 @@ context("Loading tests")
 string1 <- "data/0005/00/00050060.dpa"
 string2  <- "00050060.dpa"
 
-
+## old format of density profiles
 dp <- dpload(dp.file = system.file("extdata", "00010001.dpa", package = "densitr"))
+## new format of density profiles
+## dp.new <- dpload(dp.file = system.file("extdata", "new2022.dpa", package = "densitr"))
 dpl <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 dpl2 <- dpload(dp.directory = system.file("extdata", package = "densitr"), recursive = FALSE)
 
@@ -17,6 +19,7 @@ test_that("Loading file vs folder", {
   expect_equal(length(dpl), 15)
   expect_equal(length(dpl2), 5)
   expect_is(dp, "dp")
+  ## expect_is(dp.new, "dp")
   expect_is(dpl[[1]], "dp")
 })
 

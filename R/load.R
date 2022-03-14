@@ -55,7 +55,14 @@ read_dpa <- function(file) {
     stop("not a *.dpa file")
   }
   dpa.read <- readLines(file, warn = FALSE)
-  data <- data.frame("amplitude" = utils::tail(utils::head(dpa.read, n = -14), -3))
+  ## newer versions of resistograph leave out FOOTER, only providing a HEADER that has also changed
+  if (any(dpa.read == "[FOOTER]") == FALSE){
+    n_data <- which(dpa.read == "[DATA]")
+    data <- data.frame(amplitude = utils::tail(dpa.read, n = -n_data))
+  } else {
+    data <- data.frame(amplitude = utils::tail(utils::head(dpa.read,
+                                                           n = -14), -3))
+  }
   if (nrow(data) != 0) {
     data$position <- 1:nrow(data)
     data$amplitude <- as.numeric(as.character(data$amplitude))
@@ -65,15 +72,40 @@ read_dpa <- function(file) {
   }
   data$ID <- extract_dpa_name(file)
   row.names(data) <- NULL
-  footer <- paste(utils::tail(dpa.read, n = 13), collapse = "\n")
-  footer <- utils::read.csv(text = footer, check.names = FALSE, header = F, col.names = "footer")
-  footer$name <- sapply(strsplit(as.character(footer$footer), "="), "[", 1)
-  footer$value <- sapply(strsplit(as.character(footer$footer), "="), "[", 2)
-  footer$footer <- NULL
-  footer$ID <- extract_dpa_name(file)
-  footer <- stats::reshape(footer, idvar = "ID", timevar = "name", direction = "wide")
-  names(footer) <- gsub("(value\\.y\\.|value\\.)", "", names(footer))
-  attributes(footer)$reshapeWide <- NULL # strip reshaping attributes
+  if (any(dpa.read == "[FOOTER]") == FALSE){
+    ## newer file format
+    footer <- paste(utils::head(dpa.read, n = n_data), collapse = "\n")
+    footer <- utils::read.csv(text = footer, check.names = FALSE,
+                              header = F, col.names = "footer")
+    footer$name <- sapply(strsplit(as.character(footer$footer),
+                                   "="), "[", 1)
+    footer$value <- sapply(strsplit(as.character(footer$footer),
+                                    "="), "[", 2)
+    footer$footer <- NULL
+
+    footer <- footer[!(footer$name == "[HEADER]" | footer$name=="[DATA]"),]
+
+    footer$ID <- extract_dpa_name(file)
+    footer <- stats::reshape(footer, idvar = "ID", timevar = "name",
+                             direction = "wide")
+    names(footer) <- gsub("(value\\.y\\.|value\\.)", "", names(footer))
+    attributes(footer)$reshapeWide <- NULL
+  } else {
+    ## older file format
+    footer <- paste(utils::tail(dpa.read, n = 13), collapse = "\n")
+    footer <- utils::read.csv(text = footer, check.names = FALSE,
+                              header = F, col.names = "footer")
+    footer$name <- sapply(strsplit(as.character(footer$footer),
+                                   "="), "[", 1)
+    footer$value <- sapply(strsplit(as.character(footer$footer),
+                                    "="), "[", 2)
+    footer$footer <- NULL
+    footer$ID <- extract_dpa_name(file)
+    footer <- stats::reshape(footer, idvar = "ID", timevar = "name",
+                             direction = "wide")
+    names(footer) <- gsub("(value\\.y\\.|value\\.)", "", names(footer))
+    attributes(footer)$reshapeWide <- NULL# strip reshaping attributes
+  }
   d <- list("data" = data, "footer" = footer)
   class(d) <- "dp"
   return(d)
@@ -115,7 +147,9 @@ dpload <- function(dp.file = NULL, dp.directory = "",
   if (is.null(dp.file)) {
     ## read the whole directory, possibly recursively
     if (dir.exists(dp.directory)) {
-      dp.files <- list.files(path = dp.directory, recursive = recursive, pattern = "*.dpa$")
+      ## in 2022 list.files with *.dpa$ stopped working on windows for some reason,
+      ## so the pattern is changes to .dpa instead
+      dp.files <- list.files(path = dp.directory, recursive = recursive, pattern = ".dpa")
       dp.files <- file.path(dp.directory, dp.files)
       message("found ", length(dp.files), " density profiles, loading...")
       if (requireNamespace("pbapply", quietly = TRUE)) {

@@ -22,6 +22,13 @@
 #' @param cutoff.sd How many standard deviations for the cutoff limit?
 #' @param return.plot If true, will return a plot displaying segment
 #'   detection for the current dp file.
+#' @param minseglen Minimum segment length for segment detection,
+#' default setting of 250 points is for data resolution of 1/100 mm,
+#' test a few options with return.plot = TRUE to find the right value
+#'  @param span Span for loess regression, use to adjust sensitivity
+#' of detection detection for the current dp file.
+#' @param nroll Number of points for rolling mean, use to adjust
+#' sensitivity of detection for the current dp file.
 #' @return Either a row number where the actual measurement starts or
 #'   a plot, displaying changepoint segmentation and set limits.
 #' @seealso dpdetect_e, dptrim, dptriml, dptrim_s, dptriml_s
@@ -35,21 +42,21 @@
 #' \donttest{
 #' dpdetect_s(dp, return.plot = TRUE)
 #' }
-dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
+dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE, minseglen = 250, span = 0.1, nroll = 100) {
   ## check if dp object
   if (!inherits(dp, "dp")) {
     stop("not a dp object")
   }
   ## get a rolling mean of diff lags
-  fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span = 0.1)
+  fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span = span)
   fitted <- stats::predict(fit)
-  data.in <- baseR.rollmean(diff(fitted), 100) # defined in others.R
+  data.in <- baseR.rollmean(diff(fitted), nroll) # defined in others.R
   ## set limits and find segments
   limit <- abs(mean(data.in) + (cutoff.sd * stats::sd(data.in)))
   segments.points <- suppressWarnings(
     changepoint::cpt.meanvar(data.in,
                              method = "BinSeg", Q = 10,
-                             minseglen = 250, class = FALSE
+                             minseglen = minseglen, class = FALSE
                              ))
   segments.list <- splitAt(data.in, segments.points)
   segments.list[length(segments.list)] <- NULL # remove the last item in a list
@@ -90,7 +97,7 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
     segments.points2 <- suppressWarnings(
       changepoint::cpt.meanvar(data.in,
                                method = "BinSeg", Q = 10,
-                               minseglen = 250, class = TRUE
+                               minseglen = minseglen, class = TRUE
                                ))
     graphics::plot.new()
     ## save and restore par setting
@@ -123,7 +130,7 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
     p <- grDevices::recordPlot()
     return(p)
   } else {
-    return(cutoff) # add 100 to account for rolling mean right centered
+    return(cutoff)
   }
 }
 
@@ -143,6 +150,13 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
 #' off.
 #' @param dp A dp object, see dpload.
 #' @param cutoff.sd How many standard deviations for the cutoff limit?
+#' @param minseglen Minimum segment length for segment detection,
+#' default setting of 250 points is for data resolution of 1/100 mm,
+#' test a few options with return.plot = TRUE to find the right value
+#'  @param span Span for loess regression, use to adjust sensitivity
+#' of detection detection for the current dp file.
+#' @param nroll Number of points for rolling mean, use to adjust
+#' sensitivity of detection for the current dp file.
 #' @param return.plot If true, will return a plot displaying segment
 #'   detection for the current dp file.
 #' @return Either a row number where the actual measurement ends or
@@ -158,21 +172,21 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
 #' \donttest{
 #' dpdetect_e(dp, return.plot = TRUE)
 #' }
-dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
+dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE, minseglen = 250, span = 0.1, nroll = 100) {
   ## check if dp object
   if (!inherits(dp, "dp")) {
     stop("not a dp object")
   }
   ## get a rolling mean of diff lags
-  fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span = 0.1)
+  fit <- stats::loess(dp$data$amplitude ~ dp$data$position, span = span)
   fitted <- stats::predict(fit)
-  data.in <- baseR.rollmean(diff(fitted), 100) # defined in others.R
+  data.in <- baseR.rollmean(diff(fitted), nroll) # defined in others.R
   ## get limits and get segments
   limit <- mean(data.in) - (cutoff.sd * stats::sd(data.in))
   segments.points <- suppressWarnings(
     changepoint::cpt.meanvar(data.in,
                              method = "BinSeg", Q = 10,
-                             minseglen = 250, class = FALSE
+                             minseglen = minseglen, class = FALSE
                              ))
   segments.list <- splitAt(data.in, segments.points)
   segments.list[length(segments.list)] <- NULL # remove the last item in a list
@@ -207,7 +221,7 @@ dpdetect_e <- function(dp, cutoff.sd = 1, return.plot = FALSE) {
     segments.points2 <- suppressWarnings(
       changepoint::cpt.meanvar(data.in,
                                method = "BinSeg", Q = 10,
-                               minseglen = 250, class = TRUE
+                               minseglen = minseglen, class = TRUE
                                ))
     graphics::plot.new()
     ## save and restore par setting

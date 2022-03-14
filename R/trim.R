@@ -35,16 +35,16 @@
 #' ## plot trimming
 #' dptrim(dp, return.plot = TRUE)
 #' }
-dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE) {
+dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE, ...) {
   if (!inherits(dp, "dp")) {
     stop("not a dp object")
   } # check if dp object
   if (silent == TRUE) {
-    start <- suppressWarnings(dpdetect_s(dp))
-    end <- suppressWarnings(dpdetect_e(dp))
+    start <- suppressWarnings(dpdetect_s(dp, ...))
+    end <- suppressWarnings(dpdetect_e(dp, ...))
   } else {
-    start <- dpdetect_s(dp)
-    end <- dpdetect_e(dp)
+    start <- dpdetect_s(dp, ...)
+    end <- dpdetect_e(dp, ...)
   }
   if (return.plot == TRUE) {
     graphics::plot(dp$data$amplitude,
@@ -105,15 +105,15 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
 #' ## trim the measurements
 #' dp.trimmed <- dptriml(dp.list)
 #' }
-dptriml <- function(dp.list, rreport = FALSE, cl = 1) {
+dptriml <- function(dp.list, rreport = FALSE, cl = 1, ...) {
   if (is.list(dp.list) && !inherits(dp.list[[1]], "dp")) {
     stop("not a dp list")
   }
   message("started trimming ", length(dp.list), " files")
   if (requireNamespace("pbapply", quietly = TRUE)) {
-    dp.trimmed <- pbapply::pblapply(dp.list, dptrim, return.fail = T, silent = T, cl = cl)
+    dp.trimmed <- pbapply::pblapply(dp.list, dptrim, return.fail = T, silent = T, cl = cl, ...)
   } else {
-    dp.trimmed <- lapply(dp.list, dptrim, return.fail = T, silent = T)
+    dp.trimmed <- lapply(dp.list, dptrim, return.fail = T, silent = T, ...)
   }
   data <- unlist(lapply(dp.trimmed, function(x) x[-(2:3)]), recursive = FALSE)
   names(data) <- names(dp.trimmed)
@@ -148,7 +148,7 @@ dptriml <- function(dp.list, rreport = FALSE, cl = 1) {
 #' Automatically trim an individual density profile on the starting side
 #'
 #' Calls dpdetect_s on a given dpa object and returns a trimmed
-#' dpa object with the the row before the starting point removed. If
+#' dpa object with the the rows before the starting point removed. If
 #' return.plot = TRUE, it will return a plot displaying the dp object
 #' with detected starting point. If called with the option
 #' return.fail = FALSE and return.plot = FALSE, the returned
@@ -181,16 +181,16 @@ dptriml <- function(dp.list, rreport = FALSE, cl = 1) {
 #' ## plot trimming
 #' dptrim_s(dp, return.plot = TRUE)
 #' }
-dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE) {
+dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE, ...) {
   ## check if dp object
   if (!inherits(dp, "dp")) {
     stop("not a dp object")
   }
 
   if (silent == TRUE) {
-    start <- suppressWarnings(dpdetect_s(dp))
+    start <- suppressWarnings(dpdetect_s(dp, ...))
   } else {
-    start <- dpdetect_s(dp)
+    start <- dpdetect_s(dp, ...)
   }
 
   if (return.plot == TRUE) {
@@ -248,15 +248,15 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' ## trim the measurements
 #' dp.trimmed <- dptrim_sl(dp.list)
 #' }
-dptriml_s <- function(dp.list, rreport = FALSE, cl = 1) {
+dptriml_s <- function(dp.list, rreport = FALSE, cl = 1, ...) {
   if (is.list(dp.list) && !inherits(dp.list[[1]], "dp")) {
     stop("not a dp list")
   }
   message("started start trimming ", length(dp.list), " files")
   if (requireNamespace("pbapply", quietly = TRUE)) {
-    dp.trimmed <- pbapply::pblapply(dp.list, dptrim_s, return.fail = T, silent = T, cl = cl)
+    dp.trimmed <- pbapply::pblapply(dp.list, dptrim_s, return.fail = T, silent = T, cl = cl, ...)
   } else {
-    dp.trimmed <- lapply(dp.list, dptrim_s, return.fail = T, silent = T)
+    dp.trimmed <- lapply(dp.list, dptrim_s, return.fail = T, silent = T, ...)
   }
   data <- unlist(lapply(dp.trimmed, function(x) x[-2]), recursive = FALSE)
   names(data) <- names(dp.trimmed)

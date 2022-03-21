@@ -1,6 +1,6 @@
 Package: densitr
 Title: Analysing Density Profiles from Resistance Drilling of Trees
-Version: 0.2
+Version: 0.2.1
 Authors@R: c(
     person(given = "Luka",
     family = "Krajnc",

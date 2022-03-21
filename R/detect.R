@@ -25,7 +25,7 @@
 #' @param minseglen Minimum segment length for segment detection,
 #' default setting of 250 points is for data resolution of 1/100 mm,
 #' test a few options with return.plot = TRUE to find the right value
-#'  @param span Span for loess regression, use to adjust sensitivity
+#' @param span Span for loess regression, use to adjust sensitivity
 #' of detection detection for the current dp file.
 #' @param nroll Number of points for rolling mean, use to adjust
 #' sensitivity of detection for the current dp file.
@@ -153,7 +153,7 @@ dpdetect_s <- function(dp, cutoff.sd = 1, return.plot = FALSE, minseglen = 250, 
 #' @param minseglen Minimum segment length for segment detection,
 #' default setting of 250 points is for data resolution of 1/100 mm,
 #' test a few options with return.plot = TRUE to find the right value
-#'  @param span Span for loess regression, use to adjust sensitivity
+#' @param span Span for loess regression, use to adjust sensitivity
 #' of detection detection for the current dp file.
 #' @param nroll Number of points for rolling mean, use to adjust
 #' sensitivity of detection for the current dp file.

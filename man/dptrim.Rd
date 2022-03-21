@@ -4,7 +4,7 @@
 \alias{dptrim}
 \title{Automatically trim an individual density profile on both sides}
 \usage{
-dptrim(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
+dptrim(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE, ...)
 }
 \arguments{
 \item{dp}{An dp object, see \code{dpload}}
@@ -20,6 +20,9 @@ included when returning a dp object?}
 \item{silent}{Mute detection warnings, used when calling on list. A
 list of trimmed dp objects, a result of calling dtriml or
 dptriml_s on a dp list with return.fail = FALSE.}
+
+\item{...}{Parameters minseglen, span and nroll, will get passed through
+to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.}
 }
 \value{
 A trimmed dp object, with the beginning and ending

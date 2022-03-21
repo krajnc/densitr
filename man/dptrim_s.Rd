@@ -4,7 +4,7 @@
 \alias{dptrim_s}
 \title{Automatically trim an individual density profile on the starting side}
 \usage{
-dptrim_s(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE)
+dptrim_s(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE, ...)
 }
 \arguments{
 \item{dp}{An dp object, see \code{dpload}}
@@ -20,6 +20,9 @@ included when returning a dp object?}
 \item{silent}{Mute detection warnings, used when calling on list. A
 list of trimmed dp objects, a result of calling dptriml or
 dptriml_s on a dp list with rreport = FALSE.}
+
+\item{...}{Parameters minseglen, span and nroll, will get passed through
+to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.}
 }
 \value{
 A trimmed dp object, with the beginning and ending
@@ -28,7 +31,7 @@ A trimmed dp object, with the beginning and ending
 }
 \description{
 Calls dpdetect_s on a given dpa object and returns a trimmed
-dpa object with the the row before the starting point removed. If
+dpa object with the the rows before the starting point removed. If
 return.plot = TRUE, it will return a plot displaying the dp object
 with detected starting point. If called with the option
 return.fail = FALSE and return.plot = FALSE, the returned

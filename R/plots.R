@@ -36,8 +36,9 @@ readkeygraph <- function(prompt) {
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## plot trimming the measurements
 #' \donttest{
+#' if(interactive()){
 #' plot_trimming(dp.list)
-#' }
+#' }}
 plot_trimming <- function(dp.list) {
   for (i in 1:length(dp.list)) {
     print((dptrim(dp.list[[i]], return.plot = T)))
@@ -59,8 +60,9 @@ plot_trimming <- function(dp.list) {
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' \donttest{
+#' if(interactive()){
 #' plot_start_detection(dp.list)
-#' }
+#' }}
 plot_start_detection <- function(dp.list) {
   for (i in 1:length(dp.list)) {
     print((dpdetect_s(dp.list[[i]], return.plot = T)))
@@ -82,8 +84,9 @@ plot_start_detection <- function(dp.list) {
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' \donttest{
+#' if(interactive()){
 #' plot_end_detection(dp.list)
-#' }
+#' }}
 plot_end_detection <- function(dp.list) {
   for (i in 1:length(dp.list)) {
     print((dpdetect_e(dp.list[[i]], return.plot = T)))
@@ -104,8 +107,9 @@ plot_end_detection <- function(dp.list) {
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' \donttest{
+#' if(interactive()){
 #' plot_all(dp.list)
-#' }
+#' }}
 plot_all <- function(dp.list) {
   if (is.list(dp.list) == FALSE) {
     stop("not a list of density profiles")

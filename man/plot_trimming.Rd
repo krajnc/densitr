@@ -19,8 +19,9 @@ nothing.
 dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## plot trimming the measurements
 \donttest{
+if(interactive()){
 plot_trimming(dp.list)
-}
+}}
 }
 \seealso{
 dptrim, dptrim_s, dptriml_s,

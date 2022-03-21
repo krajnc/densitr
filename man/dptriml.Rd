@@ -4,7 +4,7 @@
 \alias{dptriml}
 \title{Automatically trim a list of density profiles on both sides}
 \usage{
-dptriml(dp.list, rreport = FALSE, cl = 1)
+dptriml(dp.list, rreport = FALSE, cl = 1, ...)
 }
 \arguments{
 \item{dp.list}{A list of dp objects, see \code{dpload}}
@@ -13,8 +13,10 @@ dptriml(dp.list, rreport = FALSE, cl = 1)
 mandatory when using \code{correct_failures} to manually pick
 starting/ending.}
 
-\item{cl}{Number of cores to run the trimming in parallel, passed through to \code{pbapply}.
-starting/ending.}
+\item{cl}{Number of cores to run the trimming in parallel, passed through to \code{pbapply}.}
+
+\item{...}{Parameters minseglen, span and nroll, will get passed through
+to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.}
 }
 \value{
 A list of trimmed dp objects. When rreport = TRUE, it return a two-item list of (i) trimmed dp objects and (ii) trimming report data frame.
@@ -28,7 +30,7 @@ up the trimming process significantly.
 \examples{
 \donttest{
 ## load several dpa files
-dp.list <- dpload(dpa.directory = system.file("extdata", package = "densitr"))
+dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
 dp.trimmed <- dptriml(dp.list)
 }

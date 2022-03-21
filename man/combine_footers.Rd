@@ -18,7 +18,8 @@ A data frame, combining all footer data from dp.list
 \description{
 Given a dp object list, this function will extract all footers
 (the additional measurement data) from all dp objects in a given
-list and combine them in a single data frame.
+list and combine them in a single data frame. Will not work if
+trying to combine footer from newer and older format of data.
 }
 \examples{
 ## load all files in directory

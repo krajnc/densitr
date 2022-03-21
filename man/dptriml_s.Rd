@@ -4,7 +4,7 @@
 \alias{dptriml_s}
 \title{Automatically trim a list of density profiles on the starting side}
 \usage{
-dptriml_s(dp.list, rreport = FALSE, cl = 1)
+dptriml_s(dp.list, rreport = FALSE, cl = 1, ...)
 }
 \arguments{
 \item{dp.list}{A list of dp objects, see \code{dpload}}
@@ -14,7 +14,10 @@ mandatory when using \code{correct_failures} to manually pick
 starting/ending.}
 
 \item{cl}{Number of cores to run the trimming in parallel, passed
-through to \code{pbapply}. starting/ending.}
+through to \code{pbapply}.}
+
+\item{...}{Parameters minseglen, span and nroll, will get passed through
+to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.}
 }
 \value{
 A list of trimmed dp objects. When rreport = TRUE, it
@@ -33,7 +36,7 @@ side, see \code{dptriml} for trimming both side simultaneously.
 ## load several dp files
 dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 ## trim the measurements
-dp.trimmed <- dptrim_sl(dp.list)
+dp.trimmed <- dptriml_s(dp.list)
 }
 }
 \seealso{

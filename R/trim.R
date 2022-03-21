@@ -21,6 +21,8 @@
 #' @param silent Mute detection warnings, used when calling on list. A
 #'   list of trimmed dp objects, a result of calling dtriml or
 #'   dptriml_s on a dp list with return.fail = FALSE.
+#' @param ... Parameters minseglen, span and nroll, will get passed through
+#' to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.
 #' @return A trimmed dp object, with the beginning and ending
 #'   removed, if they were detected. When return.plot = TRUE, it
 #'   returns a plot displaying the process.
@@ -94,14 +96,15 @@ dptrim <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALSE,
 #'   mandatory when using \code{correct_failures} to manually pick
 #'   starting/ending.
 #' @param cl Number of cores to run the trimming in parallel, passed through to \code{pbapply}.
-#'   starting/ending.
+#' @param ... Parameters minseglen, span and nroll, will get passed through
+#' to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.
 #' @return A list of trimmed dp objects. When rreport = TRUE, it return a two-item list of (i) trimmed dp objects and (ii) trimming report data frame.
 #' @seealso dptrim, dptrim_s, dptriml_s,
 #' @export
 #' @examples
 #' \donttest{
 #' ## load several dpa files
-#' dp.list <- dpload(dpa.directory = system.file("extdata", package = "densitr"))
+#' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
 #' dp.trimmed <- dptriml(dp.list)
 #' }
@@ -167,6 +170,8 @@ dptriml <- function(dp.list, rreport = FALSE, cl = 1, ...) {
 #' @param silent Mute detection warnings, used when calling on list. A
 #'   list of trimmed dp objects, a result of calling dptriml or
 #'   dptriml_s on a dp list with rreport = FALSE.
+#' @param ... Parameters minseglen, span and nroll, will get passed through
+#' to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.
 #' @return A trimmed dp object, with the beginning and ending
 #'   removed, if they were detected. When return.plot = TRUE, it
 #'   returns a plot displaying the process.
@@ -235,7 +240,9 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #'   mandatory when using \code{correct_failures} to manually pick
 #'   starting/ending.
 #' @param cl Number of cores to run the trimming in parallel, passed
-#'   through to \code{pbapply}. starting/ending.
+#'   through to \code{pbapply}.
+#' @param ... Parameters minseglen, span and nroll, will get passed through
+#' to dpdetect_s, adjust when profile resolution is not 1/100 of a millimeter.
 #' @return A list of trimmed dp objects. When rreport = TRUE, it
 #'   return a two-item list of (i) trimmed dp objects and (ii)
 #'   trimming report data frame.
@@ -246,7 +253,7 @@ dptrim_s <- function(dp, return.plot = FALSE, return.fail = FALSE, silent = FALS
 #' ## load several dp files
 #' dp.list <- dpload(dp.directory = system.file("extdata", package = "densitr"))
 #' ## trim the measurements
-#' dp.trimmed <- dptrim_sl(dp.list)
+#' dp.trimmed <- dptriml_s(dp.list)
 #' }
 dptriml_s <- function(dp.list, rreport = FALSE, cl = 1, ...) {
   if (is.list(dp.list) && !inherits(dp.list[[1]], "dp")) {

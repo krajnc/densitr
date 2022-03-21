@@ -5,7 +5,14 @@
 \title{Detect measurement ending point automatically using changepoint
 segmentation}
 \usage{
-dpdetect_e(dp, cutoff.sd = 1, return.plot = FALSE)
+dpdetect_e(
+  dp,
+  cutoff.sd = 1,
+  return.plot = FALSE,
+  minseglen = 250,
+  span = 0.1,
+  nroll = 100
+)
 }
 \arguments{
 \item{dp}{A dp object, see dpload.}
@@ -14,6 +21,16 @@ dpdetect_e(dp, cutoff.sd = 1, return.plot = FALSE)
 
 \item{return.plot}{If true, will return a plot displaying segment
 detection for the current dp file.}
+
+\item{minseglen}{Minimum segment length for segment detection,
+default setting of 250 points is for data resolution of 1/100 mm,
+test a few options with return.plot = TRUE to find the right value}
+
+\item{span}{Span for loess regression, use to adjust sensitivity
+of detection detection for the current dp file.}
+
+\item{nroll}{Number of points for rolling mean, use to adjust
+sensitivity of detection for the current dp file.}
 }
 \value{
 Either a row number where the actual measurement ends or

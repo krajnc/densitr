@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 # Manual trimming
-Automatic trimming sometimes fails to detect the starting or ending point within the density profile. Failing to detect ending point is usually a consequence of the profile being bark-to-pith instead of bark-to-bark. In those cases (an others) you can trim the measurement by hand.
+ Since package version 0.2 you can also trim the whole list of measurements by hand by using the function `trim_manually`. When using automatic trimming, it sometimes fails to detect the starting or ending point within the density profile. Failing to detect ending point is usually a consequence of the profile being bark-to-pith instead of bark-to-bark. In those cases (an others) you can trim the measurement by hand - either correcting failed automatic trimmings with ` correct_failures` or manually for the whole sample (`trim_manually`).
 
 Load the library, a few density profiles and try to trim them automatically:
 ```{r setup}
@@ -36,7 +36,7 @@ dptrim(dp.list[["00050045"]], return.plot = TRUE)
 
 As seen from the plot, end detection failed due to the large increase in values towards the ending part of the profile.
 
-In such cases or where you want to make a manual correction, you can use `manual_trim_detect` on an individual profile. This will plot that profile and you can click on the plot to select the desired position. After selecting the point, your selection will be drawn on the plot. The function will also fail if your graphics device is something other than X11, windows or quartz.
+In such cases or where you want to make a manual correction, you can use `manual_trim_detect` on an individual profile or `trim_manually` on list of density profiles. This will plot that profile and you can click on the plot to select the desired position. After selecting the point, your selection will be drawn on the plot. The function will also fail if your graphics device is something other than X11, windows or quartz.
 ```{r, eval = FALSE}
 manual_trim_detect(dp.list[["00050045"]])
 ```
